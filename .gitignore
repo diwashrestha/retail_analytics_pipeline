@@ -1,2 +1,4 @@
 *.csvdata/raw/*.csv
 data/raw/*.csv
+*.csv
+*.parquet
