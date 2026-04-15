@@ -1,0 +1,377 @@
+{
+  "schema_version": "1.1.0",
+  "schema_name": "einkaufpark_de_raw_transaction",
+  "description": "Official raw transaction schema for Einkaufpark DE. All 50 stores must produce CSV exports conforming to this contract. One row per line item purchased.",
+  "created": "2026-04-06",
+  "owner": "data-engineering",
+  "columns": [
+    {
+      "name": "transaction_id",
+      "type": "string",
+      "nullable": false,
+      "description": "Unique identifier for the transaction. Format: TXN-{store_id}-{12-char hex}. 0.4% of rows may be duplicates due to POS retry behaviour — handled by dedup in silver layer.",
+      "example": "TXN-EKP-DE-001-A3F7B2C19D44"
+    },
+    {
+      "name": "basket_id",
+      "type": "string",
+      "nullable": false,
+      "description": "Groups all line items belonging to one customer visit. Derived as MD5(transaction_id + store_id + order_date). All rows for the same visit share the same basket_id.",
+      "example": "BSK-7f3a9c1d2b4e"
+    },
+    {
+      "name": "batch_id",
+      "type": "string",
+      "nullable": false,
+      "description": "Identifies the data generation or export run that produced this file. Derived from MD5 of config parameters — identical across re-runs with the same seed, enabling reproducibility.",
+      "example": "BATCH_A3F19C04B2"
+    },
+    {
+      "name": "source_system",
+      "type": "string",
+      "nullable": false,
+      "allowed_values": ["SAP_POS", "LEGACY_POS_CSV"],
+      "description": "The POS system that produced this record. SAP_POS covers 85% of stores; LEGACY_POS_CSV covers 15% of older small-town branches.",
+      "example": "SAP_POS"
+    },
+    {
+      "name": "record_hash",
+      "type": "string",
+      "nullable": false,
+      "description": "MD5 hash of (transaction_id + order_date + customer_id + product_id + store_id). Used as the deduplication key in the silver layer. Two rows with the same record_hash are considered identical.",
+      "example": "d41d8cd98f00b204e9800998ecf8427e"
+    },
+    {
+      "name": "order_date",
+      "type": "date",
+      "nullable": false,
+      "format": "YYYY-MM-DD",
+      "description": "Calendar date on which the transaction occurred. Seasonality-biased in the generator: Friday/Saturday peak, December peak, Black Friday week (ISO 47), pre-Easter (ISO 13–15), December 1–23.",
+      "example": "2025-11-28"
+    },
+    {
+      "name": "ship_date",
+      "type": "date",
+      "nullable": false,
+      "format": "YYYY-MM-DD",
+      "description": "For in-store transactions this always equals order_date. Approximately 0.3% of rows have a ±1-day difference due to POS timezone misalignment — these receive WARN:DATE_SEQUENCE_ERROR.",
+      "example": "2025-11-28"
+    },
+    {
+      "name": "ingestion_date",
+      "type": "date",
+      "nullable": false,
+      "format": "YYYY-MM-DD",
+      "description": "Wall-clock date when the CSV file was generated or exported. Used to track data latency.",
+      "example": "2025-11-29"
+    },
+    {
+      "name": "sales_channel",
+      "type": "string",
+      "nullable": false,
+      "allowed_values": ["IN_STORE"],
+      "description": "Channel through which the sale occurred. Always IN_STORE for this dataset — no e-commerce or click-and-collect.",
+      "example": "IN_STORE"
+    },
+    {
+      "name": "order_status",
+      "type": "string",
+      "nullable": false,
+      "allowed_values": ["Completed", "Voided", "Partially_Returned", "Returned"],
+      "description": "Final status of the transaction. Distribution: Completed 93%, Voided 3%, Partially_Returned 2.5%, Returned 1.5%.",
+      "example": "Completed"
+    },
+    {
+      "name": "store_id",
+      "type": "string",
+      "nullable": false,
+      "description": "Unique identifier for the physical store. Format: EKP-DE-{3-digit number}. Range: EKP-DE-001 to EKP-DE-050.",
+      "example": "EKP-DE-014"
+    },
+    {
+      "name": "store_city",
+      "type": "string",
+      "nullable": false,
+      "description": "German city where the store is located.",
+      "example": "Frankfurt"
+    },
+    {
+      "name": "store_district",
+      "type": "string",
+      "nullable": false,
+      "description": "Neighbourhood or Stadtteil within the city.",
+      "example": "Innenstadt"
+    },
+    {
+      "name": "store_postal_code",
+      "type": "string",
+      "nullable": false,
+      "description": "5-digit German postal code (PLZ).",
+      "example": "60311"
+    },
+    {
+      "name": "store_area",
+      "type": "string",
+      "nullable": false,
+      "description": "Street name where the store is located.",
+      "example": "Zeil"
+    },
+    {
+      "name": "store_region",
+      "type": "string",
+      "nullable": false,
+      "description": "German federal state (Bundesland) the store belongs to.",
+      "example": "Hesse"
+    },
+    {
+      "name": "store_country_code",
+      "type": "string",
+      "nullable": false,
+      "allowed_values": ["DE"],
+      "description": "ISO 3166-1 alpha-2 country code. Always DE for this dataset.",
+      "example": "DE"
+    },
+    {
+      "name": "store_country_name",
+      "type": "string",
+      "nullable": false,
+      "allowed_values": ["Germany"],
+      "description": "Full country name. Always Germany for this dataset.",
+      "example": "Germany"
+    },
+    {
+      "name": "store_size_class",
+      "type": "string",
+      "nullable": false,
+      "allowed_values": ["L", "M", "S"],
+      "description": "Store size classification. L=large city hypermarket (21 stores), M=mid-city store (11 stores), S=small-town store (18 stores). Affects terminal count and average basket size.",
+      "example": "L"
+    },
+    {
+      "name": "customer_id",
+      "type": "string",
+      "nullable": false,
+      "description": "Identifier for the customer. Format: CUST{1–300000}. Guest/anonymous transactions use GUEST-{uuid} or null. The same customer_id always maps to the same age, gender, and loyalty tier.",
+      "example": "CUST84201"
+    },
+    {
+      "name": "customer_age",
+      "type": "integer",
+      "nullable": true,
+      "description": "Customer age in years. Nullable for guest transactions. Known DQ issues: ~0.3% have impossible values (121–160) flagged as WARN:AGE_INVALID; ~0.15% are negative due to legacy migration artifacts.",
+      "example": 42
+    },
+    {
+      "name": "gender",
+      "type": "string",
+      "nullable": true,
+      "description": "Customer gender. Nullable for guests. Known encoding inconsistency across source systems: values can be M, Male, F, Female, Divers, or null. Normalised to M/F/Divers/null in the silver layer.",
+      "example": "F"
+    },
+    {
+      "name": "membership_active",
+      "type": "boolean",
+      "nullable": false,
+      "description": "True if the customer scanned a loyalty card for this transaction. Approximately 54% penetration among post-March-2023 transactions. False for all guest transactions.",
+      "example": true
+    },
+    {
+      "name": "loyalty_card_id",
+      "type": "string",
+      "nullable": true,
+      "description": "Loyalty card number. Format: KLC{8-digit number}. Null when membership_active is false. Loyalty programme launched 2023-03-01.",
+      "example": "KLC00192847"
+    },
+    {
+      "name": "loyalty_tier",
+      "type": "string",
+      "nullable": true,
+      "allowed_values": ["Bronze", "Silver", "Gold", "Platinum", null],
+      "description": "Customer loyalty tier. Distribution among members: Bronze 55%, Silver 28%, Gold 12%, Platinum 5%. Null for non-members.",
+      "example": "Silver"
+    },
+    {
+      "name": "loyalty_points_earned",
+      "type": "integer",
+      "nullable": true,
+      "description": "Points earned on this transaction. Multiplier by tier: Bronze 1x, Silver 1.5x, Gold 2x, Platinum 3x net_revenue_eur. Zero on voided or returned transactions. Null for non-members.",
+      "example": 18
+    },
+    {
+      "name": "coupon_applied",
+      "type": "boolean",
+      "nullable": false,
+      "description": "True if a loyalty coupon was redeemed on this transaction. Approximately 15% of member transactions use a coupon. Always false for non-members.",
+      "example": false
+    },
+    {
+      "name": "coupon_code",
+      "type": "string",
+      "nullable": true,
+      "description": "Coupon code redeemed. Format: KL-{SAVE5|SAVE10|BIO15|WEEK20|VIP30}-{4-digit}. Null when coupon_applied is false.",
+      "example": "KL-SAVE10-4821"
+    },
+    {
+      "name": "product_id",
+      "type": "string",
+      "nullable": false,
+      "description": "Identifier for the product scanned. Derived as PROD + first 6 chars of MD5(product_name) so the same product always maps to the same ID. Join to dim_product in the silver layer.",
+      "example": "PROD44021"
+    },
+    {
+      "name": "product_name",
+      "type": "string",
+      "nullable": false,
+      "description": "Full product name including brand, variant and size. Sourced from the product catalogue (2,045 SKUs). Examples: 'Milka Milk Chocolate Bar 100g', 'EKP-Bio Broccoli 500g', 'Barilla Spaghetti Organic 500g'.",
+      "example": "Milka Milk Chocolate Bar 100g"
+    },
+    {
+      "name": "product_category",
+      "type": "string",
+      "nullable": false,
+      "allowed_values": ["Fresh & Perishables", "Packaged Food", "Household", "Health & Beauty", "Non-Food"],
+      "description": "Top-level product category. Food categories dominate due to weighted draw in the generator.",
+      "example": "Fresh & Perishables"
+    },
+    {
+      "name": "product_subcategory",
+      "type": "string",
+      "nullable": false,
+      "description": "Product subcategory within the category. 30 subcategories total across all categories.",
+      "example": "Fruit & Vegetables"
+    },
+    {
+      "name": "product_unit",
+      "type": "string",
+      "nullable": false,
+      "allowed_values": ["kg", "piece", "pack", "bottle", "can", "box", "bag", "bar", "jar", "tube", "tub", "punnet", "bunch", "loaf"],
+      "description": "Unit of sale for this product. Drives correct quantity interpretation — a customer buying 3 'kg' of apples is different from buying 3 'pack' of biscuits.",
+      "example": "pack"
+    },
+    {
+      "name": "is_private_label",
+      "type": "boolean",
+      "nullable": false,
+      "description": "True if the product is an Einkaufpark own-brand (EKP-Classic, EKP-Bio, EKP-Favourites, EKP-take it easy, EKP-Free). Approximately 35% of eligible products. Private label is priced 10–20% below comparable branded products.",
+      "example": false
+    },
+    {
+      "name": "brand",
+      "type": "string",
+      "nullable": false,
+      "description": "Brand name. One of the EKP private label names if is_private_label is true, otherwise a national brand name.",
+      "example": "Nestlé"
+    },
+    {
+      "name": "quantity",
+      "type": "integer",
+      "nullable": true,
+      "description": "Number of units purchased. Known DQ issues: ~1.5% are zero (voided scan, WARN:QTY_ZERO); ~1% are negative (return line, WARN:QTY_NEGATIVE); rare null (ERR:QTY_NULL).",
+      "example": 2
+    },
+    {
+      "name": "unit_price_eur",
+      "type": "decimal",
+      "precision": 10,
+      "scale": 2,
+      "nullable": true,
+      "description": "Price per unit in EUR at time of sale. Known DQ issues: ~1% null due to POS lookup failure (ERR:PRICE_NULL); ~0.5% negative as refund adjustment (WARN:PRICE_NEGATIVE). Promo weeks apply an 0.85–0.90x discount to the base range.",
+      "example": 2.49
+    },
+    {
+      "name": "discount_pct",
+      "type": "decimal",
+      "precision": 5,
+      "scale": 2,
+      "nullable": true,
+      "description": "Percentage discount applied to this line item. 80% of rows are 0.0. Range for valid discounts: 0–50%. Known DQ issues: ~1.5% null; ~0.5% exceed 100 due to legacy POS rounding bug (WARN:DISCOUNT_OVER_100).",
+      "example": 0.0
+    },
+    {
+      "name": "transaction_currency",
+      "type": "string",
+      "nullable": false,
+      "allowed_values": ["EUR"],
+      "description": "Currency of the transaction. Always EUR for this dataset.",
+      "example": "EUR"
+    },
+    {
+      "name": "net_revenue_eur",
+      "type": "decimal",
+      "precision": 12,
+      "scale": 2,
+      "nullable": true,
+      "description": "Computed revenue for this line item: unit_price_eur * quantity * (1 - discount_pct / 100). Null whenever unit_price_eur, quantity, or discount_pct is null or invalid (ERR:REVENUE_NULL). This is the primary revenue metric.",
+      "example": 4.98
+    },
+    {
+      "name": "payment_type",
+      "type": "string",
+      "nullable": false,
+      "allowed_values": ["Card", "Cash", "Apple_Pay", "Google_Pay", "Voucher", "Gift_Card"],
+      "description": "Payment method used for this basket. Distribution: Card 48%, Cash 28%, Apple_Pay 9%, Google_Pay 7%, Voucher 5%, Gift_Card 3%.",
+      "example": "Card"
+    },
+    {
+      "name": "pos_terminal_id",
+      "type": "string",
+      "nullable": false,
+      "description": "Identifier of the POS terminal that processed the transaction. Format: POS-{store_id}-T{lane number zero-padded}. Terminal count by size class: L=20, M=12, S=6.",
+      "example": "POS-EKP-DE-014-T07"
+    },
+    {
+      "name": "terminal_type",
+      "type": "string",
+      "nullable": false,
+      "allowed_values": ["CASHIER", "SELF_CHECKOUT"],
+      "description": "Type of terminal that processed the transaction. Joined from terminal_master.json in the bronze layer using pos_terminal_id. Approximately 30% SCO for L-class stores, 20% for S-class.",
+      "example": "CASHIER"
+    },
+    {
+      "name": "is_self_checkout",
+      "type": "boolean",
+      "nullable": false,
+      "description": "True when terminal_type is SELF_CHECKOUT. Derived boolean for convenience — directly answers the business question of whether this was a self-service transaction.",
+      "example": false
+    },
+    {
+      "name": "cashier_id",
+      "type": "string",
+      "nullable": true,
+      "description": "Employee ID of the cashier who processed the transaction. Format: EMP{4-digit number}. Null when is_self_checkout is true — no staff member is assigned to SCO lanes.",
+      "example": "EMP0412"
+    },
+    {
+      "name": "promo_week_id",
+      "type": "string",
+      "nullable": false,
+      "description": "ISO week identifier for the transaction date. Format: PW{YYYY-WW}. Used to group transactions by promotional calendar week.",
+      "example": "PW2025-47"
+    },
+    {
+      "name": "is_promo_period",
+      "type": "boolean",
+      "nullable": false,
+      "description": "True if the transaction falls within a known high-traffic promotional period: Black Friday week (ISO week 47), pre-Easter (ISO weeks 13–15), or Christmas run-up (December 1–23). Promo periods receive approximately 1.4x traffic uplift in the generator.",
+      "example": true
+    },
+    {
+      "name": "data_quality_flag",
+      "type": "string",
+      "nullable": false,
+      "description": "Pipe-separated string of data quality codes. Value is OK for clean rows. ERR codes trigger quarantine routing in bronze. WARN codes pass through with is_clean=false. INFO codes are informational. Full set: ERR:PRICE_NULL, ERR:QTY_NULL, ERR:REVENUE_NULL, WARN:PRICE_NEGATIVE, WARN:QTY_ZERO, WARN:QTY_NEGATIVE, WARN:AGE_INVALID, WARN:DISCOUNT_OVER_100, WARN:DATE_SEQUENCE_ERROR, INFO:DUPLICATE_TXN.",
+      "example": "OK"
+    }
+  ],
+  "dq_rules": {
+    "quarantine_on": ["ERR:PRICE_NULL", "ERR:QTY_NULL", "ERR:REVENUE_NULL"],
+    "flag_warn_on": ["WARN:PRICE_NEGATIVE", "WARN:QTY_ZERO", "WARN:QTY_NEGATIVE", "WARN:AGE_INVALID", "WARN:DISCOUNT_OVER_100", "WARN:DATE_SEQUENCE_ERROR"],
+    "info_only": ["INFO:DUPLICATE_TXN"]
+  },
+  "expected_dq_rates": {
+    "ok_rows_pct": 85.0,
+    "warn_rows_pct": 13.5,
+    "err_rows_pct": 1.5,
+    "duplicate_rate_pct": 0.4
+  }
+}
