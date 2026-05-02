@@ -1,8 +1,11 @@
 """
-Einkaufpark DE — Product Catalogue v3.0
+Einkaufpark DE — Product Catalogue v3.1
 ========================================
 Combinatorial generation: base_names × variants × sizes → product entries.
 ~1,400 unique SKUs across 27 subcategories.
+
+v3.1: Added per-product Zipf popularity scores so a few SKUs per subcategory
+      dominate volume (realistic Pareto / 80-20 distribution).
 
 Tuple structure per product:
   (category, subcategory, product_name, brand,
@@ -634,7 +637,7 @@ _add("Fresh & Perishables", "Bakery & Pastry", "bakery",
      [""],
      0.59, 1.29, 1, 6, "piece", [12,1,2])
 
-_add("Fresh & Perichables", "Bakery & Pastry", "bakery",
+_add("Fresh & Perishables", "Bakery & Pastry", "bakery",
      ["Apple Strudel", "Cheesecake Slice", "Black Forest Cake Slice"],
      [""],
      [""],
@@ -1256,11 +1259,52 @@ _add("Non-Food", "Seasonal & Promotions", "nonfood",
      4.99, 14.99, 1, 2, "piece", [1,2,3,5])
 
 # ---------------------------------------------------------------------------
+# Per-product popularity scores (Fix 2 — Zipf/Pareto distribution)
+# ---------------------------------------------------------------------------
+# In real retail, a few SKUs dominate volume (bananas, milk, bread) while
+# most products are slow movers.  We assign each product a popularity
+# multiplier using a Zipf-like curve within its subcategory.
+#
+# After all _add() calls have populated PRODUCTS, we rank products within
+# each subcategory and assign: popularity = 1 / rank^0.6
+# (exponent 0.6 gives a moderate 80/20 effect without making rare items
+# completely invisible).
+
+_PRODUCT_POPULARITY: dict = {}   # product_name -> float multiplier
+
+def _compute_popularity():
+    """Called once after catalogue is fully built."""
+    from collections import defaultdict
+    by_subcat = defaultdict(list)
+    for i, p in enumerate(PRODUCTS):
+        by_subcat[p[1]].append(i)   # group indices by subcategory
+
+    pop_rng = _random.Random(99)   # deterministic, separate from brand rng
+    for subcat, indices in by_subcat.items():
+        # Shuffle within subcategory so popularity isn't tied to insertion order
+        shuffled = list(indices)
+        pop_rng.shuffle(shuffled)
+        for rank, idx in enumerate(shuffled, start=1):
+            name = PRODUCTS[idx][2]
+            # Zipf-like: rank 1 → 1.0, rank 2 → 0.66, rank 10 → 0.25, rank 50 → 0.13
+            _PRODUCT_POPULARITY[name] = 1.0 / (rank ** 0.6)
+
+
+# ---------------------------------------------------------------------------
 # Catalogue access API
 # ---------------------------------------------------------------------------
 
 def get_available_products(month: int):
-    """Return (products, weights) for the given calendar month."""
+    """Return (products, weights) for the given calendar month.
+
+    Weight = subcategory_base_weight × per_product_popularity.
+    This creates realistic Pareto distribution where a few SKUs per
+    subcategory dominate sales volume.
+    """
+    # Ensure popularity is computed (idempotent after first call)
+    if not _PRODUCT_POPULARITY:
+        _compute_popularity()
+
     available, weights = [], []
     weight_map = {
         "Fruits": 10, "Vegetables": 10, "Meat & Poultry": 7,
@@ -1277,7 +1321,9 @@ def get_available_products(month: int):
         seasonal = p[10]
         if seasonal is None or month in seasonal:
             available.append(p)
-            weights.append(weight_map.get(p[1], 2))
+            base_w = weight_map.get(p[1], 2)
+            pop    = _PRODUCT_POPULARITY.get(p[2], 0.5)
+            weights.append(base_w * pop)
     return available, weights
 
 
@@ -1296,3 +1342,16 @@ if __name__ == "__main__":
     aug, _ = get_available_products(8)
     print(f"\nJanuary-available : {len(jan):,}")
     print(f"August-available  : {len(aug):,}")
+
+    # Show popularity distribution for a sample subcategory
+    print(f"\n  Popularity sample (Fruits — top 10 vs bottom 10):")
+    fruit_pops = sorted(
+        [(name, pop) for name, pop in _PRODUCT_POPULARITY.items()
+         if any(p[2] == name and p[1] == "Fruits" for p in PRODUCTS)],
+        key=lambda x: -x[1]
+    )
+    for name, pop in fruit_pops[:10]:
+        print(f"    TOP  {pop:.3f}  {name}")
+    print(f"    ...")
+    for name, pop in fruit_pops[-5:]:
+        print(f"    LOW  {pop:.3f}  {name}")
