@@ -175,3 +175,10 @@ def heal_ship_date(df: DataFrame) -> DataFrame:
             F.col("order_date")
         ).otherwise(F.col("ship_date"))
     )
+    
+
+#-- Setp 7: VAT Derivation 
+
+# German VAT (MwSt): 7% reduced (food), 19% standard (non-food)
+
+_VAT_MAP_KEYS = []
