@@ -142,12 +142,12 @@ ORDER_STATUS_WEIGHTS  = [0.93, 0.03, 0.025, 0.015]
 SOURCE_SYSTEMS         = ["SAP_POS", "LEGACY_POS_CSV"]
 SOURCE_SYSTEM_WEIGHTS  = [0.85, 0.15]
 
-# Loyalty tiers and their distribution among loyalty-active customers.
-LOYALTY_TIERS         = ["Bronze", "Silver", "Gold", "Platinum"]
-LOYALTY_TIER_WEIGHTS  = [0.55, 0.28, 0.12, 0.05]
+# Loyalty membership — German grocery programs (Payback, Lidl Plus, dm app)
+# are FLAT: you hold the card or you don't. No Bronze/Silver/Gold tiers — that
+# is a US airline/hotel pattern that doesn't fit the German market.
+LOYALTY_MEMBER_RATE   = 0.62          # ~62% of shoppers hold a loyalty card
 LOYALTY_LAUNCH        = datetime(2023, 3, 1)
-TIER_REVENUE_MULT     = {"Bronze": 1.0, "Silver": 1.5, "Gold": 2.0, "Platinum": 3.0}
-TIER_FREQ_MULT        = {"Bronze": 1.0, "Silver": 1.3, "Gold": 1.8, "Platinum": 2.5}
+LOYALTY_POINTS_PER_EUR = 1            # flat 1 point per €1 spent (Payback-style)
 
 # Payment method weights by basket total (€). Last entry catches anything above.
 PAYMENT_TYPES     = ["Card", "Cash", "Apple_Pay", "Google_Pay", "Voucher", "Gift_Card"]
@@ -216,8 +216,8 @@ class Customer:
     customer_id: str
     age: Optional[int]
     gender_code: Optional[str]
-    tier: str
-    loyalty_card_id: str
+    is_member: bool                    # flat loyalty membership — no tiers
+    loyalty_card_id: Optional[str]     # NULL for non-members
 
 
 # ═══════════════════════════════════════════════════════════════════════════
@@ -313,21 +313,27 @@ def build_customers(n: int, rng: Random) -> tuple[dict[str, Customer], list[str]
         elif gr < 0.970: gender_code = "Divers"
         else:            gender_code = None
 
-        tier = rng.choices(LOYALTY_TIERS, weights=LOYALTY_TIER_WEIGHTS, k=1)[0]
+        # Loyalty membership — decided ONCE here, a stable property of the
+        # customer. Members get a card ID; non-members get NULL.
+        is_member = rng.random() < LOYALTY_MEMBER_RATE
+        loyalty_card_id = (
+            f"KLC{rng.randint(1, 3_000_000):08d}" if is_member else None
+        )
 
-        # Frequency weight via Pareto bucket × tier multiplier.
+        # Frequency weight via Pareto bucket. Shopping frequency is driven by
+        # the Pareto distribution alone — no tier multiplier (no tiers exist).
         fr = rng.random()
         cumulative = 0.0
+        freq_w = FREQ_BUCKETS[-1][1]   # default to rarest bucket's low end
         for prob, lo, hi in FREQ_BUCKETS:
             cumulative += prob
             if fr < cumulative:
                 freq_w = rng.uniform(lo, hi)
                 break
-        freq_w *= TIER_FREQ_MULT[tier]
 
         master[cid] = Customer(
-            customer_id=cid, age=age, gender_code=gender_code, tier=tier,
-            loyalty_card_id=f"KLC{rng.randint(1, 3_000_000):08d}",
+            customer_id=cid, age=age, gender_code=gender_code,
+            is_member=is_member, loyalty_card_id=loyalty_card_id,
         )
         ids.append(cid)
         freq_weights.append(freq_w)
@@ -527,10 +533,11 @@ def generate_line_item(rng: Random, prod: tuple, *, txn_id: str, basket_id: str,
             else None
         )
 
-    # Loyalty points only on positive revenue with active membership.
+    # Loyalty points — flat 1 point per €1 (Payback-style), only when the
+    # customer is an active member and the line has positive revenue.
     points = None
-    if has_loyalty and net_revenue and net_revenue > 0 and customer is not None:
-        points = int(net_revenue * TIER_REVENUE_MULT[customer.tier])
+    if has_loyalty and net_revenue and net_revenue > 0:
+        points = int(net_revenue * LOYALTY_POINTS_PER_EUR)
 
     # DQ flags — observed from the actual values.
     flags = []
@@ -575,7 +582,6 @@ def generate_line_item(rng: Random, prod: tuple, *, txn_id: str, basket_id: str,
         "gender":              gender,
         "membership_active":   has_loyalty,
         "loyalty_card_id":     customer.loyalty_card_id if (customer and has_loyalty) else None,
-        "loyalty_tier":        customer.tier if (customer and has_loyalty) else None,
         "loyalty_points_earned": points,
         "coupon_applied":      coupon_applied,
         "coupon_code":         coupon_code,
@@ -651,11 +657,14 @@ def generate_basket(rng: Random, stores: list[Store], store_weights: list[float]
         customer = customers_map[customer_picker.pick(rng)]
         gender   = encode_gender(customer.gender_code, source_system)
 
-    # Loyalty active only post-launch, for registered customers, ~54% of the time.
+    # Membership is a STABLE property of the customer (decided in
+    # build_customers), not a per-basket coin flip. It only "activates" once
+    # the loyalty program launched — pre-launch transactions show no
+    # membership even for customers who later hold a card.
     has_loyalty = (
         customer is not None
+        and customer.is_member
         and order_date >= LOYALTY_LAUNCH
-        and rng.random() < 0.54
     )
     coupon_applied = has_loyalty and (rng.random() < 0.15)
     coupon_code = None
@@ -720,7 +729,7 @@ def generate_basket(rng: Random, stores: list[Store], store_weights: list[float]
 _DIM_DROP = {
     "store_city", "store_district", "store_postal_code", "store_area",
     "store_region", "store_country_code", "store_country_name", "store_size_class",
-    "customer_age", "gender", "loyalty_card_id", "loyalty_tier",
+    "customer_age", "gender", "loyalty_card_id",
     "product_name", "product_category", "product_subcategory", "product_unit",
 }
 
@@ -777,13 +786,13 @@ def write_dim_products(out_dir: Path) -> int:
 
 def write_dim_customers(customers_map: dict[str, Customer], out_dir: Path) -> int:
     path = out_dir / "dim_customers.csv"
-    cols = ["customer_id", "age", "gender_code", "loyalty_tier", "loyalty_card_id"]
+    cols = ["customer_id", "age", "gender_code", "is_member", "loyalty_card_id"]
     with open(path, "w", newline="", encoding="utf-8") as f:
         w = csv.DictWriter(f, fieldnames=cols)
         w.writeheader()
         for c in customers_map.values():
             w.writerow({"customer_id": c.customer_id, "age": c.age,
-                        "gender_code": c.gender_code, "loyalty_tier": c.tier,
+                        "gender_code": c.gender_code, "is_member": c.is_member,
                         "loyalty_card_id": c.loyalty_card_id})
     return len(customers_map)
 
