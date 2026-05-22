@@ -21,6 +21,10 @@ BRONZE_DIR   = PROJECT_ROOT / "data" / "bronze"
 SILVER_DIR   = PROJECT_ROOT / "data" / "silver"
 GOLD_DIR     = PROJECT_ROOT / "data" / "gold"
 
+# Delta package — MUST match the installed Spark build:
+#   PySpark 3.5.x, Scala 2.12  ->  io.delta:delta-spark_2.12:3.2.1
+DELTA_PACKAGE = "io.delta:delta-spark_2.12:3.2.1"
+
 
 def get_spark(app_name: str = "einkaufpark") -> SparkSession:
     """Create or return a SparkSession with Delta Lake enabled.
@@ -41,10 +45,10 @@ def get_spark(app_name: str = "einkaufpark") -> SparkSession:
                 "io.delta.sql.DeltaSparkSessionExtension")
         .config("spark.sql.catalog.spark_catalog",
                 "org.apache.spark.sql.delta.catalog.DeltaCatalog")
-        .config("spark.jars.packages",
-                "io.delta:delta-spark_2.12:3.3.0")
+        .config("spark.jars.packages", DELTA_PACKAGE)
         # Performance tuning for local mode
-        .config("spark.driver.memory", "2g")
+        .config("spark.driver.memory", "8g")
+        .config("spark.driver.maxResultSize", "2g") 
         .config("spark.sql.shuffle.partitions", "4")
         .config("spark.sql.autoBroadcastJoinThreshold", "10485760")
         .config("spark.default.parallelism", "4")
