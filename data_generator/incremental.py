@@ -1,43 +1,15 @@
 """
-Einkaufpark DE — Incremental Mode (Daily Batch Files + Late Arrivals)
-======================================================================
-Produces a pipeline-ready dataset where transactions are split into one
-CSV per trading day, plus simulated late arrivals (records that "land" in
-a future day's batch).
+Einkaufpark DE — Incremental Daily Batch Generator
+===================================================
+Produces one CSV drop per trading day, controlled exact POS retries, late
+arrivals, a separate returns fact, customer/store masters, and SCD2 prices.
 
-This is what real ETL pipelines actually consume — not one monolithic CSV
-but daily drops that may include corrections, retries, and late records.
+Valid transaction prices are looked up from the SCD2 interval effective on the
+order date. On-time rows use the batch date as ingestion_date; late rows are
+routed to the later ingestion batch and carry INFO:LATE_ARRIVAL.
 
-Output:
-  dim_stores.csv             — single snapshot (delegated to generator.py)
-  dim_customers.csv          — single snapshot (delegated to generator.py)
-  dim_products_scd2.csv      — price history (delegated to price_history.py)
-  batches/batch_YYYYMMDD.csv — one file per non-Sunday day
-  batches/batch_<end>_late.csv — overflow for arrivals past end_date
-  fact_returns.csv           — separate fact table
-
-Each row has TWO date columns to expose the late-arrival challenge:
-  - order_date     : when the transaction actually occurred
-  - ingestion_date : when it landed in the system (1-3 days later for late)
-
-Late arrival rows carry "INFO:LATE_ARRIVAL" in their data_quality_flag.
-
-Success criteria — verified at end of run:
-
-  I1. Total reconciliation — rows written across all batches sum to the
-                             generator's emitted count (no losses).
-  I2. No Sunday batches    — zero batch files for Sundays (Sonntagsruhe).
-  I3. Late arrival rate    — observed fraction of LATE_ARRIVAL rows within
-                             ±2pp of the configured rate.
-  I4. Future placement     — every LATE_ARRIVAL row has ingestion_date >
-                             order_date, and lands in a batch file whose
-                             date matches its ingestion_date.
-  I5. FK integrity         — every product_id and store_id resolves
-                             against the dim tables.
-
-What this module deliberately does NOT do:
-  - Idempotent re-runs (overwrites blindly; pipeline is responsible).
-  - Match transaction prices to SCD2 prices (independent by design).
+The generator overwrites its output directory by design. Idempotent ingestion
+and checkpointing belong to the Bronze pipeline.
 """
 
 from __future__ import annotations
@@ -45,6 +17,7 @@ from __future__ import annotations
 import argparse
 import csv
 import hashlib
+import json
 import sys
 from collections import defaultdict
 from datetime import datetime, timedelta
@@ -53,13 +26,13 @@ from random import Random
 
 # Reuse infrastructure from generator and price_history.
 from generator import (
-    DOW_WEIGHTS, MONTH_WEIGHTS,
-    build_customers, generate_basket, is_promo_period,
+    DOW_WEIGHTS, MONTH_WEIGHTS, GENERATOR_VERSION, DUPLICATE_BASKET_RATE,
+    build_customers, generate_basket, is_promo_period, mark_duplicate_basket,
     load_stores, load_terminals, make_return_rows,
     write_dim_stores, write_dim_customers,
     _DIM_DROP, _FACT_RETURNS_COLS,
 )
-from price_history import write_scd2, validate as validate_scd2
+from price_history import PriceIndex, write_scd2, validate as validate_scd2
 from progress import ProgressBar
 
 
@@ -137,21 +110,6 @@ def schedule_late_arrival(basket: list[dict], current_date: datetime,
     return delivery_date
 
 
-# ═══════════════════════════════════════════════════════════════════════════
-# Per-basket post-processing: returns + late-arrival routing
-# ═══════════════════════════════════════════════════════════════════════════
-
-def normalize_returns_inplace(basket: list[dict]) -> None:
-    """Flip negative quantities back to positive and mark all as Completed.
-    Called when the basket's status indicates it should produce a return event
-    in fact_returns instead of negative line items in fact_transactions.
-    """
-    for r in basket:
-        if r["quantity"] is not None and r["quantity"] < 0:
-            r["quantity"] = abs(r["quantity"])
-        if r["net_revenue_eur"] is not None and r["net_revenue_eur"] < 0:
-            r["net_revenue_eur"] = abs(r["net_revenue_eur"])
-        r["order_status"] = "Completed"
 
 
 # ═══════════════════════════════════════════════════════════════════════════
@@ -163,10 +121,24 @@ def write_incremental(args, out_dir: Path) -> dict:
     master_dir = Path(args.master_dir)
     start = datetime.strptime(args.start_date, "%Y-%m-%d")
     end   = datetime.strptime(args.end_date,   "%Y-%m-%d")
-    today_str = datetime.now().strftime("%Y-%m-%d")
-    batch_id  = "BATCH_" + hashlib.md5(
-        f"{args.records}|{args.seed}|{args.start_date}|{args.end_date}".encode()
-    ).hexdigest()[:10].upper()
+    generation_date = args.generation_date or args.end_date
+    batch_config = {
+        "generator_version": GENERATOR_VERSION,
+        "mode": "incremental",
+        "records": args.records,
+        "customers": args.customers,
+        "seed": args.seed,
+        "start_date": args.start_date,
+        "end_date": args.end_date,
+        "walkin_rate": args.walkin_rate,
+        "late_rate": args.late_rate,
+        "return_rate": args.return_rate,
+        "duplicate_rate": args.duplicate_rate,
+        "generation_date": generation_date,
+    }
+    batch_id = "BATCH_" + hashlib.sha256(
+        json.dumps(batch_config, sort_keys=True).encode()
+    ).hexdigest()[:16].upper()
 
     rng = Random(args.seed)
 
@@ -182,6 +154,7 @@ def write_incremental(args, out_dir: Path) -> dict:
     # SCD2 price history (separate concern, delegated).
     print(f"  [2/4] Generating SCD2 price history ...", flush=True)
     write_scd2(rng, start, end, out_dir)
+    price_index = PriceIndex.from_csv(out_dir / "dim_products_scd2.csv")
 
     # Daily volume plan.
     print(f"  [3/4] Planning daily volumes ...", flush=True)
@@ -195,16 +168,16 @@ def write_incremental(args, out_dir: Path) -> dict:
     batch_dir.mkdir(parents=True, exist_ok=True)
 
     # Header for fact CSVs — derived once from a sample basket.
-    sample_pool: list[str] = []
     sample_rng = Random(args.seed + 1)
     sample = generate_basket(
         sample_rng, stores, store_weights, customers_map, cids, cws,
-        terminals, start, start, batch_id, today_str, sample_pool, args.walkin_rate
+        terminals, start, start, batch_id, start.strftime("%Y-%m-%d"),
+        args.walkin_rate, price_index,
     )
     fact_header = [k for k in sample[0].keys() if k not in _DIM_DROP]
 
-    # Pools used across the whole run.
-    recent_txn_pool: list[str] = []
+    # Pools used across the whole run. Exact duplicate retries are sampled
+    # from baskets generated on the same trading day.
     scheduled_late: dict[datetime, list[dict]] = defaultdict(list)
     return_buffer: list[dict] = []
 
@@ -220,24 +193,45 @@ def write_incremental(args, out_dir: Path) -> dict:
         day_rows: list[dict] = []
         emitted_today = 0
 
+        recent_day_baskets: list[list[dict]] = []
+
         while emitted_today < target_rows:
-            basket = generate_basket(
-                rng, stores, store_weights, customers_map, cids, cws,
-                terminals, current_date, current_date,
-                batch_id, today_str, recent_txn_pool, args.walkin_rate,
+            is_duplicate = bool(recent_day_baskets) and rng.random() < args.duplicate_rate
+            if is_duplicate:
+                basket = mark_duplicate_basket(rng.choice(recent_day_baskets))
+            else:
+                basket = generate_basket(
+                    rng, stores, store_weights, customers_map, cids, cws,
+                    terminals, current_date, current_date, batch_id,
+                    current_date.strftime("%Y-%m-%d"), args.walkin_rate,
+                    price_index,
+                )
+                recent_day_baskets.append([dict(row) for row in basket])
+                if len(recent_day_baskets) > 5000:
+                    recent_day_baskets.pop(0)
+
+            # A return is generated once for a real completed basket, never for
+            # an exact POS retry copy or a voided/invalid basket.
+            is_completed = basket[0]["order_status"] == "Completed"
+            has_valid_sale = any(
+                row.get("quantity") and row["quantity"] > 0
+                and row.get("net_revenue_eur") is not None
+                for row in basket
             )
-
-            # Returns handling — same logic as generator.normalized mode.
-            orig_status = basket[0]["order_status"]
-            needs_return = orig_status in ("Returned", "Partially_Returned")
+            needs_return = (
+                not is_duplicate
+                and is_completed
+                and has_valid_sale
+                and rng.random() < args.return_rate
+            )
             if needs_return:
-                normalize_returns_inplace(basket)
-            elif orig_status == "Completed" and rng.random() < DEFAULT_RETURN_RATE:
-                needs_return = True
-            if needs_return:
-                return_buffer.extend(make_return_rows(rng, basket, today_str, end))
+                return_buffer.extend(
+                    make_return_rows(
+                        rng, basket, current_date.strftime("%Y-%m-%d"), end
+                    )
+                )
 
-            # Late arrival decision (~5%).
+            # Late arrival decision.
             if rng.random() < args.late_rate:
                 delivery_date = schedule_late_arrival(basket, current_date, end, rng)
                 scheduled_late[delivery_date].extend(basket)
@@ -442,6 +436,12 @@ def parse_args() -> argparse.Namespace:
     p.add_argument("--walkin-rate", type=float, default=0.10)
     p.add_argument("--late-rate",   type=float, default=0.05,
                    help="Fraction of baskets that arrive in a later day's batch")
+    p.add_argument("--return-rate", type=float, default=DEFAULT_RETURN_RATE,
+                   help="Fraction of valid completed baskets with a return event")
+    p.add_argument("--duplicate-rate", type=float, default=DUPLICATE_BASKET_RATE,
+                   help="Exact POS retry basket rate")
+    p.add_argument("--generation-date", type=str, default=None,
+                   help="Deterministic run date; defaults to --end-date")
     p.add_argument("--output-dir",  type=str, default="data/raw")
     p.add_argument("--master-dir",  type=str, default="master")
     return p.parse_args()
@@ -458,6 +458,8 @@ def main() -> int:
     print(f"  date range   : {args.start_date} → {args.end_date}")
     print(f"  walkin rate  : {args.walkin_rate:.0%}")
     print(f"  late rate    : {args.late_rate:.0%}")
+    print(f"  return rate  : {args.return_rate:.0%}")
+    print(f"  duplicate rate: {args.duplicate_rate:.1%}")
     print(f"  output       : {out_dir}/")
     print(f"  {chr(9472)*60}")
 

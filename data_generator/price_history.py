@@ -24,16 +24,18 @@ Success criteria — verified at end of run:
                            at end_date (full coverage of the requested range).
   S4. Promo correctness  — every is_promo_price=True row spans ≤8 days.
 
+The transaction generator consumes this SCD2 table through PriceIndex, so the
+unit price on every valid sale is the effective shelf price for its order date.
+Only deliberately injected DQ rows may differ from the catalogue price.
+
 What this module deliberately does NOT do:
-  - Tie SCD2 prices to actual transaction prices.
-    Transaction prices are generated independently in generator.py; reconciling
-    them is a silver-layer pipeline concern (price_vs_catalogue flag).
   - Generate price events for products not in PRODUCTS.
 """
 
 from __future__ import annotations
 
 import argparse
+import bisect
 import csv
 import json
 import sys
@@ -195,6 +197,50 @@ def write_scd2(rng: Random, start: datetime, end: datetime, output_dir: Path) ->
     print(f"  dim_products_scd2.csv  : {n_rows:,} rows "
           f"({n_rows / len(PRODUCTS):.1f} intervals/product on average)")
     return n_rows
+
+
+
+
+class PriceIndex:
+    """In-memory product/date lookup for generated SCD2 prices."""
+
+    def __init__(self, rows_by_product: dict[str, list[tuple[datetime, datetime, float]]]):
+        self._rows = rows_by_product
+        self._starts = {
+            pid: [row[0] for row in rows]
+            for pid, rows in rows_by_product.items()
+        }
+
+    @classmethod
+    def from_csv(cls, path: Path) -> "PriceIndex":
+        rows: dict[str, list[tuple[datetime, datetime, float]]] = {}
+        with open(path, encoding="utf-8") as f:
+            for row in csv.DictReader(f):
+                pid = row["product_id"]
+                rows.setdefault(pid, []).append((
+                    datetime.strptime(row["effective_from"], "%Y-%m-%d"),
+                    datetime.strptime(row["effective_to"], "%Y-%m-%d"),
+                    float(row["effective_price_eur"]),
+                ))
+        for pid in rows:
+            rows[pid].sort(key=lambda value: value[0])
+        return cls(rows)
+
+    def get_price(self, product_id: str, order_date: datetime) -> float:
+        intervals = self._rows.get(product_id)
+        if not intervals:
+            raise KeyError(f"No SCD2 price history for {product_id}")
+        starts = self._starts[product_id]
+        idx = bisect.bisect_right(starts, order_date) - 1
+        if idx < 0:
+            raise KeyError(f"No price for {product_id} on {order_date:%Y-%m-%d}")
+        effective_from, effective_to, price = intervals[idx]
+        if not effective_from <= order_date <= effective_to:
+            raise KeyError(f"SCD2 coverage gap for {product_id} on {order_date:%Y-%m-%d}")
+        return price
+
+    def __call__(self, product_id: str, order_date: datetime) -> float:
+        return self.get_price(product_id, order_date)
 
 
 # ═══════════════════════════════════════════════════════════════════════════

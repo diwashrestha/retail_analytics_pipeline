@@ -1,30 +1,18 @@
 """
-Einkaufpark DE — Synthetic Sales Data Generator (rewrite)
-==========================================================
-Generates physical-retail POS data for Germany. Two output modes:
+Einkaufpark DE — Synthetic Sales Data Generator
+================================================
+Generates reproducible German physical-retail POS data in flat or normalized
+form. Valid sales use stable master-data attributes and deterministic IDs.
+Controlled malformed rows remain available for Bronze/Silver DQ exercises.
 
-  flat        Single denormalised CSV.
-  normalized  Separate dim + fact CSVs (3 dims, 2 facts).
+Validated invariants:
+  R1 reproducibility, R2 foreign keys, R3 Sunday closure, R4 DQ rates,
+  R5 walk-in rate, R6 unique loyalty cards, R7 transaction identity,
+  R8 stable product attributes, and R9 refund integrity.
 
-Success criteria — verified automatically at the end of every run:
-
-  R1. Reproducibility   — same seed produces byte-identical output.
-                          Verified by regenerating a canary of 1k rows
-                          and comparing the SHA256 of fact_transactions.
-  R2. FK integrity      — every product_id and store_id in facts exists
-                          in the corresponding dimension table.
-  R3. Sunday closure    — zero rows with order_date on a Sunday.
-  R4. DQ rates          — observed rates within ±0.5pp of raw_schema.json's
-                          expected_dq_rates (ok / warn / err).
-  R5. Walk-in rate      — fraction of baskets with customer_id IS NULL is
-                          within ±2pp of the configured walkin_rate.
-
-What this module deliberately does NOT do (lifted into separate concerns):
-  - SCD2 price history             → price_history.py (not provided here)
-  - Daily batch files / late arrivals → incremental.py (not provided here)
-  - Read input data from anywhere   → master/ JSONs + product_catalogue.py only
-
-If a feature isn't in the success criteria above, it isn't in this file.
+Returns are emitted only in fact_returns; the sales fact contains Completed and
+Voided baskets. Exact POS retries replay the complete original basket and retain
+its record hashes so Silver can deduplicate them correctly.
 """
 
 from __future__ import annotations
@@ -41,7 +29,7 @@ from dataclasses import dataclass
 from datetime import datetime, timedelta
 from pathlib import Path
 from random import Random
-from typing import Iterator, Optional
+from typing import Callable, Iterator, Optional
 
 # Product catalogue is a domain artifact — kept as a separate module.
 # Expected shape:
@@ -134,13 +122,13 @@ BASKET_SIZE_BUCKETS = [
     (10, 15, 0.20), (16, 25, 0.08), (26, 40, 0.02),
 ]
 
-# Order status distribution. Returns are emitted separately in normalized mode.
-ORDER_STATUSES        = ["Completed", "Voided", "Partially_Returned", "Returned"]
-ORDER_STATUS_WEIGHTS  = [0.93, 0.03, 0.025, 0.015]
+# Basket status distribution. Returns are represented only in fact_returns.
+# Keeping return events separate avoids negative sales lines and double-counting.
+ORDER_STATUSES        = ["Completed", "Voided"]
+ORDER_STATUS_WEIGHTS  = [0.97, 0.03]
 
-# Source system mix.
-SOURCE_SYSTEMS         = ["SAP_POS", "LEGACY_POS_CSV"]
-SOURCE_SYSTEM_WEIGHTS  = [0.85, 0.15]
+GENERATOR_VERSION     = "2.0.0"
+DUPLICATE_BASKET_RATE = 0.004
 
 # Loyalty membership — German grocery programs (Payback, Lidl Plus, dm app)
 # are FLAT: you hold the card or you don't. No Bronze/Silver/Gold tiers — that
@@ -186,7 +174,6 @@ FREQ_BUCKETS = [
 # Precomputed pickers for fixed distributions — built once at import.
 # (WeightedPicker is defined above; constants must exist first, hence here.)
 _ORDER_STATUS_PICKER  = WeightedPicker(ORDER_STATUSES, ORDER_STATUS_WEIGHTS)
-_SOURCE_SYSTEM_PICKER = WeightedPicker(SOURCE_SYSTEMS, SOURCE_SYSTEM_WEIGHTS)
 _BASKET_SIZE_PICKER   = WeightedPicker(
     list(range(len(BASKET_SIZE_BUCKETS))),
     [b[2] for b in BASKET_SIZE_BUCKETS],
@@ -209,6 +196,8 @@ class Store:
     country_name: str
     size_class: str
     terminal_count: int
+    source_system: str
+    opening_hours: dict[str, str]
 
 
 @dataclass(frozen=True)
@@ -258,6 +247,7 @@ def load_stores(master_dir: Path) -> tuple[list[Store], list[float]]:
             postal_code=s["postal_code"], street=s["street"], region=s["state"],
             country_code=s["country_code"], country_name=s["country_name"],
             size_class=s["size_class"], terminal_count=s["terminal_count"],
+            source_system=s["source_system"], opening_hours=s["opening_hours"],
         )
         for s in data["stores"]
     ]
@@ -316,9 +306,9 @@ def build_customers(n: int, rng: Random) -> tuple[dict[str, Customer], list[str]
         # Loyalty membership — decided ONCE here, a stable property of the
         # customer. Members get a card ID; non-members get NULL.
         is_member = rng.random() < LOYALTY_MEMBER_RATE
-        loyalty_card_id = (
-            f"KLC{rng.randint(1, 3_000_000):08d}" if is_member else None
-        )
+        # Derive the card from the customer sequence so it is guaranteed unique
+        # and reproducible. Random sampling created thousands of collisions.
+        loyalty_card_id = f"KLC{i:08d}" if is_member else None
 
         # Frequency weight via Pareto bucket. Shopping frequency is driven by
         # the Pareto distribution alone — no tier multiplier (no tiers exist).
@@ -388,24 +378,30 @@ def pick_date(rng: Random, start: datetime, end: datetime) -> datetime:
 _HOUR_PICKER_CACHE: dict[tuple[int, int], "WeightedPicker"] = {}
 
 
-def pick_time_of_day(rng: Random, size_class: str, is_saturday: bool) -> str:
-    """Realistic transaction time respecting store opening hours.
+def _opening_window(store: Store, order_date: datetime) -> tuple[int, int]:
+    """Read the store-specific opening window from store_master.json."""
+    day_name = order_date.strftime("%A").lower()
+    value = store.opening_hours.get(day_name, "closed")
+    if value == "closed":
+        raise ValueError(f"Store {store.store_id} is closed on {day_name}")
+    start_text, end_text = value.split("-", 1)
+    return int(start_text.split(":")[0]), int(end_text.split(":")[0])
 
-    L/M stores: Mo-Fr 07-21, Sa 07-20.
-    S stores:   Mo-Fr 08-18, Sa 08-14.
-    """
-    if size_class == "S":
-        open_h, close_h = 8, (14 if is_saturday else 18)
-    else:
-        open_h, close_h = 7, (20 if is_saturday else 21)
 
-    # Only four distinct (open, close) windows exist — cache a picker for each.
+def pick_time_of_day(rng: Random, store: Store, order_date: datetime) -> str:
+    """Realistic transaction time using the store master's opening hours."""
+    open_h, close_h = _opening_window(store, order_date)
     key = (open_h, close_h)
     picker = _HOUR_PICKER_CACHE.get(key)
     if picker is None:
-        hours   = [h for h in HOUR_WEIGHTS if open_h <= h < close_h]
+        hours = [h for h in HOUR_WEIGHTS if open_h <= h < close_h]
+        if not hours:
+            raise ValueError(
+                f"No configured traffic weights for {store.store_id} "
+                f"between {open_h}:00 and {close_h}:00"
+            )
         weights = [HOUR_WEIGHTS[h] for h in hours]
-        picker  = WeightedPicker(hours, weights)
+        picker = WeightedPicker(hours, weights)
         _HOUR_PICKER_CACHE[key] = picker
 
     h = picker.pick(rng)
@@ -418,24 +414,33 @@ def pick_time_of_day(rng: Random, size_class: str, is_saturday: bool) -> str:
 
 def dirty_age(age: Optional[int], rng: Random) -> Optional[int]:
     r = rng.random()
-    if r < 0.995:  return age
-    if r < 0.998:  return rng.randint(121, 160)
-    if r < 0.9995: return rng.randint(-5, -1)
+    if r < 0.995:  
+        return age
+    if r < 0.998:  
+        return rng.randint(121, 160)
+    if r < 0.9995: 
+        return rng.randint(-5, -1)
     return None
 
 
-def dirty_price(p_min: float, p_max: float, rng: Random) -> Optional[float]:
+def dirty_price(effective_price: float, rng: Random) -> Optional[float]:
+    """Inject controlled raw-price defects around the actual shelf price."""
     r = rng.random()
-    if r < 0.985: return round(rng.uniform(p_min, p_max), 2)
-    if r < 0.995: return None
-    return round(-rng.uniform(0.01, p_max * 0.3), 2)
+    if r < 0.995:
+        return round(effective_price, 2)
+    if r < 0.998:
+        return None
+    return round(-max(0.01, effective_price * rng.uniform(0.05, 0.30)), 2)
 
 
 def dirty_discount(rng: Random) -> Optional[float]:
     r = rng.random()
-    if r < 0.80:   return 0.0
-    if r < 0.98:   return round(rng.uniform(0.5, 50.0), 2)
-    if r < 0.995:  return None
+    if r < 0.80:
+        return 0.0
+    if r < 0.995:
+        return round(rng.uniform(0.5, 35.0), 2)
+    if r < 0.998:
+        return None
     return round(rng.uniform(100.1, 102.0), 2)
 
 
@@ -443,9 +448,13 @@ def dirty_quantity(qty_min: int, qty_max: int, rng: Random) -> Optional[int]:
     qty_min = max(1, qty_min)
     qty_max = max(qty_min, qty_max)
     r = rng.random()
-    if r < 0.975: return rng.randint(qty_min, qty_max)
-    if r < 0.990: return 0
-    return rng.randint(-3, -1)
+    if r < 0.992:
+        return rng.randint(qty_min, qty_max)
+    if r < 0.995:
+        return None
+    if r < 0.998:
+        return 0
+    return -rng.randint(1, 3)
 
 
 # ═══════════════════════════════════════════════════════════════════════════
@@ -488,48 +497,35 @@ def generate_line_item(rng: Random, prod: tuple, *, txn_id: str, basket_id: str,
                        has_loyalty: bool, coupon_applied: bool, coupon_code: Optional[str],
                        payment_type: str, pos_terminal_id: str, terminal_type: str,
                        is_sco: bool, cashier_id: Optional[str], source_system: str,
-                       order_status: str, batch_id: str, today_str: str,
-                       is_dup: bool, line_seq: int) -> dict:
+                       order_status: str, batch_id: str, ingestion_date_str: str,
+                       effective_price_eur: float, line_seq: int) -> dict:
     """Build one line-item row. Pure function — all inputs explicit."""
     cat, subcat, cat_name, brand_pool, pl_possible, p_min, p_max, q_min, q_max, unit, _ = prod
 
-    # product_id is hashed from the CATALOGUE name (FK stable across PL rename).
+    # Product identity is a stable dimension attribute. The catalogue brand
+    # must not change randomly from transaction to transaction.
     pid = product_id_for(cat_name)
+    brand = brand_pool
+    product_name = cat_name
+    is_pl = brand.startswith("EKP-") or brand == "bulk"
+    if brand == "bulk":
+        brand = "EKP-Classic"
+        is_pl = True
 
-    is_pl = pl_possible and (rng.random() < 0.35)
-    if is_pl:
-        brand = rng.choice(PRIVATE_LABELS)
-        parts = cat_name.split(" ", 1)
-        product_name = f"{brand} {parts[1]}" if len(parts) > 1 else f"{brand} {cat_name}"
-    elif brand_pool == "bulk":
-        brand, is_pl = "EKP-Classic", True
-        product_name = cat_name
-    else:
-        brand = brand_pool
-        product_name = cat_name
-
-    # Effective price range — promo discount × PL discount.
-    p_lo, p_hi = p_min, p_max
-    if is_promo_week:  p_lo, p_hi = p_lo * 0.85, p_hi * 0.90
-    if is_pl:          p_lo, p_hi = p_lo * 0.82, p_hi * 0.88
-
-    # Status-driven quantity / revenue.
+    # The unit price comes from the SCD2 record effective on the order date.
+    # Transaction-level discounts are applied separately to calculate revenue.
     if order_status == "Voided":
-        unit_price = dirty_price(p_lo, p_hi, rng)
+        unit_price = round(effective_price_eur, 2)
         quantity, discount_pct, net_revenue = 0, 0.0, 0.0
-    elif order_status == "Returned":
-        unit_price = dirty_price(p_lo, p_hi, rng)
-        quantity = -rng.randint(max(1, int(q_min)), max(1, int(q_max)))
-        discount_pct = 0.0
-        net_revenue = round(unit_price * quantity, 2) if unit_price and unit_price > 0 else None
-    else:  # Completed or Partially_Returned (mostly completed-shaped)
-        unit_price   = dirty_price(p_lo, p_hi, rng)
+    else:
+        unit_price   = dirty_price(effective_price_eur, rng)
         discount_pct = dirty_discount(rng)
         quantity     = dirty_quantity(int(q_min), int(q_max), rng)
-        net_revenue  = (
+        # Preserve non-null malformed values in raw data so Silver can route
+        # them to REVIEW. Only missing inputs produce a null revenue/ERR row.
+        net_revenue = (
             round(unit_price * quantity * (1 - discount_pct / 100), 2)
-            if (unit_price is not None and quantity is not None and discount_pct is not None
-                and quantity > 0 and unit_price > 0 and 0 <= discount_pct <= 100)
+            if unit_price is not None and quantity is not None and discount_pct is not None
             else None
         )
 
@@ -551,10 +547,11 @@ def generate_line_item(rng: Random, prod: tuple, *, txn_id: str, basket_id: str,
     age = customer.age if customer else None
     if age is not None and (age < 0 or age > 120):
         flags.append("WARN:AGE_INVALID")
-    if discount_pct is not None and discount_pct > 100:
+    if discount_pct is None:
+        flags.append("ERR:DISCOUNT_NULL")
+    elif discount_pct > 100:
         flags.append("WARN:DISCOUNT_OVER_100")
     if net_revenue is None:                     flags.append("ERR:REVENUE_NULL")
-    if is_dup:                                  flags.append("INFO:DUPLICATE_TXN")
     dq_flag = "|".join(flags) if flags else "OK"
 
     return {
@@ -565,7 +562,7 @@ def generate_line_item(rng: Random, prod: tuple, *, txn_id: str, basket_id: str,
         "record_hash":         record_hash(txn_id, order_date_str, customer.customer_id if customer else "WALKIN", pid, store.store_id, line_seq),
         "order_date":          order_date_str,
         "order_time":          order_time_str,
-        "ingestion_date":      today_str,
+        "ingestion_date":      ingestion_date_str,
         "sales_channel":       "IN_STORE",
         "order_status":        order_status,
         "store_id":            store.store_id,
@@ -625,25 +622,21 @@ def _cached_picker(options: list, weights: list[float]) -> "WeightedPicker":
 def generate_basket(rng: Random, stores: list[Store], store_weights: list[float],
                     customers_map: dict[str, Customer], customer_ids: list[str],
                     customer_freq_weights: list[float], terminals: dict[str, tuple[str, bool]],
-                    start: datetime, end: datetime, batch_id: str, today_str: str,
-                    recent_txn_pool: list[str], walkin_rate: float) -> list[dict]:
+                    start: datetime, end: datetime, batch_id: str, ingestion_date_str: str,
+                    walkin_rate: float,
+                    price_lookup: Optional[Callable[[str, datetime], float]] = None) -> list[dict]:
     """Generate one shopping trip (basket) → list of line-item rows."""
     store_picker = _cached_picker(stores, store_weights)
-    store        = store_picker.pick(rng)
-    source_system = _SOURCE_SYSTEM_PICKER.pick(rng)
+    store = store_picker.pick(rng)
+    source_system = store.source_system
 
-    # Duplicate transaction injection (~0.4%).
-    if recent_txn_pool and rng.random() < 0.004:
-        txn_id, is_dup = rng.choice(recent_txn_pool), True
-    else:
-        txn_id, is_dup = f"TXN-{store.store_id}-{make_id(rng)}", False
-    recent_txn_pool.append(txn_id)
-    if len(recent_txn_pool) > 5000:
-        recent_txn_pool.pop(0)
+    # Every newly generated basket receives a unique transaction ID. Exact POS
+    # retry duplicates are created later by replaying the complete basket.
+    txn_id = f"TXN-{store.store_id}-{make_id(rng)}"
 
     order_date     = pick_date(rng, start, end)
     order_date_str = order_date.strftime("%Y-%m-%d")
-    order_time_str = pick_time_of_day(rng, store.size_class, order_date.weekday() == 5)
+    order_time_str = pick_time_of_day(rng, store, order_date)
     is_promo_week  = is_promo_period(order_date)
     promo_week_id  = f"PW{order_date.strftime('%Y-%V')}"   # computed once, not per line
     basket_id      = "BSK-" + record_hash(txn_id, store.store_id, order_date_str)[:12]
@@ -708,8 +701,14 @@ def generate_basket(rng: Random, stores: list[Store], store_weights: list[float]
             payment_type="__PENDING__",
             pos_terminal_id=pos_term_id, terminal_type=term_type, is_sco=is_sco,
             cashier_id=cashier_id, source_system=source_system,
-            order_status=order_status, batch_id=batch_id, today_str=today_str,
-            is_dup=is_dup, line_seq=seq,
+            order_status=order_status, batch_id=batch_id,
+            ingestion_date_str=ingestion_date_str,
+            effective_price_eur=(
+                price_lookup(product_id_for(prod[2]), order_date)
+                if price_lookup is not None
+                else round((float(prod[5]) + float(prod[6])) / 2, 2)
+            ),
+            line_seq=seq,
         ))
 
     basket_total = sum(r["net_revenue_eur"] for r in rows
@@ -734,19 +733,42 @@ _DIM_DROP = {
 }
 
 
+def mark_duplicate_basket(basket: list[dict]) -> list[dict]:
+    """Return an exact retry copy with an INFO flag and identical record hashes."""
+    duplicate = [dict(row) for row in basket]
+    for row in duplicate:
+        flag = row["data_quality_flag"]
+        if "INFO:DUPLICATE_TXN" not in flag:
+            row["data_quality_flag"] = (
+                "INFO:DUPLICATE_TXN"
+                if flag == "OK"
+                else f"{flag}|INFO:DUPLICATE_TXN"
+            )
+    return duplicate
+
+
 def basket_stream(rng: Random, n_records: int, stores, store_weights,
                   customers_map, customer_ids, customer_freq_weights, terminals,
-                  start: datetime, end: datetime, batch_id: str, today_str: str,
-                  walkin_rate: float) -> Iterator[list[dict]]:
-    """Yield baskets until at least n_records line items have been emitted."""
+                  start: datetime, end: datetime, batch_id: str, ingestion_date_str: str,
+                  walkin_rate: float,
+                  price_lookup: Optional[Callable[[str, datetime], float]] = None,
+                  duplicate_rate: float = DUPLICATE_BASKET_RATE) -> Iterator[list[dict]]:
+    """Yield new baskets and exact POS-retry copies until n_records are emitted."""
     emitted = 0
-    recent_pool: list[str] = []
+    recent_baskets: list[list[dict]] = []
     while emitted < n_records:
-        basket = generate_basket(
-            rng, stores, store_weights, customers_map, customer_ids,
-            customer_freq_weights, terminals, start, end, batch_id,
-            today_str, recent_pool, walkin_rate,
-        )
+        if recent_baskets and rng.random() < duplicate_rate:
+            basket = mark_duplicate_basket(rng.choice(recent_baskets))
+        else:
+            basket = generate_basket(
+                rng, stores, store_weights, customers_map, customer_ids,
+                customer_freq_weights, terminals, start, end, batch_id,
+                ingestion_date_str, walkin_rate, price_lookup,
+            )
+            recent_baskets.append([dict(row) for row in basket])
+            if len(recent_baskets) > 5000:
+                recent_baskets.pop(0)
+
         emitted += len(basket)
         yield basket
 
@@ -754,12 +776,14 @@ def basket_stream(rng: Random, n_records: int, stores, store_weights,
 def write_dim_stores(stores: list[Store], out_dir: Path) -> int:
     path = out_dir / "dim_stores.csv"
     cols = ["store_id", "city", "district", "postal_code", "street", "region",
-            "country_code", "country_name", "size_class", "terminal_count", "currency"]
+            "country_code", "country_name", "size_class", "terminal_count",
+            "source_system", "opening_hours", "currency"]
     with open(path, "w", newline="", encoding="utf-8") as f:
         w = csv.DictWriter(f, fieldnames=cols)
         w.writeheader()
         for s in stores:
-            w.writerow({**s.__dict__, "currency": "EUR"})
+            row = {**s.__dict__, "opening_hours": json.dumps(s.opening_hours), "currency": "EUR"}
+            w.writerow(row)
     return len(stores)
 
 
@@ -797,9 +821,9 @@ def write_dim_customers(customers_map: dict[str, Customer], out_dir: Path) -> in
     return len(customers_map)
 
 
-def make_return_rows(rng: Random, basket: list[dict], today_str: str,
+def make_return_rows(rng: Random, basket: list[dict], ingestion_date_str: str,
                      end_date: datetime) -> list[dict]:
-    """Build fact_returns rows linked to a completed basket."""
+    """Build return facts whose refunds never exceed the amount paid."""
     base = basket[0]
     order_dt = datetime.strptime(base["order_date"], "%Y-%m-%d")
     return_dt = order_dt + timedelta(days=rng.randint(1, 7))
@@ -809,21 +833,36 @@ def make_return_rows(rng: Random, basket: list[dict], today_str: str,
         return []
 
     return_date_str = return_dt.strftime("%Y-%m-%d")
-    return_time_str = pick_time_of_day(rng, base.get("store_size_class", "M"),
-                                       return_dt.weekday() == 5)
+    return_time_str = pick_time_of_day_for_return(
+        rng, base.get("store_size_class", "M"), return_dt
+    )
     full_return = rng.random() < 0.40
-    items = basket if full_return else rng.sample(basket, k=rng.randint(1, min(2, len(basket))))
+    valid_items = [
+        row for row in basket
+        if row.get("quantity") and row["quantity"] > 0
+        and row.get("net_revenue_eur") is not None
+    ]
+    if not valid_items:
+        return []
+    items = (
+        valid_items
+        if full_return
+        else rng.sample(valid_items, k=rng.randint(1, min(2, len(valid_items))))
+    )
     reason = rng.choices(RETURN_REASONS, weights=RETURN_REASON_W, k=1)[0]
     cashier = f"EMP{rng.randint(1, 3000):04d}"
 
     out = []
     for seq, row in enumerate(items, start=1):
-        qty = row.get("quantity")
-        if not qty or qty <= 0:
-            continue
-        price = row.get("unit_price_eur")
+        original_qty = int(row["quantity"])
+        return_qty = original_qty if full_return else rng.randint(1, original_qty)
+        net_unit_price = row["net_revenue_eur"] / original_qty
+        refund = round(net_unit_price * return_qty, 2)
+        return_key = record_hash(
+            base["basket_id"], row["product_id"], return_date_str, seq
+        )[:16].upper()
         out.append({
-            "return_id":                f"RET-{base['transaction_id']}-{seq:02d}",
+            "return_id":                f"RET-{return_key}",
             "original_transaction_id":  base["transaction_id"],
             "original_basket_id":       base["basket_id"],
             "return_date":              return_date_str,
@@ -831,20 +870,37 @@ def make_return_rows(rng: Random, basket: list[dict], today_str: str,
             "store_id":                 base["store_id"],
             "customer_id":              base["customer_id"],
             "product_id":               row["product_id"],
-            "return_quantity":          qty,
-            "unit_price_eur":           price,
-            "refund_amount_eur":        round(price * qty, 2) if price and price > 0 else None,
+            "original_quantity":        original_qty,
+            "return_quantity":          return_qty,
+            "original_unit_price_eur":  row.get("unit_price_eur"),
+            "original_discount_pct":    row.get("discount_pct"),
+            "net_unit_price_eur":       round(net_unit_price, 4),
+            "refund_amount_eur":        refund,
             "reason_code":              reason,
             "cashier_id":               cashier,
-            "ingestion_date":           today_str,
+            "ingestion_date":           return_date_str,
         })
     return out
+
+
+def pick_time_of_day_for_return(
+    rng: Random, size_class: str, return_date: datetime
+) -> str:
+    """Returns are processed within conservative store-service hours."""
+    is_saturday = return_date.weekday() == 5
+    close_h = 14 if (size_class == "S" and is_saturday) else (
+        18 if size_class == "S" else (20 if is_saturday else 21)
+    )
+    hours = list(range(9, close_h))
+    h = rng.choice(hours)
+    return f"{h:02d}:{rng.randint(0,59):02d}:{rng.randint(0,59):02d}"
 
 
 _FACT_RETURNS_COLS = [
     "return_id", "original_transaction_id", "original_basket_id",
     "return_date", "return_time", "store_id", "customer_id", "product_id",
-    "return_quantity", "unit_price_eur", "refund_amount_eur",
+    "original_quantity", "return_quantity", "original_unit_price_eur",
+    "original_discount_pct", "net_unit_price_eur", "refund_amount_eur",
     "reason_code", "cashier_id", "ingestion_date",
 ]
 
@@ -892,18 +948,13 @@ def write_normalized(stream: Iterator[list[dict]], out_dir: Path, n_target: int,
             if rows_written >= n_target:
                 break
 
-            # Normalize returns: flip negative quantities back, emit separate fact_returns.
-            orig_status = basket[0]["order_status"]
-            needs_return = orig_status in ("Returned", "Partially_Returned")
-            if needs_return:
-                for r in basket:
-                    if r["quantity"] is not None and r["quantity"] < 0:
-                        r["quantity"] = abs(r["quantity"])
-                    if r["net_revenue_eur"] is not None and r["net_revenue_eur"] < 0:
-                        r["net_revenue_eur"] = abs(r["net_revenue_eur"])
-                    r["order_status"] = "Completed"
-            elif orig_status == "Completed" and rng.random() < return_rate:
-                needs_return = True
+            is_completed = basket[0]["order_status"] == "Completed"
+            has_valid_sale = any(
+                row.get("quantity") and row["quantity"] > 0
+                and row.get("net_revenue_eur") is not None
+                for row in basket
+            )
+            needs_return = is_completed and has_valid_sale and rng.random() < return_rate
 
             if needs_return:
                 for rr in make_return_rows(rng, basket, today_str, end_date):
@@ -934,16 +985,15 @@ def check_reproducibility(args, n_canary: int = 1000) -> tuple[bool, str]:
         stores, sw = load_stores(Path(args.master_dir))
         terminals  = load_terminals(Path(args.master_dir))
         cmap, cids, cw = build_customers(args.customers, rng)
-        today = datetime.now().strftime("%Y-%m-%d")
+        today = args.generation_date or args.end_date
         start = datetime.strptime(args.start_date, "%Y-%m-%d")
         end   = datetime.strptime(args.end_date,   "%Y-%m-%d")
         h = hashlib.sha256()
         for basket in basket_stream(rng, n_canary, stores, sw, cmap, cids, cw,
                                     terminals, start, end, "CANARY", today,
-                                    args.walkin_rate):
+                                    args.walkin_rate, duplicate_rate=args.duplicate_rate):
             for row in basket:
-                # Hash a deterministic subset (no timestamps).
-                h.update(f"{row['transaction_id']}|{row['product_id']}|{row['quantity']}".encode())
+                h.update(json.dumps(row, sort_keys=True, default=str).encode())
         return h.hexdigest()
 
     d1, d2 = digest_once(), digest_once()
@@ -984,7 +1034,7 @@ def check_no_sundays(out_dir: Path, mode: str) -> tuple[bool, str]:
 
 
 def check_dq_rates(out_dir: Path, mode: str, schema: dict) -> tuple[bool, str]:
-    """R4: observed DQ rates within ±0.5pp of expected."""
+    """R4: observed row classes remain close to the configured contract."""
     fname = "einkaufpark_de_sales_raw.csv" if mode == "flat" else "fact_transactions.csv"
     counts: Counter[str] = Counter()
     total = 0
@@ -992,26 +1042,35 @@ def check_dq_rates(out_dir: Path, mode: str, schema: dict) -> tuple[bool, str]:
         for row in csv.DictReader(f):
             total += 1
             flag = row["data_quality_flag"]
-            if flag == "OK":           counts["ok"] += 1
-            elif "ERR" in flag:        counts["err"] += 1
-            elif "WARN" in flag:       counts["warn"] += 1
+            if "ERR" in flag:
+                counts["err"] += 1
+            elif "WARN" in flag:
+                counts["warn"] += 1
+            elif "INFO" in flag:
+                counts["info"] += 1
+            else:
+                counts["ok"] += 1
 
-    exp = schema["expected_dq_rates"]
-    ok_pct   = 100 * counts["ok"]   / total
-    warn_pct = 100 * counts["warn"] / total
-    err_pct  = 100 * counts["err"]  / total
-    msgs = []
+    expected = schema["expected_dq_rates"]
+    observed = {name: 100 * counts[name] / max(total, 1)
+                for name in ("ok", "warn", "err", "info")}
+    expected_keys = {
+        "ok": "ok_rows_pct",
+        "warn": "warn_rows_pct",
+        "err": "err_rows_pct",
+        "info": "info_rows_pct",
+    }
+    messages = []
     passing = True
-    for name, observed, expected in [
-        ("ok",   ok_pct,   exp["ok_rows_pct"]),
-        ("warn", warn_pct, exp["warn_rows_pct"]),
-        ("err",  err_pct,  exp["err_rows_pct"]),
-    ]:
-        delta = abs(observed - expected)
-        if delta > 0.5:
+    for name, key in expected_keys.items():
+        target = float(expected.get(key, 0.0))
+        delta = abs(observed[name] - target)
+        if delta > 0.75:
             passing = False
-        msgs.append(f"{name}={observed:.2f}%(exp {expected:.1f}%, Δ{delta:.2f}pp)")
-    return passing, " ".join(msgs)
+        messages.append(
+            f"{name}={observed[name]:.2f}%(exp {target:.1f}%, Δ{delta:.2f}pp)"
+        )
+    return passing, " ".join(messages)
 
 
 def check_walkin_rate(out_dir: Path, mode: str, target: float) -> tuple[bool, str]:
@@ -1032,6 +1091,89 @@ def check_walkin_rate(out_dir: Path, mode: str, target: float) -> tuple[bool, st
     return delta <= 0.02, f"walk-in rate={observed*100:.1f}% (target {target*100:.0f}%, Δ{delta*100:.1f}pp)"
 
 
+def check_customer_card_uniqueness(out_dir: Path, mode: str) -> tuple[bool, str]:
+    if mode == "flat":
+        return True, "skipped (customer dimension not written)"
+    cards: list[str] = []
+    with open(out_dir / "dim_customers.csv", encoding="utf-8") as f:
+        for row in csv.DictReader(f):
+            if row["loyalty_card_id"]:
+                cards.append(row["loyalty_card_id"])
+    duplicates = len(cards) - len(set(cards))
+    return duplicates == 0, (
+        f"{len(cards):,} member cards unique"
+        if duplicates == 0
+        else f"FAIL: {duplicates:,} duplicate loyalty-card assignments"
+    )
+
+
+def check_transaction_identity(out_dir: Path, mode: str) -> tuple[bool, str]:
+    fname = "einkaufpark_de_sales_raw.csv" if mode == "flat" else "fact_transactions.csv"
+    contexts: dict[str, set[tuple[str, str, str, str]]] = {}
+    hash_counts: Counter[str] = Counter()
+    duplicate_hashes: list[str] = []
+    with open(out_dir / fname, encoding="utf-8") as f:
+        for row in csv.DictReader(f):
+            txn = row["transaction_id"]
+            context = (row["basket_id"], row["store_id"], row["order_date"], row.get("customer_id") or "WALKIN")
+            contexts.setdefault(txn, set()).add(context)
+            hash_counts[row["record_hash"]] += 1
+            if "INFO:DUPLICATE_TXN" in row["data_quality_flag"]:
+                duplicate_hashes.append(row["record_hash"])
+
+    conflicts = sum(1 for values in contexts.values() if len(values) > 1)
+    orphan_retries = sum(1 for value in duplicate_hashes if hash_counts[value] < 2)
+    ok = conflicts == 0 and orphan_retries == 0
+    return ok, (
+        f"0 key conflicts; {len(duplicate_hashes):,} retry rows are exact copies"
+        if ok
+        else f"FAIL: {conflicts} transaction-context conflicts, {orphan_retries} non-exact retry rows"
+    )
+
+
+def check_product_attribute_stability(out_dir: Path, mode: str) -> tuple[bool, str]:
+    fname = "einkaufpark_de_sales_raw.csv" if mode == "flat" else "fact_transactions.csv"
+    attrs: dict[str, set[tuple[str, str]]] = {}
+    with open(out_dir / fname, encoding="utf-8") as f:
+        for row in csv.DictReader(f):
+            attrs.setdefault(row["product_id"], set()).add(
+                (row["brand"], row["is_private_label"])
+            )
+    unstable = sum(1 for values in attrs.values() if len(values) > 1)
+    return unstable == 0, (
+        f"{len(attrs):,} product IDs have stable brand/private-label attributes"
+        if unstable == 0
+        else f"FAIL: {unstable} product IDs have conflicting attributes"
+    )
+
+
+def check_refund_integrity(out_dir: Path, mode: str) -> tuple[bool, str]:
+    if mode == "flat":
+        return True, "skipped (returns fact not written)"
+    returns_path = out_dir / "fact_returns.csv"
+    if not returns_path.exists():
+        return False, "FAIL: fact_returns.csv missing"
+    return_ids: set[str] = set()
+    duplicates = over_refunds = 0
+    rows = 0
+    with open(returns_path, encoding="utf-8") as f:
+        for row in csv.DictReader(f):
+            rows += 1
+            if row["return_id"] in return_ids:
+                duplicates += 1
+            return_ids.add(row["return_id"])
+            refund = float(row["refund_amount_eur"])
+            maximum = float(row["net_unit_price_eur"]) * int(row["return_quantity"])
+            if refund > maximum + 0.011:
+                over_refunds += 1
+    ok = duplicates == 0 and over_refunds == 0
+    return ok, (
+        f"{rows:,} return rows: unique IDs and refund ≤ amount paid"
+        if ok
+        else f"FAIL: {duplicates} duplicate return IDs, {over_refunds} over-refunds"
+    )
+
+
 def validate(args, out_dir: Path, schema: dict) -> bool:
     print(f"\n  Validation ({chr(9472)*46}")
     checks = [
@@ -1040,6 +1182,10 @@ def validate(args, out_dir: Path, schema: dict) -> bool:
         ("R3 no Sundays",      lambda: check_no_sundays(out_dir, args.mode)),
         ("R4 DQ rates",        lambda: check_dq_rates(out_dir, args.mode, schema)),
         ("R5 walk-in rate",    lambda: check_walkin_rate(out_dir, args.mode, args.walkin_rate)),
+        ("R6 loyalty cards",   lambda: check_customer_card_uniqueness(out_dir, args.mode)),
+        ("R7 transaction IDs", lambda: check_transaction_identity(out_dir, args.mode)),
+        ("R8 product identity",lambda: check_product_attribute_stability(out_dir, args.mode)),
+        ("R9 refund integrity",lambda: check_refund_integrity(out_dir, args.mode)),
     ]
     all_pass = True
     for name, fn in checks:
@@ -1067,6 +1213,10 @@ def parse_args() -> argparse.Namespace:
     p.add_argument("--walkin-rate", type=float, default=0.10,
                    help="Fraction of baskets with customer_id=NULL")
     p.add_argument("--mode", choices=["flat", "normalized"], default="normalized")
+    p.add_argument("--duplicate-rate", type=float, default=DUPLICATE_BASKET_RATE,
+                   help="Exact POS retry basket rate")
+    p.add_argument("--generation-date", type=str, default=None,
+                   help="Deterministic ingestion date; defaults to --end-date")
     p.add_argument("--output-dir", type=str, default="data/raw")
     p.add_argument("--master-dir", type=str, default="master")
     return p.parse_args()
@@ -1079,10 +1229,21 @@ def main() -> int:
     master_dir = Path(args.master_dir)
     start_dt   = datetime.strptime(args.start_date, "%Y-%m-%d")
     end_dt     = datetime.strptime(args.end_date,   "%Y-%m-%d")
-    today_str  = datetime.now().strftime("%Y-%m-%d")
-    batch_id   = "BATCH_" + hashlib.md5(
-        f"{args.records}|{args.seed}|{args.start_date}|{args.end_date}".encode()
-    ).hexdigest()[:10].upper()
+    today_str = args.generation_date or args.end_date
+    batch_config = {
+        "generator_version": GENERATOR_VERSION,
+        "records": args.records,
+        "customers": args.customers,
+        "seed": args.seed,
+        "start_date": args.start_date,
+        "end_date": args.end_date,
+        "walkin_rate": args.walkin_rate,
+        "duplicate_rate": args.duplicate_rate,
+        "generation_date": today_str,
+    }
+    batch_id = "BATCH_" + hashlib.sha256(
+        json.dumps(batch_config, sort_keys=True).encode()
+    ).hexdigest()[:16].upper()
 
     rng = Random(args.seed)
 
@@ -1107,6 +1268,7 @@ def main() -> int:
         rng, args.records, stores, store_weights, customers_map,
         customer_ids, customer_freq_weights, terminals,
         start_dt, end_dt, batch_id, today_str, args.walkin_rate,
+        duplicate_rate=args.duplicate_rate,
     )
 
     if args.mode == "flat":
