@@ -18,6 +18,7 @@ import argparse
 import csv
 import hashlib
 import json
+import shutil
 import sys
 from collections import defaultdict
 from datetime import datetime, timedelta
@@ -29,7 +30,7 @@ from generator import (
     DOW_WEIGHTS, MONTH_WEIGHTS, GENERATOR_VERSION, DUPLICATE_BASKET_RATE,
     build_customers, generate_basket, is_promo_period, mark_duplicate_basket,
     load_stores, load_terminals, make_return_rows,
-    write_dim_stores, write_dim_customers,
+    write_dim_stores, write_dim_products, write_dim_customers,
     _DIM_DROP, _FACT_RETURNS_COLS,
 )
 from price_history import PriceIndex, write_scd2, validate as validate_scd2
@@ -142,19 +143,42 @@ def write_incremental(args, out_dir: Path) -> dict:
 
     rng = Random(args.seed)
 
+    # Pipeline-ready output layout. Each run replaces only generator-managed
+    # directories so stale batch files from an earlier date range cannot survive.
+    transactions_dir = out_dir / "transactions"
+    returns_dir = out_dir / "returns"
+    dimensions_dir = out_dir / "dimensions"
+    for managed_dir in (transactions_dir, returns_dir, dimensions_dir):
+        if managed_dir.exists():
+            shutil.rmtree(managed_dir)
+        managed_dir.mkdir(parents=True, exist_ok=True)
+
+    # Remove files/directories produced by generator versions before v2.1.0.
+    legacy_batch_dir = out_dir / "batches"
+    if legacy_batch_dir.exists():
+        shutil.rmtree(legacy_batch_dir)
+    for legacy_name in (
+        "dim_stores.csv", "dim_customers.csv", "dim_products.csv",
+        "dim_products_scd2.csv", "fact_returns.csv",
+    ):
+        legacy_path = out_dir / legacy_name
+        if legacy_path.exists():
+            legacy_path.unlink()
+
     # Dimensions & customer master.
     print(f"  [1/4] Loading masters + building {args.customers:,} customers ...",
           flush=True)
     stores, store_weights = load_stores(master_dir)
     terminals             = load_terminals(master_dir)
     customers_map, cids, cws = build_customers(args.customers, rng)
-    write_dim_stores(stores, out_dir)
-    write_dim_customers(customers_map, out_dir)
+    write_dim_stores(stores, dimensions_dir)
+    write_dim_products(dimensions_dir)
+    write_dim_customers(customers_map, dimensions_dir)
 
     # SCD2 price history (separate concern, delegated).
     print(f"  [2/4] Generating SCD2 price history ...", flush=True)
-    write_scd2(rng, start, end, out_dir)
-    price_index = PriceIndex.from_csv(out_dir / "dim_products_scd2.csv")
+    write_scd2(rng, start, end, dimensions_dir)
+    price_index = PriceIndex.from_csv(dimensions_dir / "dim_products_scd2.csv")
 
     # Daily volume plan.
     print(f"  [3/4] Planning daily volumes ...", flush=True)
@@ -164,8 +188,7 @@ def write_incremental(args, out_dir: Path) -> dict:
     print(f"        avg rows/day : {args.records // max(len(sorted_days), 1):,}")
     print(f"  [4/4] Writing daily batch files ...", flush=True)
 
-    batch_dir = out_dir / "batches"
-    batch_dir.mkdir(parents=True, exist_ok=True)
+    batch_dir = transactions_dir
 
     # Header for fact CSVs — derived once from a sample basket.
     sample_rng = Random(args.seed + 1)
@@ -277,7 +300,7 @@ def write_incremental(args, out_dir: Path) -> dict:
         print(f"  overflow batch    : {len(overflow_rows):,} rows (late, past end_date)")
 
     # fact_returns.
-    returns_path = out_dir / "fact_returns.csv"
+    returns_path = returns_dir / "fact_returns.csv"
     with open(returns_path, "w", newline="", encoding="utf-8") as f:
         w = csv.DictWriter(f, fieldnames=_FACT_RETURNS_COLS)
         w.writeheader()
@@ -327,9 +350,9 @@ def scan_batches(out_dir: Path, stats: dict, target_late: float) -> dict[str, tu
     check results keyed by check name.
     """
     # Dim sets for FK check (I5).
-    with open(out_dir / "dim_stores.csv", encoding="utf-8") as f:
+    with open(out_dir / "dimensions" / "dim_stores.csv", encoding="utf-8") as f:
         dim_stores = {r["store_id"] for r in csv.DictReader(f)}
-    with open(out_dir / "dim_products_scd2.csv", encoding="utf-8") as f:
+    with open(out_dir / "dimensions" / "dim_products_scd2.csv", encoding="utf-8") as f:
         dim_products = {r["product_id"] for r in csv.DictReader(f)}
 
     n_total = n_late = 0
@@ -337,7 +360,7 @@ def scan_batches(out_dir: Path, stats: dict, target_late: float) -> dict[str, tu
     fact_stores: set[str] = set()
     fact_products: set[str] = set()
 
-    for row, fname in _iter_batch_rows(out_dir / "batches"):
+    for row, fname in _iter_batch_rows(out_dir / "transactions"):
         n_total += 1
         fact_stores.add(row["store_id"])
         fact_products.add(row["product_id"])
@@ -394,7 +417,7 @@ def scan_batches(out_dir: Path, stats: dict, target_late: float) -> dict[str, tu
 
 def validate(out_dir: Path, stats: dict, late_rate: float,
              start: datetime, end: datetime) -> bool:
-    batch_dir = out_dir / "batches"
+    batch_dir = out_dir / "transactions"
     print(f"\n  Validation {chr(9472)*52}")
 
     all_pass = True
@@ -416,7 +439,9 @@ def validate(out_dir: Path, stats: dict, late_rate: float,
 
     # SCD2 validation (delegated to price_history).
     print()
-    scd2_ok = validate_scd2(out_dir / "dim_products_scd2.csv", start, end)
+    scd2_ok = validate_scd2(
+        out_dir / "dimensions" / "dim_products_scd2.csv", start, end
+    )
 
     print(f"  {chr(9472)*60}")
     return all_pass and scd2_ok

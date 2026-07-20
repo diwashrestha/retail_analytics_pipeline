@@ -1,0 +1,24 @@
+resources:
+  schemas:
+    retail_raw_schema:
+      name: ${var.raw_schema}
+      catalog_name: ${var.catalog}
+      comment: Raw landing schema for Einkaufpark generated files.
+
+    retail_bronze_schema:
+      name: ${var.bronze_schema}
+      catalog_name: ${var.catalog}
+      comment: Source-aligned Bronze tables and quarantine datasets.
+
+    retail_silver_schema:
+      name: ${var.silver_schema}
+      catalog_name: ${var.catalog}
+      comment: Trusted conformed facts, dimensions, and review datasets.
+
+  volumes:
+    retail_raw_volume:
+      name: ${var.raw_volume}
+      catalog_name: ${var.catalog}
+      schema_name: ${resources.schemas.retail_raw_schema.name}
+      volume_type: MANAGED
+      comment: Managed landing volume for generated Einkaufpark CSV files.

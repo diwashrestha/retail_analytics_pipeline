@@ -10,7 +10,8 @@ from collections import Counter, defaultdict
 from datetime import datetime
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parents[1]
+GENERATOR_DIR = Path(__file__).resolve().parent
+PROJECT_ROOT = GENERATOR_DIR.parent
 
 
 class GeneratorIntegrityTest(unittest.TestCase):
@@ -21,36 +22,39 @@ class GeneratorIntegrityTest(unittest.TestCase):
         subprocess.run(
             [
                 sys.executable,
-                str(ROOT / "incremental.py"),
+                str(GENERATOR_DIR / "incremental.py"),
                 "--records", "8000",
                 "--customers", "2500",
                 "--start-date", "2025-01-01",
                 "--end-date", "2025-02-28",
                 "--generation-date", "2025-03-01",
                 "--output-dir", str(cls.output),
-                "--master-dir", str(ROOT),
+                "--master-dir", str(PROJECT_ROOT / "master"),
             ],
-            cwd=ROOT,
+            cwd=GENERATOR_DIR,
             check=True,
             stdout=subprocess.DEVNULL,
         )
 
         cls.rows: list[dict[str, str]] = []
-        for path in sorted((cls.output / "batches").glob("batch_*.csv")):
+        for path in sorted((cls.output / "transactions").glob("batch_*.csv")):
             with path.open(encoding="utf-8") as handle:
                 cls.rows.extend(csv.DictReader(handle))
 
-        with (cls.output / "fact_returns.csv").open(encoding="utf-8") as handle:
+        with (cls.output / "returns" / "fact_returns.csv").open(encoding="utf-8") as handle:
             cls.returns = list(csv.DictReader(handle))
 
-        with (cls.output / "dim_customers.csv").open(encoding="utf-8") as handle:
+        with (cls.output / "dimensions" / "dim_customers.csv").open(encoding="utf-8") as handle:
             cls.customers = list(csv.DictReader(handle))
 
-        with (cls.output / "dim_stores.csv").open(encoding="utf-8") as handle:
+        with (cls.output / "dimensions" / "dim_stores.csv").open(encoding="utf-8") as handle:
             cls.stores = list(csv.DictReader(handle))
 
-        with (cls.output / "dim_products_scd2.csv").open(encoding="utf-8") as handle:
+        with (cls.output / "dimensions" / "dim_products_scd2.csv").open(encoding="utf-8") as handle:
             cls.prices = list(csv.DictReader(handle))
+
+        with (cls.output / "dimensions" / "dim_products.csv").open(encoding="utf-8") as handle:
+            cls.products = list(csv.DictReader(handle))
 
     @classmethod
     def tearDownClass(cls) -> None:
@@ -81,6 +85,12 @@ class GeneratorIntegrityTest(unittest.TestCase):
     def test_loyalty_cards_are_unique(self) -> None:
         cards = [row["loyalty_card_id"] for row in self.customers if row["loyalty_card_id"]]
         self.assertEqual(len(cards), len(set(cards)))
+
+    def test_current_product_dimension_is_unique_and_complete(self) -> None:
+        product_ids = [row["product_id"] for row in self.products]
+        scd2_product_ids = {row["product_id"] for row in self.prices}
+        self.assertEqual(len(product_ids), len(set(product_ids)))
+        self.assertEqual(set(product_ids), scd2_product_ids)
 
     def test_product_attributes_are_stable(self) -> None:
         attrs: dict[str, set[tuple[str, str]]] = defaultdict(set)

@@ -1,4 +1,10 @@
-*.csvdata/raw/*.csv
-data/raw/*.csv
+data/
 *.csv
 *.parquet
+*.zip
+.delta/
+__pycache__/
+.venv/
+dist/
+build/
+.databricks/
