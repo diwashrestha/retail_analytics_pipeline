@@ -2,6 +2,7 @@ data/
 *.csv
 *.parquet
 *.zip
+*.crc
 .delta/
 __pycache__/
 .venv/
