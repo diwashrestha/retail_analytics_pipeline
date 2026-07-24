@@ -23,6 +23,9 @@
 --   6. Do not deduplicate, perform SCD joins, or calculate business KPIs here.
 -- ============================================================================
 
+USE CATALOG workspace;
+USE SCHEMA retail_dev_bronze;
+
 -- ---------------------------------------------------------------------------
 -- 1. POS TRANSACTION LINE ITEMS — append-only ingestion with Auto Loader
 -- ---------------------------------------------------------------------------
@@ -74,7 +77,7 @@ SELECT
   _metadata.file_modification_time AS _source_file_modified_at,
   current_timestamp()              AS _bronze_ingested_at
 FROM STREAM read_files(
-  :transactions_path,
+  '/Volumes/workspace/retail_dev_raw/retail_input/transactions',
   format => 'csv',
   header => 'true',
   mode => 'PERMISSIVE',
@@ -419,7 +422,7 @@ SELECT
   _metadata.file_modification_time AS _source_file_modified_at,
   current_timestamp()              AS _bronze_ingested_at
 FROM STREAM read_files(
-  :returns_path,
+  '/Volumes/workspace/retail_dev_raw/retail_input/returns',
   format => 'csv',
   header => 'true',
   mode => 'PERMISSIVE',
@@ -642,7 +645,7 @@ SELECT
   _metadata.file_modification_time AS _source_file_modified_at,
   current_timestamp() AS _bronze_ingested_at
 FROM read_files(
-  :stores_path,
+  '/Volumes/workspace/retail_dev_raw/retail_input/dimensions/dim_stores.csv',
   format => 'csv',
   header => 'true',
   mode => 'PERMISSIVE',
@@ -733,7 +736,7 @@ SELECT
   _metadata.file_modification_time AS _source_file_modified_at,
   current_timestamp() AS _bronze_ingested_at
 FROM read_files(
-  :customers_path,
+  '/Volumes/workspace/retail_dev_raw/retail_input/dimensions/dim_customers.csv',
   format => 'csv',
   header => 'true',
   mode => 'PERMISSIVE',
@@ -817,7 +820,7 @@ SELECT
   _metadata.file_modification_time AS _source_file_modified_at,
   current_timestamp() AS _bronze_ingested_at
 FROM read_files(
-  :products_path,
+  '/Volumes/workspace/retail_dev_raw/retail_input/dimensions/dim_products.csv',
   format => 'csv',
   header => 'true',
   mode => 'PERMISSIVE',
@@ -916,7 +919,7 @@ SELECT
   _metadata.file_modification_time AS _source_file_modified_at,
   current_timestamp() AS _bronze_ingested_at
 FROM read_files(
-  :product_prices_path,
+  '/Volumes/workspace/retail_dev_raw/retail_input/dimensions/dim_products_scd2.csv',
   format => 'csv',
   header => 'true',
   mode => 'PERMISSIVE',

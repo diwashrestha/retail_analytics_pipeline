@@ -10,8 +10,8 @@
 -- product categories.
 -- ============================================================================
 
-USE CATALOG IDENTIFIER(:gold_catalog);
-USE SCHEMA IDENTIFIER(:gold_schema);
+USE CATALOG workspace;
+USE SCHEMA retail_dev_gold;
 
 CREATE OR REFRESH MATERIALIZED VIEW daily_sales
 COMMENT 'Daily category sales at date-store-category-subcategory grain. Category basket and customer counts are non-additive across categories.'
@@ -120,7 +120,7 @@ SELECT
   round(sum(refund_amount_eur), 2) AS refund_amount_eur,
   count(DISTINCT original_basket_id) AS returned_basket_count,
   round(avg(days_to_return), 2) AS average_days_to_return
-FROM IDENTIFIER(:silver_catalog || '.' || :silver_schema || '.fact_returns')
+FROM workspace.retail_dev_silver.fact_returns
 GROUP BY store_sk, store_id;
 
 CREATE OR REFRESH MATERIALIZED VIEW store_performance
@@ -169,7 +169,7 @@ WITH store_base AS (
     coalesce(r.refund_amount_eur, 0) AS refund_amount_eur,
     coalesce(r.returned_basket_count, 0) AS returned_basket_count,
     r.average_days_to_return
-  FROM IDENTIFIER(:silver_catalog || '.' || :silver_schema || '.dim_store') st
+  FROM workspace.retail_dev_silver.dim_store st
   LEFT JOIN gold_store_basket_metrics b
     ON st.store_sk = b.store_sk
   LEFT JOIN gold_store_return_metrics r

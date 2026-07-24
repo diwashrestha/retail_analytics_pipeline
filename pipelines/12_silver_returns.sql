@@ -17,8 +17,9 @@
 
 -- Publish all unqualified datasets in the parameterized Silver target.
 -- The USE statements are scoped to this source file.
-USE CATALOG IDENTIFIER(:silver_catalog);
-USE SCHEMA IDENTIFIER(:silver_schema);
+
+USE CATALOG workspace;
+USE SCHEMA retail_dev_silver;
 
 -- ---------------------------------------------------------------------------
 -- 1. RETURN ID INTEGRITY AND EXACT-DUPLICATE REMOVAL
@@ -46,7 +47,7 @@ SELECT
     coalesce(reason_code, ''),
     coalesce(cashier_id, '')
   ), 256) AS return_payload_hash
-FROM IDENTIFIER(:bronze_catalog || '.' || :bronze_schema || '.fact_returns') b;
+FROM workspace.retail_dev_bronze.fact_returns b;
 
 CREATE OR REFRESH PRIVATE MATERIALIZED VIEW return_id_stats
 AS
@@ -385,7 +386,7 @@ SELECT
   current_timestamp() AS measured_at
 FROM (
   SELECT
-    (SELECT count(*) FROM IDENTIFIER(:bronze_catalog || '.' || :bronze_schema || '.fact_returns')) AS bronze_rows,
+    (SELECT count(*) FROM workspace.retail_dev_bronze.fact_returns) AS bronze_rows,
     (SELECT count(*) FROM return_id_conflict_review) AS id_conflict_rows,
     (SELECT count(*) FROM duplicate_returns) AS exact_duplicate_rows,
     (SELECT count(*) FROM fact_returns) AS trusted_return_rows,

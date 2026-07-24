@@ -6,8 +6,8 @@
 -- aggregation, preventing the return multiplication defect found previously.
 -- ============================================================================
 
-USE CATALOG IDENTIFIER(:gold_catalog);
-USE SCHEMA IDENTIFIER(:gold_schema);
+USE CATALOG workspace;
+USE SCHEMA retail_dev_gold;
 
 CREATE OR REFRESH PRIVATE MATERIALIZED VIEW gold_product_sales_metrics
 AS
@@ -42,7 +42,7 @@ SELECT
   sum(return_quantity) AS returned_units,
   round(sum(refund_amount_eur), 2) AS refund_amount_eur,
   round(avg(days_to_return), 2) AS average_days_to_return
-FROM IDENTIFIER(:silver_catalog || '.' || :silver_schema || '.fact_returns')
+FROM workspace.retail_dev_silver.fact_returns
 GROUP BY product_sk, product_id;
 
 CREATE OR REFRESH PRIVATE MATERIALIZED VIEW gold_total_basket_count
@@ -89,7 +89,7 @@ SELECT
   coalesce(r.refund_amount_eur, 0) AS refund_amount_eur,
   r.average_days_to_return,
   t.total_basket_count
-FROM IDENTIFIER(:silver_catalog || '.' || :silver_schema || '.dim_product') p
+FROM workspace.retail_dev_silver.dim_product p
 LEFT JOIN gold_product_sales_metrics s
   ON p.product_sk = s.product_sk
 LEFT JOIN gold_product_return_metrics r

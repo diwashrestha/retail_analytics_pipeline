@@ -3,8 +3,8 @@
 -- Critical failures stop the Lakeflow pipeline update.
 -- ============================================================================
 
-USE CATALOG IDENTIFIER(:gold_catalog);
-USE SCHEMA IDENTIFIER(:gold_schema);
+USE CATALOG workspace;
+USE SCHEMA retail_dev_gold;
 
 CREATE OR REFRESH MATERIALIZED VIEW gold_quality_checks
 COMMENT 'Machine-readable Gold grain, reconciliation, and business-value checks.'
@@ -78,7 +78,7 @@ SELECT
   'Daily sales revenue must reconcile to trusted Silver sales.', current_timestamp()
 FROM (
   SELECT coalesce(sum(net_sales_eur), 0) AS silver_value
-  FROM IDENTIFIER(:silver_catalog || '.' || :silver_schema || '.fact_sales')
+  FROM workspace.retail_dev_silver.fact_sales
 ) s
 CROSS JOIN (
   SELECT coalesce(sum(net_sales_eur), 0) AS gold_value FROM daily_sales
@@ -90,7 +90,7 @@ SELECT
   cast(round(s.silver_value, 2) AS DECIMAL(20,4)), cast(round(g.gold_value, 2) AS DECIMAL(20,4)),
   CASE WHEN abs(s.silver_value - g.gold_value) <= cast(:revenue_tolerance_eur AS DECIMAL(10,2)) THEN 'PASSED' ELSE 'FAILED' END,
   'Basket-level revenue must reconcile to trusted Silver sales.', current_timestamp()
-FROM (SELECT coalesce(sum(net_sales_eur), 0) AS silver_value FROM IDENTIFIER(:silver_catalog || '.' || :silver_schema || '.fact_sales')) s
+FROM (SELECT coalesce(sum(net_sales_eur), 0) AS silver_value FROM workspace.retail_dev_silver.fact_sales) s
 CROSS JOIN (SELECT coalesce(sum(net_sales_eur), 0) AS gold_value FROM basket_analysis) g
 
 UNION ALL
@@ -99,7 +99,7 @@ SELECT
   cast(round(s.silver_value, 2) AS DECIMAL(20,4)), cast(round(g.gold_value, 2) AS DECIMAL(20,4)),
   CASE WHEN abs(s.silver_value - g.gold_value) <= cast(:revenue_tolerance_eur AS DECIMAL(10,2)) THEN 'PASSED' ELSE 'FAILED' END,
   'Store performance revenue must reconcile to trusted Silver sales.', current_timestamp()
-FROM (SELECT coalesce(sum(net_sales_eur), 0) AS silver_value FROM IDENTIFIER(:silver_catalog || '.' || :silver_schema || '.fact_sales')) s
+FROM (SELECT coalesce(sum(net_sales_eur), 0) AS silver_value FROM workspace.retail_dev_silver.fact_sales) s
 CROSS JOIN (SELECT coalesce(sum(net_sales_eur), 0) AS gold_value FROM store_performance) g
 
 UNION ALL
@@ -108,7 +108,7 @@ SELECT
   cast(round(s.silver_value, 2) AS DECIMAL(20,4)), cast(round(g.gold_value, 2) AS DECIMAL(20,4)),
   CASE WHEN abs(s.silver_value - g.gold_value) <= cast(:revenue_tolerance_eur AS DECIMAL(10,2)) THEN 'PASSED' ELSE 'FAILED' END,
   'Product performance revenue must reconcile to trusted Silver sales.', current_timestamp()
-FROM (SELECT coalesce(sum(net_sales_eur), 0) AS silver_value FROM IDENTIFIER(:silver_catalog || '.' || :silver_schema || '.fact_sales')) s
+FROM (SELECT coalesce(sum(net_sales_eur), 0) AS silver_value FROM workspace.retail_dev_silver.fact_sales) s
 CROSS JOIN (SELECT coalesce(sum(net_sales_eur), 0) AS gold_value FROM product_performance) g
 
 UNION ALL
@@ -117,7 +117,7 @@ SELECT
   cast(round(s.silver_value, 2) AS DECIMAL(20,4)), cast(round(g.gold_value, 2) AS DECIMAL(20,4)),
   CASE WHEN abs(s.silver_value - g.gold_value) <= cast(:revenue_tolerance_eur AS DECIMAL(10,2)) THEN 'PASSED' ELSE 'FAILED' END,
   'Hourly traffic revenue must reconcile to trusted Silver sales.', current_timestamp()
-FROM (SELECT coalesce(sum(net_sales_eur), 0) AS silver_value FROM IDENTIFIER(:silver_catalog || '.' || :silver_schema || '.fact_sales')) s
+FROM (SELECT coalesce(sum(net_sales_eur), 0) AS silver_value FROM workspace.retail_dev_silver.fact_sales) s
 CROSS JOIN (SELECT coalesce(sum(net_sales_eur), 0) AS gold_value FROM hourly_traffic) g
 
 UNION ALL
@@ -128,7 +128,7 @@ SELECT
   'Customer LTV sales must reconcile to Silver sales for identified customers only.', current_timestamp()
 FROM (
   SELECT coalesce(sum(net_sales_eur), 0) AS silver_value
-  FROM IDENTIFIER(:silver_catalog || '.' || :silver_schema || '.fact_sales')
+  FROM workspace.retail_dev_silver.fact_sales
   WHERE customer_id IS NOT NULL
 ) s
 CROSS JOIN (SELECT coalesce(sum(lifetime_sales_eur), 0) AS gold_value FROM customer_ltv) g
@@ -140,7 +140,7 @@ SELECT
   cast(round(s.silver_value, 2) AS DECIMAL(20,4)), cast(round(g.gold_value, 2) AS DECIMAL(20,4)),
   CASE WHEN abs(s.silver_value - g.gold_value) <= cast(:revenue_tolerance_eur AS DECIMAL(10,2)) THEN 'PASSED' ELSE 'FAILED' END,
   'Product performance refunds must reconcile to trusted Silver returns.', current_timestamp()
-FROM (SELECT coalesce(sum(refund_amount_eur), 0) AS silver_value FROM IDENTIFIER(:silver_catalog || '.' || :silver_schema || '.fact_returns')) s
+FROM (SELECT coalesce(sum(refund_amount_eur), 0) AS silver_value FROM workspace.retail_dev_silver.fact_returns) s
 CROSS JOIN (SELECT coalesce(sum(refund_amount_eur), 0) AS gold_value FROM product_performance) g
 
 UNION ALL
@@ -149,7 +149,7 @@ SELECT
   cast(round(s.silver_value, 2) AS DECIMAL(20,4)), cast(round(g.gold_value, 2) AS DECIMAL(20,4)),
   CASE WHEN abs(s.silver_value - g.gold_value) <= cast(:revenue_tolerance_eur AS DECIMAL(10,2)) THEN 'PASSED' ELSE 'FAILED' END,
   'Return reason refunds must reconcile to trusted Silver returns without repeated sales denominators.', current_timestamp()
-FROM (SELECT coalesce(sum(refund_amount_eur), 0) AS silver_value FROM IDENTIFIER(:silver_catalog || '.' || :silver_schema || '.fact_returns')) s
+FROM (SELECT coalesce(sum(refund_amount_eur), 0) AS silver_value FROM workspace.retail_dev_silver.fact_returns) s
 CROSS JOIN (SELECT coalesce(sum(refund_amount_eur), 0) AS gold_value FROM return_analysis) g
 
 UNION ALL
@@ -158,7 +158,7 @@ SELECT
   cast(s.silver_value AS DECIMAL(20,4)), cast(g.gold_value AS DECIMAL(20,4)),
   CASE WHEN s.silver_value = g.gold_value THEN 'PASSED' ELSE 'FAILED' END,
   'Return reason units must reconcile to trusted Silver returns.', current_timestamp()
-FROM (SELECT coalesce(sum(return_quantity), 0) AS silver_value FROM IDENTIFIER(:silver_catalog || '.' || :silver_schema || '.fact_returns')) s
+FROM (SELECT coalesce(sum(return_quantity), 0) AS silver_value FROM workspace.retail_dev_silver.fact_returns) s
 CROSS JOIN (SELECT coalesce(sum(returned_units), 0) AS gold_value FROM return_analysis) g
 
 -- Business-value and ranking checks -----------------------------------------

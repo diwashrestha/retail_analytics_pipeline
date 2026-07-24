@@ -21,8 +21,8 @@
 
 -- Publish all unqualified datasets in the parameterized Silver target.
 -- The USE statements are scoped to this source file.
-USE CATALOG IDENTIFIER(:silver_catalog);
-USE SCHEMA IDENTIFIER(:silver_schema);
+USE CATALOG workspace;
+USE SCHEMA retail_dev_silver;
 
 -- ---------------------------------------------------------------------------
 -- 1. SOURCE PAYLOAD AND RECORD-HASH INTEGRITY
@@ -65,7 +65,7 @@ SELECT
     coalesce(promo_week_id, ''),
     coalesce(cast(is_promo_period AS STRING), '')
   ), 256) AS transaction_payload_hash
-FROM IDENTIFIER(:bronze_catalog || '.' || :bronze_schema || '.fact_transactions') b;
+FROM workspace.retail_dev_bronze.fact_transactions b;
 
 CREATE OR REFRESH PRIVATE MATERIALIZED VIEW transaction_record_hash_stats
 AS
@@ -592,7 +592,7 @@ SELECT
   current_timestamp() AS measured_at
 FROM (
   SELECT
-    (SELECT count(*) FROM IDENTIFIER(:bronze_catalog || '.' || :bronze_schema || '.fact_transactions')) AS bronze_rows,
+    (SELECT count(*) FROM workspace.retail_dev_bronze.fact_transactions) AS bronze_rows,
     (SELECT count(*) FROM transaction_hash_conflict_review) AS hash_conflict_rows,
     (SELECT count(*) FROM duplicate_transactions) AS exact_duplicate_rows,
     (SELECT count(*) FROM fact_sales) AS valid_sales_rows,

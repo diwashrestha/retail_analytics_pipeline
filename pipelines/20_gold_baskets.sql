@@ -7,8 +7,8 @@
 -- Gold source files.
 -- ============================================================================
 
-USE CATALOG IDENTIFIER(:gold_catalog);
-USE SCHEMA IDENTIFIER(:gold_schema);
+USE CATALOG workspace;
+USE SCHEMA retail_dev_gold;
 
 CREATE OR REFRESH PRIVATE MATERIALIZED VIEW gold_sales_enriched
 AS
@@ -30,12 +30,12 @@ SELECT
   c.age_group AS customer_age_group,
   c.gender_code AS customer_gender_code,
   c.is_member AS customer_master_is_member
-FROM IDENTIFIER(:silver_catalog || '.' || :silver_schema || '.fact_sales') s
-JOIN IDENTIFIER(:silver_catalog || '.' || :silver_schema || '.dim_store') st
+FROM workspace.retail_dev_silver.fact_sales s
+JOIN workspace.retail_dev_silver.dim_store st
   ON s.store_sk = st.store_sk
-JOIN IDENTIFIER(:silver_catalog || '.' || :silver_schema || '.dim_product') p
+JOIN workspace.retail_dev_silver.dim_product p
   ON s.product_sk = p.product_sk
-LEFT JOIN IDENTIFIER(:silver_catalog || '.' || :silver_schema || '.dim_customer') c
+LEFT JOIN workspace.retail_dev_silver.dim_customer c
   ON s.customer_sk = c.customer_sk;
 
 CREATE OR REFRESH MATERIALIZED VIEW basket_analysis

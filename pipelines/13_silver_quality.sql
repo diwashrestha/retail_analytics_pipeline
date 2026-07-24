@@ -6,8 +6,8 @@
 
 -- Publish all unqualified datasets in the parameterized Silver target.
 -- The USE statements are scoped to this source file.
-USE CATALOG IDENTIFIER(:silver_catalog);
-USE SCHEMA IDENTIFIER(:silver_schema);
+USE CATALOG workspace;
+USE SCHEMA retail_dev_silver;
 
 CREATE OR REFRESH MATERIALIZED VIEW silver_quality_checks
 COMMENT 'Machine-readable Silver quality contract. A downstream task should fail the job when a CRITICAL check has status FAILED.'

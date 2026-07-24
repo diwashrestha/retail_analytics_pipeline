@@ -7,9 +7,11 @@
 --   hourly_traffic  = order_hour x weekday_number x store_size_class
 -- ============================================================================
 
-USE CATALOG IDENTIFIER(:gold_catalog);
-USE SCHEMA IDENTIFIER(:gold_schema);
+-- USE CATALOG IDENTIFIER(:gold_catalog);
+-- USE SCHEMA IDENTIFIER(:gold_schema);
 
+USE CATALOG workspace;
+USE SCHEMA retail_dev_gold;
 -- ---------------------------------------------------------------------------
 -- 1. CUSTOMER LIFETIME VALUE
 -- ---------------------------------------------------------------------------
@@ -48,7 +50,7 @@ SELECT
   sum(return_quantity) AS returned_units,
   round(sum(refund_amount_eur), 2) AS refund_amount_eur,
   round(avg(days_to_return), 2) AS average_days_to_return
-FROM IDENTIFIER(:silver_catalog || '.' || :silver_schema || '.fact_returns')
+FROM workspace.retail_dev_silver.fact_returns
 WHERE customer_id IS NOT NULL
 GROUP BY customer_sk, customer_id;
 
@@ -97,7 +99,7 @@ SELECT
     WHEN b.last_purchase_date IS NULL THEN NULL
     ELSE datediff(d.dataset_max_order_date, b.last_purchase_date)
   END AS recency_days
-FROM IDENTIFIER(:silver_catalog || '.' || :silver_schema || '.dim_customer') c
+FROM workspace.retail_dev_silver.dim_customer c
 LEFT JOIN gold_customer_basket_metrics b
   ON c.customer_sk = b.customer_sk
 LEFT JOIN gold_customer_return_metrics r
@@ -186,8 +188,8 @@ WITH reason_metrics AS (
     round(avg(r.days_to_return), 2) AS average_days_to_return,
     min(r.return_date) AS first_return_date,
     max(r.return_date) AS last_return_date
-  FROM IDENTIFIER(:silver_catalog || '.' || :silver_schema || '.fact_returns') r
-  JOIN IDENTIFIER(:silver_catalog || '.' || :silver_schema || '.dim_product') p
+  FROM workspace.retail_dev_silver.fact_returns r
+  JOIN workspace.retail_dev_silver.dim_product p
     ON r.product_sk = p.product_sk
   GROUP BY
     r.product_sk,

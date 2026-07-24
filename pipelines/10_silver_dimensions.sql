@@ -15,8 +15,8 @@
 
 -- Publish all unqualified datasets in the parameterized Silver target.
 -- The USE statements are scoped to this source file.
-USE CATALOG IDENTIFIER(:silver_catalog);
-USE SCHEMA IDENTIFIER(:silver_schema);
+USE CATALOG workspace;
+USE SCHEMA retail_dev_silver;
 
 -- ---------------------------------------------------------------------------
 -- 1. STORE DIMENSION
@@ -41,7 +41,7 @@ WITH source_rows AS (
       coalesce(opening_hours, ''),
       coalesce(currency, '')
     ), 256) AS profile_hash
-  FROM IDENTIFIER(:bronze_catalog || '.' || :bronze_schema || '.dim_stores') b
+  FROM workspace.retail_dev_bronze.dim_stores b
 ), stats AS (
   SELECT
     store_id,
@@ -128,7 +128,7 @@ WITH source_rows AS (
       coalesce(cast(is_member AS STRING), ''),
       coalesce(loyalty_card_id, '')
     ), 256) AS profile_hash
-  FROM IDENTIFIER(:bronze_catalog || '.' || :bronze_schema || '.dim_customers') b
+  FROM workspace.retail_dev_bronze.dim_customers b
 ), stats AS (
   SELECT
     customer_id,
@@ -256,7 +256,7 @@ WITH source_rows AS (
       coalesce(seasonal_months, ''),
       coalesce(cast(vat_rate AS STRING), '')
     ), 256) AS profile_hash
-  FROM IDENTIFIER(:bronze_catalog || '.' || :bronze_schema || '.dim_products') b
+  FROM workspace.retail_dev_bronze.dim_products b
 ), stats AS (
   SELECT
     product_id,
@@ -348,7 +348,7 @@ WITH normalized AS (
       coalesce(unit, ''),
       cast(vat_rate AS STRING)
     ), 256) AS price_version_hash
-  FROM IDENTIFIER(:bronze_catalog || '.' || :bronze_schema || '.dim_products_scd2') b
+  FROM workspace.retail_dev_bronze.dim_products_scd2 b
 ), ranked AS (
   SELECT
     *,
@@ -385,27 +385,46 @@ CREATE OR REFRESH PRIVATE MATERIALIZED VIEW product_scd2_sequenced
 AS
 SELECT
   p.*,
-  lag(effective_to) OVER (
-    PARTITION BY product_id
-    ORDER BY effective_from, effective_to, price_version_hash
+
+  lag(p.effective_to) OVER (
+    PARTITION BY p.product_id
+    ORDER BY
+      p.effective_from,
+      p.effective_to,
+      p.price_version_hash
   ) AS previous_effective_to,
-  CASE WHEN o.price_version_hash IS NOT NULL THEN TRUE ELSE FALSE END AS has_overlap,
+
   CASE
-    WHEN lag(effective_to) OVER (
+    WHEN o.price_version_hash IS NOT NULL THEN TRUE
+    ELSE FALSE
+  END AS has_overlap,
+
+  CASE
+    WHEN lag(p.effective_to) OVER (
       PARTITION BY p.product_id
-      ORDER BY p.effective_from, p.effective_to, p.price_version_hash
+      ORDER BY
+        p.effective_from,
+        p.effective_to,
+        p.price_version_hash
     ) IS NOT NULL
-     AND p.effective_from > date_add(
-       lag(effective_to) OVER (
-         PARTITION BY p.product_id
-         ORDER BY p.effective_from, p.effective_to, p.price_version_hash
-       ),
-       1
-     )
+
+    AND p.effective_from > date_add(
+      lag(p.effective_to) OVER (
+        PARTITION BY p.product_id
+        ORDER BY
+          p.effective_from,
+          p.effective_to,
+          p.price_version_hash
+      ),
+      1
+    )
+
     THEN TRUE
     ELSE FALSE
   END AS has_gap_before
+
 FROM product_scd2_deduplicated p
+
 LEFT JOIN product_scd2_overlap_versions o
   ON p.price_version_hash = o.price_version_hash;
 
@@ -495,7 +514,7 @@ WITH observed AS (
     is_self_checkout,
     source_system,
     _bronze_ingested_at
-  FROM IDENTIFIER(:bronze_catalog || '.' || :bronze_schema || '.fact_transactions')
+  FROM workspace.retail_dev_bronze.fact_transactions
 ), stats AS (
   SELECT
     terminal_id,
@@ -568,35 +587,35 @@ COMMENT 'Current conformed-dimension counts and review counts.'
 AS
 SELECT
   'dim_store' AS dataset_name,
-  (SELECT count(*) FROM IDENTIFIER(:bronze_catalog || '.' || :bronze_schema || '.dim_stores')) AS bronze_rows,
+  (SELECT count(*) FROM workspace.retail_dev_bronze.dim_stores) AS bronze_rows,
   (SELECT count(*) FROM dim_store) AS silver_rows,
   (SELECT count(*) FROM dim_store_review) AS review_keys,
   current_timestamp() AS measured_at
 UNION ALL
 SELECT
   'dim_customer',
-  (SELECT count(*) FROM IDENTIFIER(:bronze_catalog || '.' || :bronze_schema || '.dim_customers')),
+  (SELECT count(*) FROM workspace.retail_dev_bronze.dim_customers),
   (SELECT count(*) FROM dim_customer),
   (SELECT count(*) FROM dim_customer_review),
   current_timestamp()
 UNION ALL
 SELECT
   'dim_product',
-  (SELECT count(*) FROM IDENTIFIER(:bronze_catalog || '.' || :bronze_schema || '.dim_products')),
+  (SELECT count(*) FROM workspace.retail_dev_bronze.dim_products),
   (SELECT count(*) FROM dim_product),
   (SELECT count(*) FROM dim_product_review),
   current_timestamp()
 UNION ALL
 SELECT
   'dim_product_scd2',
-  (SELECT count(*) FROM IDENTIFIER(:bronze_catalog || '.' || :bronze_schema || '.dim_products_scd2')),
+  (SELECT count(*) FROM workspace.retail_dev_bronze.dim_products_scd2),
   (SELECT count(*) FROM dim_product_scd2),
   (SELECT count(*) FROM dim_product_scd2_review),
   current_timestamp()
 UNION ALL
 SELECT
   'dim_terminal',
-  (SELECT count(DISTINCT pos_terminal_id) FROM IDENTIFIER(:bronze_catalog || '.' || :bronze_schema || '.fact_transactions')),
+  (SELECT count(DISTINCT pos_terminal_id) FROM workspace.retail_dev_bronze.fact_transactions),
   (SELECT count(*) FROM dim_terminal),
   (SELECT count(*) FROM dim_terminal_review),
   current_timestamp();
