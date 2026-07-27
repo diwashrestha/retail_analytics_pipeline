@@ -648,7 +648,9 @@ FROM read_files(
   '/Volumes/workspace/retail_dev_raw/retail_input/dimensions/dim_stores.csv',
   format => 'csv',
   header => 'true',
-  mode => 'PERMISSIVE',
+  quote => '"',
+  escape => '"',
+  mode => 'FAILFAST',
   rescuedDataColumn => '_rescued_data',
   schemaEvolutionMode => 'rescue',
   schema => '
@@ -669,39 +671,115 @@ FROM read_files(
 );
 
 CREATE OR REFRESH PRIVATE MATERIALIZED VIEW dim_stores_parsed AS
+
+WITH cleaned AS (
+    SELECT
+        trim(store_id) AS store_id,
+        trim(city) AS city,
+        trim(district) AS district,
+        trim(postal_code) AS postal_code,
+        trim(street) AS street,
+        trim(region) AS region,
+        upper(trim(country_code)) AS country_code,
+        trim(country_name) AS country_name,
+        upper(trim(size_class)) AS size_class,
+
+        trim(terminal_count) AS terminal_count_raw,
+        try_cast(trim(terminal_count) AS INT) AS terminal_count,
+
+        trim(source_system) AS source_system,
+        trim(opening_hours) AS opening_hours,
+        upper(trim(currency)) AS currency,
+
+        _rescued_data,
+        _source_file_path,
+        _source_file_name,
+        _source_file_modified_at,
+        _bronze_ingested_at
+    FROM dim_stores_raw
+),
+
+validated AS (
+    SELECT
+        *,
+
+        concat_ws(
+            '|',
+
+            CASE
+                WHEN store_id IS NULL OR store_id = ''
+                THEN 'MISSING_STORE_ID'
+            END,
+
+            CASE
+                WHEN city IS NULL OR city = ''
+                THEN 'MISSING_CITY'
+            END,
+
+            CASE
+                WHEN country_code IS NULL
+                  OR country_code NOT RLIKE '^[A-Z]{2}$'
+                THEN 'INVALID_COUNTRY_CODE'
+            END,
+
+            CASE
+                WHEN terminal_count_raw IS NULL
+                  OR terminal_count_raw = ''
+                THEN 'MISSING_TERMINAL_COUNT'
+
+                WHEN terminal_count IS NULL
+                THEN 'INVALID_TERMINAL_COUNT'
+
+                WHEN terminal_count <= 0
+                THEN 'NON_POSITIVE_TERMINAL_COUNT'
+            END,
+
+            CASE
+                WHEN opening_hours IS NULL
+                  OR opening_hours = ''
+                THEN 'MISSING_OPENING_HOURS'
+
+                WHEN try_parse_json(opening_hours) IS NULL
+                THEN 'INVALID_OPENING_HOURS_JSON'
+            END,
+
+            CASE
+                WHEN currency IS NULL
+                  OR currency NOT RLIKE '^[A-Z]{3}$'
+                THEN 'INVALID_CURRENCY'
+            END,
+
+            CASE
+                WHEN _rescued_data IS NOT NULL
+                  AND trim(_rescued_data) <> ''
+                THEN 'RESCUED_DATA_PRESENT'
+            END
+        ) AS hard_error_codes
+
+    FROM cleaned
+)
+
 SELECT
-  trim(store_id) AS store_id,
-  trim(city) AS city,
-  trim(district) AS district,
-  trim(postal_code) AS postal_code,
-  trim(street) AS street,
-  trim(region) AS region,
-  trim(country_code) AS country_code,
-  trim(country_name) AS country_name,
-  trim(size_class) AS size_class,
-  try_cast(trim(terminal_count) AS INT) AS terminal_count,
-  trim(source_system) AS source_system,
-  trim(opening_hours) AS opening_hours,
-  trim(currency) AS currency,
-  concat_ws('|',
-    CASE WHEN _rescued_data IS NOT NULL THEN 'ERR:RESCUED_DATA' END,
-    CASE WHEN store_id IS NULL OR trim(store_id) = '' THEN 'ERR:MISSING_STORE_ID' END,
-    CASE WHEN city IS NULL OR trim(city) = '' THEN 'ERR:MISSING_CITY' END,
-    CASE WHEN postal_code IS NULL OR NOT trim(postal_code) RLIKE '^[0-9]{5}$' THEN 'ERR:INVALID_POSTAL_CODE' END,
-    CASE WHEN region IS NULL OR trim(region) = '' THEN 'ERR:MISSING_REGION' END,
-    CASE WHEN country_code <> 'DE' THEN 'ERR:INVALID_COUNTRY_CODE' END,
-    CASE WHEN size_class NOT IN ('S','M','L') THEN 'ERR:INVALID_SIZE_CLASS' END,
-    CASE WHEN try_cast(trim(terminal_count) AS INT) IS NULL OR try_cast(trim(terminal_count) AS INT) <= 0 THEN 'ERR:INVALID_TERMINAL_COUNT' END,
-    CASE WHEN source_system NOT IN ('SAP_POS','LEGACY_POS_CSV') THEN 'ERR:INVALID_SOURCE_SYSTEM' END,
-    CASE WHEN opening_hours IS NULL OR trim(opening_hours) = '' THEN 'ERR:MISSING_OPENING_HOURS' END,
-    CASE WHEN currency <> 'EUR' THEN 'ERR:INVALID_CURRENCY' END
-  ) AS hard_error_codes,
-  _rescued_data,
-  _source_file_path,
-  _source_file_name,
-  _source_file_modified_at,
-  _bronze_ingested_at
-FROM dim_stores_raw;
+    store_id,
+    city,
+    district,
+    postal_code,
+    street,
+    region,
+    country_code,
+    country_name,
+    size_class,
+    terminal_count,
+    source_system,
+    opening_hours,
+    currency,
+    hard_error_codes,
+    _rescued_data,
+    _source_file_path,
+    _source_file_name,
+    _source_file_modified_at,
+    _bronze_ingested_at
+FROM validated;
 
 CREATE OR REFRESH MATERIALIZED VIEW dim_stores
 COMMENT 'Typed store master records accepted by Bronze.'
@@ -713,9 +791,11 @@ WHERE hard_error_codes = '';
 CREATE OR REFRESH MATERIALIZED VIEW dim_stores_quarantine
 COMMENT 'Invalid store master records.'
 AS
-SELECT *, hard_error_codes AS quarantine_reasons
+SELECT
+  *,
+  hard_error_codes AS quarantine_reasons
 FROM dim_stores_parsed
-WHERE hard_error_codes <> '';
+WHERE COALESCE(TRIM(hard_error_codes), '') <> '';
 
 -- ---------------------------------------------------------------------------
 -- 4. CUSTOMER MASTER — current snapshot

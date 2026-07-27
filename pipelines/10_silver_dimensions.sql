@@ -282,8 +282,7 @@ FROM ranked;
 CREATE OR REFRESH MATERIALIZED VIEW dim_product_review
 COMMENT 'Product master keys with conflicting current profiles.'
 AS
-SELECT
-  product_id,
+SELECT product_id,
   source_row_count,
   distinct_profile_count,
   collect_set(profile_hash) AS conflicting_profile_hashes,
@@ -506,77 +505,147 @@ WHERE NOT s.has_overlap
 
 CREATE OR REFRESH PRIVATE MATERIALIZED VIEW terminal_source_profile
 AS
+
 WITH observed AS (
   SELECT DISTINCT
-    pos_terminal_id AS terminal_id,
-    store_id,
-    terminal_type,
+    trim(pos_terminal_id) AS terminal_id,
+    trim(store_id) AS store_id,
+    trim(terminal_type) AS terminal_type,
     is_self_checkout,
-    source_system,
+    trim(source_system) AS source_system,
     _bronze_ingested_at
   FROM workspace.retail_dev_bronze.fact_transactions
-), stats AS (
+  WHERE pos_terminal_id IS NOT NULL
+    AND trim(pos_terminal_id) <> ''
+    AND store_id IS NOT NULL
+    AND trim(store_id) <> ''
+),
+
+stats AS (
   SELECT
+    store_id,
     terminal_id,
-    count(DISTINCT store_id) AS store_count,
+
     count(DISTINCT terminal_type) AS terminal_type_count,
-    count(DISTINCT is_self_checkout) AS checkout_flag_count
+    count(DISTINCT is_self_checkout) AS checkout_flag_count,
+
+    count_if(
+      terminal_type IS NULL OR trim(terminal_type) = ''
+    ) AS missing_terminal_type_count,
+
+    count_if(
+      is_self_checkout IS NULL
+    ) AS missing_checkout_flag_count
+
   FROM observed
-  GROUP BY terminal_id
-), profiled AS (
+  GROUP BY
+    store_id,
+    terminal_id
+),
+
+profiled AS (
   SELECT
     o.*,
-    s.store_count,
     s.terminal_type_count,
     s.checkout_flag_count,
+    s.missing_terminal_type_count,
+    s.missing_checkout_flag_count,
+
     row_number() OVER (
-      PARTITION BY o.terminal_id
-      ORDER BY o._bronze_ingested_at DESC, o.store_id, o.terminal_type
+      PARTITION BY o.store_id, o.terminal_id
+      ORDER BY
+        o._bronze_ingested_at DESC,
+        o.terminal_type,
+        o.source_system
     ) AS terminal_rank
+
   FROM observed o
-  JOIN stats s USING (terminal_id)
+  JOIN stats s
+    ON o.store_id = s.store_id
+   AND o.terminal_id = s.terminal_id
 )
+
 SELECT *
 FROM profiled;
 
 CREATE OR REFRESH MATERIALIZED VIEW dim_terminal_review
-COMMENT 'Terminals observed with conflicting store or terminal-type assignments.'
+COMMENT 'Terminals with conflicting or missing terminal metadata.'
 AS
 SELECT
+  store_id,
   terminal_id,
-  collect_set(store_id) AS observed_store_ids,
+
   collect_set(terminal_type) AS observed_terminal_types,
   collect_set(is_self_checkout) AS observed_self_checkout_flags,
-  concat_ws('|',
-    CASE WHEN max(store_count) > 1 THEN 'TERMINAL_USED_BY_MULTIPLE_STORES' END,
-    CASE WHEN max(terminal_type_count) > 1 THEN 'TERMINAL_TYPE_CONFLICT' END,
-    CASE WHEN max(checkout_flag_count) > 1 THEN 'SELF_CHECKOUT_FLAG_CONFLICT' END
+
+  concat_ws(
+    '|',
+
+    CASE
+      WHEN max(terminal_type_count) > 1
+      THEN 'TERMINAL_TYPE_CONFLICT'
+    END,
+
+    CASE
+      WHEN max(checkout_flag_count) > 1
+      THEN 'SELF_CHECKOUT_FLAG_CONFLICT'
+    END,
+
+    CASE
+      WHEN max(missing_terminal_type_count) > 0
+      THEN 'MISSING_TERMINAL_TYPE'
+    END,
+
+    CASE
+      WHEN max(missing_checkout_flag_count) > 0
+      THEN 'MISSING_SELF_CHECKOUT_FLAG'
+    END
+
   ) AS review_reasons
+
 FROM terminal_source_profile
-WHERE store_count > 1
-   OR terminal_type_count > 1
-   OR checkout_flag_count > 1
-GROUP BY terminal_id;
+
+WHERE terminal_type_count <> 1
+   OR checkout_flag_count <> 1
+   OR missing_terminal_type_count > 0
+   OR missing_checkout_flag_count > 0
+
+GROUP BY
+  store_id,
+  terminal_id;
 
 CREATE OR REFRESH MATERIALIZED VIEW dim_terminal
 COMMENT 'Conformed terminal dimension derived from consistent observed POS metadata.'
 AS
+
 SELECT
-  sha2(terminal_id, 256) AS terminal_sk,
-  terminal_id,
+  sha2(
+    concat_ws(
+      '||',
+      t.store_id,
+      t.terminal_id
+    ),
+    256
+  ) AS terminal_sk,
+
+  t.terminal_id,
   s.store_sk,
   t.store_id,
   t.terminal_type,
   t.is_self_checkout,
   t.source_system,
   t._bronze_ingested_at
+
 FROM terminal_source_profile t
+
 JOIN dim_store s
   ON t.store_id = s.store_id
+
 WHERE t.terminal_rank = 1
-  AND t.store_count = 1
   AND t.terminal_type_count = 1
-  AND t.checkout_flag_count = 1;
+  AND t.checkout_flag_count = 1
+  AND t.missing_terminal_type_count = 0
+  AND t.missing_checkout_flag_count = 0;
 
 -- ---------------------------------------------------------------------------
 -- 6. DIMENSION QUALITY SUMMARY

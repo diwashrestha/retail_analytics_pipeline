@@ -256,27 +256,49 @@ WHERE base_review_reasons = '';
 
 CREATE OR REFRESH PRIVATE MATERIALIZED VIEW returns_classified
 AS
+
+WITH normalized AS (
+  SELECT
+    r.*,
+    coalesce(trim(r.base_review_reasons), '') AS normalized_base_review_reasons
+  FROM returns_base_classified r
+)
+
 SELECT
-  r.* EXCEPT (base_review_reasons),
+  r.* EXCEPT (
+    base_review_reasons,
+    normalized_base_review_reasons
+  ),
+
   c.cumulative_return_quantity,
   c.cumulative_refund_amount_eur,
-  concat_ws('|',
-    CASE WHEN r.base_review_reasons <> '' THEN r.base_review_reasons END,
+
+  concat_ws(
+    '|',
+
+    nullif(r.normalized_base_review_reasons, ''),
+
     CASE
-      WHEN r.base_review_reasons = ''
+      WHEN r.normalized_base_review_reasons = ''
        AND c.cumulative_return_quantity > r.sold_quantity
       THEN 'CUMULATIVE_RETURN_QUANTITY_EXCEEDS_SALE'
     END,
+
     CASE
-      WHEN r.base_review_reasons = ''
-       AND c.cumulative_refund_amount_eur
-           > r.original_net_sales_eur + cast(:revenue_tolerance_eur AS DECIMAL(10,2))
+      WHEN r.normalized_base_review_reasons = ''
+       AND c.cumulative_refund_amount_eur >
+           r.original_net_sales_eur
+           + cast(:revenue_tolerance_eur AS DECIMAL(10,2))
       THEN 'CUMULATIVE_REFUND_EXCEEDS_AMOUNT_PAID'
     END
+
   ) AS silver_review_reasons
-FROM returns_base_classified r
+
+FROM normalized r
+
 LEFT JOIN return_cumulative_candidates c
-  ON r._bronze_record_fingerprint = c._bronze_record_fingerprint;
+  ON r._bronze_record_fingerprint =
+     c._bronze_record_fingerprint;
 
 CREATE OR REFRESH MATERIALIZED VIEW fact_returns
 COMMENT 'Trusted return events linked to trusted sales with cumulative quantity and refund controls.'
@@ -320,7 +342,7 @@ SELECT
   _bronze_ingested_at,
   _bronze_processed_at
 FROM returns_classified
-WHERE silver_review_reasons = '';
+WHERE coalesce(trim(silver_review_reasons), '') = '';
 
 CREATE OR REFRESH MATERIALIZED VIEW fact_returns_review
 COMMENT 'Return events excluded from trusted analytics, with explicit linkage, timing, quantity, and refund review reasons.'
