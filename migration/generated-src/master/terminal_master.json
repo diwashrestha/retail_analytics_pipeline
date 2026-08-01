@@ -1,0 +1,6025 @@
+{
+  "version": "2.0.0",
+  "description": "Complete terminal master for all 50 Einkaufpark DE stores.",
+  "created": "2026-04-20",
+  "owner": "store-operations",
+  "sco_ratios": {
+    "L": "30% of lanes are SELF_CHECKOUT (6 of 20)",
+    "M": "25% of lanes are SELF_CHECKOUT (3 of 12)",
+    "S": "0% of lanes are SELF_CHECKOUT (0 of 6)"
+  },
+  "terminals": [
+    {
+      "terminal_id": "POS-EKP-DE-001-T01",
+      "store_id": "EKP-DE-001",
+      "size_class": "L",
+      "lane_number": 1,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-001-T02",
+      "store_id": "EKP-DE-001",
+      "size_class": "L",
+      "lane_number": 2,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-001-T03",
+      "store_id": "EKP-DE-001",
+      "size_class": "L",
+      "lane_number": 3,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-001-T04",
+      "store_id": "EKP-DE-001",
+      "size_class": "L",
+      "lane_number": 4,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-001-T05",
+      "store_id": "EKP-DE-001",
+      "size_class": "L",
+      "lane_number": 5,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-001-T06",
+      "store_id": "EKP-DE-001",
+      "size_class": "L",
+      "lane_number": 6,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-001-T07",
+      "store_id": "EKP-DE-001",
+      "size_class": "L",
+      "lane_number": 7,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-001-T08",
+      "store_id": "EKP-DE-001",
+      "size_class": "L",
+      "lane_number": 8,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-001-T09",
+      "store_id": "EKP-DE-001",
+      "size_class": "L",
+      "lane_number": 9,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-001-T10",
+      "store_id": "EKP-DE-001",
+      "size_class": "L",
+      "lane_number": 10,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-001-T11",
+      "store_id": "EKP-DE-001",
+      "size_class": "L",
+      "lane_number": 11,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-001-T12",
+      "store_id": "EKP-DE-001",
+      "size_class": "L",
+      "lane_number": 12,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-001-T13",
+      "store_id": "EKP-DE-001",
+      "size_class": "L",
+      "lane_number": 13,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-001-T14",
+      "store_id": "EKP-DE-001",
+      "size_class": "L",
+      "lane_number": 14,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-001-T15",
+      "store_id": "EKP-DE-001",
+      "size_class": "L",
+      "lane_number": 15,
+      "terminal_type": "SELF_CHECKOUT",
+      "is_self_checkout": true,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-001-T16",
+      "store_id": "EKP-DE-001",
+      "size_class": "L",
+      "lane_number": 16,
+      "terminal_type": "SELF_CHECKOUT",
+      "is_self_checkout": true,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-001-T17",
+      "store_id": "EKP-DE-001",
+      "size_class": "L",
+      "lane_number": 17,
+      "terminal_type": "SELF_CHECKOUT",
+      "is_self_checkout": true,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-001-T18",
+      "store_id": "EKP-DE-001",
+      "size_class": "L",
+      "lane_number": 18,
+      "terminal_type": "SELF_CHECKOUT",
+      "is_self_checkout": true,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-001-T19",
+      "store_id": "EKP-DE-001",
+      "size_class": "L",
+      "lane_number": 19,
+      "terminal_type": "SELF_CHECKOUT",
+      "is_self_checkout": true,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-001-T20",
+      "store_id": "EKP-DE-001",
+      "size_class": "L",
+      "lane_number": 20,
+      "terminal_type": "SELF_CHECKOUT",
+      "is_self_checkout": true,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-002-T01",
+      "store_id": "EKP-DE-002",
+      "size_class": "L",
+      "lane_number": 1,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-002-T02",
+      "store_id": "EKP-DE-002",
+      "size_class": "L",
+      "lane_number": 2,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-002-T03",
+      "store_id": "EKP-DE-002",
+      "size_class": "L",
+      "lane_number": 3,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-002-T04",
+      "store_id": "EKP-DE-002",
+      "size_class": "L",
+      "lane_number": 4,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-002-T05",
+      "store_id": "EKP-DE-002",
+      "size_class": "L",
+      "lane_number": 5,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-002-T06",
+      "store_id": "EKP-DE-002",
+      "size_class": "L",
+      "lane_number": 6,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-002-T07",
+      "store_id": "EKP-DE-002",
+      "size_class": "L",
+      "lane_number": 7,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-002-T08",
+      "store_id": "EKP-DE-002",
+      "size_class": "L",
+      "lane_number": 8,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-002-T09",
+      "store_id": "EKP-DE-002",
+      "size_class": "L",
+      "lane_number": 9,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-002-T10",
+      "store_id": "EKP-DE-002",
+      "size_class": "L",
+      "lane_number": 10,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-002-T11",
+      "store_id": "EKP-DE-002",
+      "size_class": "L",
+      "lane_number": 11,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-002-T12",
+      "store_id": "EKP-DE-002",
+      "size_class": "L",
+      "lane_number": 12,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-002-T13",
+      "store_id": "EKP-DE-002",
+      "size_class": "L",
+      "lane_number": 13,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-002-T14",
+      "store_id": "EKP-DE-002",
+      "size_class": "L",
+      "lane_number": 14,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-002-T15",
+      "store_id": "EKP-DE-002",
+      "size_class": "L",
+      "lane_number": 15,
+      "terminal_type": "SELF_CHECKOUT",
+      "is_self_checkout": true,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-002-T16",
+      "store_id": "EKP-DE-002",
+      "size_class": "L",
+      "lane_number": 16,
+      "terminal_type": "SELF_CHECKOUT",
+      "is_self_checkout": true,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-002-T17",
+      "store_id": "EKP-DE-002",
+      "size_class": "L",
+      "lane_number": 17,
+      "terminal_type": "SELF_CHECKOUT",
+      "is_self_checkout": true,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-002-T18",
+      "store_id": "EKP-DE-002",
+      "size_class": "L",
+      "lane_number": 18,
+      "terminal_type": "SELF_CHECKOUT",
+      "is_self_checkout": true,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-002-T19",
+      "store_id": "EKP-DE-002",
+      "size_class": "L",
+      "lane_number": 19,
+      "terminal_type": "SELF_CHECKOUT",
+      "is_self_checkout": true,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-002-T20",
+      "store_id": "EKP-DE-002",
+      "size_class": "L",
+      "lane_number": 20,
+      "terminal_type": "SELF_CHECKOUT",
+      "is_self_checkout": true,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-003-T01",
+      "store_id": "EKP-DE-003",
+      "size_class": "L",
+      "lane_number": 1,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-003-T02",
+      "store_id": "EKP-DE-003",
+      "size_class": "L",
+      "lane_number": 2,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-003-T03",
+      "store_id": "EKP-DE-003",
+      "size_class": "L",
+      "lane_number": 3,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-003-T04",
+      "store_id": "EKP-DE-003",
+      "size_class": "L",
+      "lane_number": 4,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-003-T05",
+      "store_id": "EKP-DE-003",
+      "size_class": "L",
+      "lane_number": 5,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-003-T06",
+      "store_id": "EKP-DE-003",
+      "size_class": "L",
+      "lane_number": 6,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-003-T07",
+      "store_id": "EKP-DE-003",
+      "size_class": "L",
+      "lane_number": 7,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-003-T08",
+      "store_id": "EKP-DE-003",
+      "size_class": "L",
+      "lane_number": 8,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-003-T09",
+      "store_id": "EKP-DE-003",
+      "size_class": "L",
+      "lane_number": 9,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-003-T10",
+      "store_id": "EKP-DE-003",
+      "size_class": "L",
+      "lane_number": 10,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-003-T11",
+      "store_id": "EKP-DE-003",
+      "size_class": "L",
+      "lane_number": 11,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-003-T12",
+      "store_id": "EKP-DE-003",
+      "size_class": "L",
+      "lane_number": 12,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-003-T13",
+      "store_id": "EKP-DE-003",
+      "size_class": "L",
+      "lane_number": 13,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-003-T14",
+      "store_id": "EKP-DE-003",
+      "size_class": "L",
+      "lane_number": 14,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-003-T15",
+      "store_id": "EKP-DE-003",
+      "size_class": "L",
+      "lane_number": 15,
+      "terminal_type": "SELF_CHECKOUT",
+      "is_self_checkout": true,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-003-T16",
+      "store_id": "EKP-DE-003",
+      "size_class": "L",
+      "lane_number": 16,
+      "terminal_type": "SELF_CHECKOUT",
+      "is_self_checkout": true,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-003-T17",
+      "store_id": "EKP-DE-003",
+      "size_class": "L",
+      "lane_number": 17,
+      "terminal_type": "SELF_CHECKOUT",
+      "is_self_checkout": true,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-003-T18",
+      "store_id": "EKP-DE-003",
+      "size_class": "L",
+      "lane_number": 18,
+      "terminal_type": "SELF_CHECKOUT",
+      "is_self_checkout": true,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-003-T19",
+      "store_id": "EKP-DE-003",
+      "size_class": "L",
+      "lane_number": 19,
+      "terminal_type": "SELF_CHECKOUT",
+      "is_self_checkout": true,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-003-T20",
+      "store_id": "EKP-DE-003",
+      "size_class": "L",
+      "lane_number": 20,
+      "terminal_type": "SELF_CHECKOUT",
+      "is_self_checkout": true,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-004-T01",
+      "store_id": "EKP-DE-004",
+      "size_class": "L",
+      "lane_number": 1,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-004-T02",
+      "store_id": "EKP-DE-004",
+      "size_class": "L",
+      "lane_number": 2,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-004-T03",
+      "store_id": "EKP-DE-004",
+      "size_class": "L",
+      "lane_number": 3,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-004-T04",
+      "store_id": "EKP-DE-004",
+      "size_class": "L",
+      "lane_number": 4,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-004-T05",
+      "store_id": "EKP-DE-004",
+      "size_class": "L",
+      "lane_number": 5,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-004-T06",
+      "store_id": "EKP-DE-004",
+      "size_class": "L",
+      "lane_number": 6,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-004-T07",
+      "store_id": "EKP-DE-004",
+      "size_class": "L",
+      "lane_number": 7,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-004-T08",
+      "store_id": "EKP-DE-004",
+      "size_class": "L",
+      "lane_number": 8,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-004-T09",
+      "store_id": "EKP-DE-004",
+      "size_class": "L",
+      "lane_number": 9,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-004-T10",
+      "store_id": "EKP-DE-004",
+      "size_class": "L",
+      "lane_number": 10,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-004-T11",
+      "store_id": "EKP-DE-004",
+      "size_class": "L",
+      "lane_number": 11,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-004-T12",
+      "store_id": "EKP-DE-004",
+      "size_class": "L",
+      "lane_number": 12,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-004-T13",
+      "store_id": "EKP-DE-004",
+      "size_class": "L",
+      "lane_number": 13,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-004-T14",
+      "store_id": "EKP-DE-004",
+      "size_class": "L",
+      "lane_number": 14,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-004-T15",
+      "store_id": "EKP-DE-004",
+      "size_class": "L",
+      "lane_number": 15,
+      "terminal_type": "SELF_CHECKOUT",
+      "is_self_checkout": true,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-004-T16",
+      "store_id": "EKP-DE-004",
+      "size_class": "L",
+      "lane_number": 16,
+      "terminal_type": "SELF_CHECKOUT",
+      "is_self_checkout": true,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-004-T17",
+      "store_id": "EKP-DE-004",
+      "size_class": "L",
+      "lane_number": 17,
+      "terminal_type": "SELF_CHECKOUT",
+      "is_self_checkout": true,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-004-T18",
+      "store_id": "EKP-DE-004",
+      "size_class": "L",
+      "lane_number": 18,
+      "terminal_type": "SELF_CHECKOUT",
+      "is_self_checkout": true,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-004-T19",
+      "store_id": "EKP-DE-004",
+      "size_class": "L",
+      "lane_number": 19,
+      "terminal_type": "SELF_CHECKOUT",
+      "is_self_checkout": true,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-004-T20",
+      "store_id": "EKP-DE-004",
+      "size_class": "L",
+      "lane_number": 20,
+      "terminal_type": "SELF_CHECKOUT",
+      "is_self_checkout": true,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-005-T01",
+      "store_id": "EKP-DE-005",
+      "size_class": "L",
+      "lane_number": 1,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-005-T02",
+      "store_id": "EKP-DE-005",
+      "size_class": "L",
+      "lane_number": 2,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-005-T03",
+      "store_id": "EKP-DE-005",
+      "size_class": "L",
+      "lane_number": 3,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-005-T04",
+      "store_id": "EKP-DE-005",
+      "size_class": "L",
+      "lane_number": 4,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-005-T05",
+      "store_id": "EKP-DE-005",
+      "size_class": "L",
+      "lane_number": 5,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-005-T06",
+      "store_id": "EKP-DE-005",
+      "size_class": "L",
+      "lane_number": 6,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-005-T07",
+      "store_id": "EKP-DE-005",
+      "size_class": "L",
+      "lane_number": 7,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-005-T08",
+      "store_id": "EKP-DE-005",
+      "size_class": "L",
+      "lane_number": 8,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-005-T09",
+      "store_id": "EKP-DE-005",
+      "size_class": "L",
+      "lane_number": 9,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-005-T10",
+      "store_id": "EKP-DE-005",
+      "size_class": "L",
+      "lane_number": 10,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-005-T11",
+      "store_id": "EKP-DE-005",
+      "size_class": "L",
+      "lane_number": 11,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-005-T12",
+      "store_id": "EKP-DE-005",
+      "size_class": "L",
+      "lane_number": 12,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-005-T13",
+      "store_id": "EKP-DE-005",
+      "size_class": "L",
+      "lane_number": 13,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-005-T14",
+      "store_id": "EKP-DE-005",
+      "size_class": "L",
+      "lane_number": 14,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-005-T15",
+      "store_id": "EKP-DE-005",
+      "size_class": "L",
+      "lane_number": 15,
+      "terminal_type": "SELF_CHECKOUT",
+      "is_self_checkout": true,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-005-T16",
+      "store_id": "EKP-DE-005",
+      "size_class": "L",
+      "lane_number": 16,
+      "terminal_type": "SELF_CHECKOUT",
+      "is_self_checkout": true,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-005-T17",
+      "store_id": "EKP-DE-005",
+      "size_class": "L",
+      "lane_number": 17,
+      "terminal_type": "SELF_CHECKOUT",
+      "is_self_checkout": true,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-005-T18",
+      "store_id": "EKP-DE-005",
+      "size_class": "L",
+      "lane_number": 18,
+      "terminal_type": "SELF_CHECKOUT",
+      "is_self_checkout": true,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-005-T19",
+      "store_id": "EKP-DE-005",
+      "size_class": "L",
+      "lane_number": 19,
+      "terminal_type": "SELF_CHECKOUT",
+      "is_self_checkout": true,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-005-T20",
+      "store_id": "EKP-DE-005",
+      "size_class": "L",
+      "lane_number": 20,
+      "terminal_type": "SELF_CHECKOUT",
+      "is_self_checkout": true,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-006-T01",
+      "store_id": "EKP-DE-006",
+      "size_class": "L",
+      "lane_number": 1,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-006-T02",
+      "store_id": "EKP-DE-006",
+      "size_class": "L",
+      "lane_number": 2,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-006-T03",
+      "store_id": "EKP-DE-006",
+      "size_class": "L",
+      "lane_number": 3,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-006-T04",
+      "store_id": "EKP-DE-006",
+      "size_class": "L",
+      "lane_number": 4,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-006-T05",
+      "store_id": "EKP-DE-006",
+      "size_class": "L",
+      "lane_number": 5,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-006-T06",
+      "store_id": "EKP-DE-006",
+      "size_class": "L",
+      "lane_number": 6,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-006-T07",
+      "store_id": "EKP-DE-006",
+      "size_class": "L",
+      "lane_number": 7,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-006-T08",
+      "store_id": "EKP-DE-006",
+      "size_class": "L",
+      "lane_number": 8,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-006-T09",
+      "store_id": "EKP-DE-006",
+      "size_class": "L",
+      "lane_number": 9,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-006-T10",
+      "store_id": "EKP-DE-006",
+      "size_class": "L",
+      "lane_number": 10,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-006-T11",
+      "store_id": "EKP-DE-006",
+      "size_class": "L",
+      "lane_number": 11,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-006-T12",
+      "store_id": "EKP-DE-006",
+      "size_class": "L",
+      "lane_number": 12,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-006-T13",
+      "store_id": "EKP-DE-006",
+      "size_class": "L",
+      "lane_number": 13,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-006-T14",
+      "store_id": "EKP-DE-006",
+      "size_class": "L",
+      "lane_number": 14,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-006-T15",
+      "store_id": "EKP-DE-006",
+      "size_class": "L",
+      "lane_number": 15,
+      "terminal_type": "SELF_CHECKOUT",
+      "is_self_checkout": true,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-006-T16",
+      "store_id": "EKP-DE-006",
+      "size_class": "L",
+      "lane_number": 16,
+      "terminal_type": "SELF_CHECKOUT",
+      "is_self_checkout": true,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-006-T17",
+      "store_id": "EKP-DE-006",
+      "size_class": "L",
+      "lane_number": 17,
+      "terminal_type": "SELF_CHECKOUT",
+      "is_self_checkout": true,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-006-T18",
+      "store_id": "EKP-DE-006",
+      "size_class": "L",
+      "lane_number": 18,
+      "terminal_type": "SELF_CHECKOUT",
+      "is_self_checkout": true,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-006-T19",
+      "store_id": "EKP-DE-006",
+      "size_class": "L",
+      "lane_number": 19,
+      "terminal_type": "SELF_CHECKOUT",
+      "is_self_checkout": true,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-006-T20",
+      "store_id": "EKP-DE-006",
+      "size_class": "L",
+      "lane_number": 20,
+      "terminal_type": "SELF_CHECKOUT",
+      "is_self_checkout": true,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-007-T01",
+      "store_id": "EKP-DE-007",
+      "size_class": "L",
+      "lane_number": 1,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-007-T02",
+      "store_id": "EKP-DE-007",
+      "size_class": "L",
+      "lane_number": 2,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-007-T03",
+      "store_id": "EKP-DE-007",
+      "size_class": "L",
+      "lane_number": 3,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-007-T04",
+      "store_id": "EKP-DE-007",
+      "size_class": "L",
+      "lane_number": 4,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-007-T05",
+      "store_id": "EKP-DE-007",
+      "size_class": "L",
+      "lane_number": 5,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-007-T06",
+      "store_id": "EKP-DE-007",
+      "size_class": "L",
+      "lane_number": 6,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-007-T07",
+      "store_id": "EKP-DE-007",
+      "size_class": "L",
+      "lane_number": 7,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-007-T08",
+      "store_id": "EKP-DE-007",
+      "size_class": "L",
+      "lane_number": 8,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-007-T09",
+      "store_id": "EKP-DE-007",
+      "size_class": "L",
+      "lane_number": 9,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-007-T10",
+      "store_id": "EKP-DE-007",
+      "size_class": "L",
+      "lane_number": 10,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-007-T11",
+      "store_id": "EKP-DE-007",
+      "size_class": "L",
+      "lane_number": 11,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-007-T12",
+      "store_id": "EKP-DE-007",
+      "size_class": "L",
+      "lane_number": 12,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-007-T13",
+      "store_id": "EKP-DE-007",
+      "size_class": "L",
+      "lane_number": 13,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-007-T14",
+      "store_id": "EKP-DE-007",
+      "size_class": "L",
+      "lane_number": 14,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-007-T15",
+      "store_id": "EKP-DE-007",
+      "size_class": "L",
+      "lane_number": 15,
+      "terminal_type": "SELF_CHECKOUT",
+      "is_self_checkout": true,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-007-T16",
+      "store_id": "EKP-DE-007",
+      "size_class": "L",
+      "lane_number": 16,
+      "terminal_type": "SELF_CHECKOUT",
+      "is_self_checkout": true,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-007-T17",
+      "store_id": "EKP-DE-007",
+      "size_class": "L",
+      "lane_number": 17,
+      "terminal_type": "SELF_CHECKOUT",
+      "is_self_checkout": true,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-007-T18",
+      "store_id": "EKP-DE-007",
+      "size_class": "L",
+      "lane_number": 18,
+      "terminal_type": "SELF_CHECKOUT",
+      "is_self_checkout": true,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-007-T19",
+      "store_id": "EKP-DE-007",
+      "size_class": "L",
+      "lane_number": 19,
+      "terminal_type": "SELF_CHECKOUT",
+      "is_self_checkout": true,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-007-T20",
+      "store_id": "EKP-DE-007",
+      "size_class": "L",
+      "lane_number": 20,
+      "terminal_type": "SELF_CHECKOUT",
+      "is_self_checkout": true,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-008-T01",
+      "store_id": "EKP-DE-008",
+      "size_class": "L",
+      "lane_number": 1,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-008-T02",
+      "store_id": "EKP-DE-008",
+      "size_class": "L",
+      "lane_number": 2,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-008-T03",
+      "store_id": "EKP-DE-008",
+      "size_class": "L",
+      "lane_number": 3,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-008-T04",
+      "store_id": "EKP-DE-008",
+      "size_class": "L",
+      "lane_number": 4,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-008-T05",
+      "store_id": "EKP-DE-008",
+      "size_class": "L",
+      "lane_number": 5,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-008-T06",
+      "store_id": "EKP-DE-008",
+      "size_class": "L",
+      "lane_number": 6,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-008-T07",
+      "store_id": "EKP-DE-008",
+      "size_class": "L",
+      "lane_number": 7,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-008-T08",
+      "store_id": "EKP-DE-008",
+      "size_class": "L",
+      "lane_number": 8,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-008-T09",
+      "store_id": "EKP-DE-008",
+      "size_class": "L",
+      "lane_number": 9,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-008-T10",
+      "store_id": "EKP-DE-008",
+      "size_class": "L",
+      "lane_number": 10,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-008-T11",
+      "store_id": "EKP-DE-008",
+      "size_class": "L",
+      "lane_number": 11,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-008-T12",
+      "store_id": "EKP-DE-008",
+      "size_class": "L",
+      "lane_number": 12,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-008-T13",
+      "store_id": "EKP-DE-008",
+      "size_class": "L",
+      "lane_number": 13,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-008-T14",
+      "store_id": "EKP-DE-008",
+      "size_class": "L",
+      "lane_number": 14,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-008-T15",
+      "store_id": "EKP-DE-008",
+      "size_class": "L",
+      "lane_number": 15,
+      "terminal_type": "SELF_CHECKOUT",
+      "is_self_checkout": true,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-008-T16",
+      "store_id": "EKP-DE-008",
+      "size_class": "L",
+      "lane_number": 16,
+      "terminal_type": "SELF_CHECKOUT",
+      "is_self_checkout": true,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-008-T17",
+      "store_id": "EKP-DE-008",
+      "size_class": "L",
+      "lane_number": 17,
+      "terminal_type": "SELF_CHECKOUT",
+      "is_self_checkout": true,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-008-T18",
+      "store_id": "EKP-DE-008",
+      "size_class": "L",
+      "lane_number": 18,
+      "terminal_type": "SELF_CHECKOUT",
+      "is_self_checkout": true,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-008-T19",
+      "store_id": "EKP-DE-008",
+      "size_class": "L",
+      "lane_number": 19,
+      "terminal_type": "SELF_CHECKOUT",
+      "is_self_checkout": true,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-008-T20",
+      "store_id": "EKP-DE-008",
+      "size_class": "L",
+      "lane_number": 20,
+      "terminal_type": "SELF_CHECKOUT",
+      "is_self_checkout": true,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-009-T01",
+      "store_id": "EKP-DE-009",
+      "size_class": "L",
+      "lane_number": 1,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-009-T02",
+      "store_id": "EKP-DE-009",
+      "size_class": "L",
+      "lane_number": 2,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-009-T03",
+      "store_id": "EKP-DE-009",
+      "size_class": "L",
+      "lane_number": 3,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-009-T04",
+      "store_id": "EKP-DE-009",
+      "size_class": "L",
+      "lane_number": 4,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-009-T05",
+      "store_id": "EKP-DE-009",
+      "size_class": "L",
+      "lane_number": 5,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-009-T06",
+      "store_id": "EKP-DE-009",
+      "size_class": "L",
+      "lane_number": 6,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-009-T07",
+      "store_id": "EKP-DE-009",
+      "size_class": "L",
+      "lane_number": 7,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-009-T08",
+      "store_id": "EKP-DE-009",
+      "size_class": "L",
+      "lane_number": 8,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-009-T09",
+      "store_id": "EKP-DE-009",
+      "size_class": "L",
+      "lane_number": 9,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-009-T10",
+      "store_id": "EKP-DE-009",
+      "size_class": "L",
+      "lane_number": 10,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-009-T11",
+      "store_id": "EKP-DE-009",
+      "size_class": "L",
+      "lane_number": 11,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-009-T12",
+      "store_id": "EKP-DE-009",
+      "size_class": "L",
+      "lane_number": 12,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-009-T13",
+      "store_id": "EKP-DE-009",
+      "size_class": "L",
+      "lane_number": 13,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-009-T14",
+      "store_id": "EKP-DE-009",
+      "size_class": "L",
+      "lane_number": 14,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-009-T15",
+      "store_id": "EKP-DE-009",
+      "size_class": "L",
+      "lane_number": 15,
+      "terminal_type": "SELF_CHECKOUT",
+      "is_self_checkout": true,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-009-T16",
+      "store_id": "EKP-DE-009",
+      "size_class": "L",
+      "lane_number": 16,
+      "terminal_type": "SELF_CHECKOUT",
+      "is_self_checkout": true,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-009-T17",
+      "store_id": "EKP-DE-009",
+      "size_class": "L",
+      "lane_number": 17,
+      "terminal_type": "SELF_CHECKOUT",
+      "is_self_checkout": true,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-009-T18",
+      "store_id": "EKP-DE-009",
+      "size_class": "L",
+      "lane_number": 18,
+      "terminal_type": "SELF_CHECKOUT",
+      "is_self_checkout": true,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-009-T19",
+      "store_id": "EKP-DE-009",
+      "size_class": "L",
+      "lane_number": 19,
+      "terminal_type": "SELF_CHECKOUT",
+      "is_self_checkout": true,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-009-T20",
+      "store_id": "EKP-DE-009",
+      "size_class": "L",
+      "lane_number": 20,
+      "terminal_type": "SELF_CHECKOUT",
+      "is_self_checkout": true,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-010-T01",
+      "store_id": "EKP-DE-010",
+      "size_class": "L",
+      "lane_number": 1,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-010-T02",
+      "store_id": "EKP-DE-010",
+      "size_class": "L",
+      "lane_number": 2,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-010-T03",
+      "store_id": "EKP-DE-010",
+      "size_class": "L",
+      "lane_number": 3,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-010-T04",
+      "store_id": "EKP-DE-010",
+      "size_class": "L",
+      "lane_number": 4,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-010-T05",
+      "store_id": "EKP-DE-010",
+      "size_class": "L",
+      "lane_number": 5,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-010-T06",
+      "store_id": "EKP-DE-010",
+      "size_class": "L",
+      "lane_number": 6,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-010-T07",
+      "store_id": "EKP-DE-010",
+      "size_class": "L",
+      "lane_number": 7,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-010-T08",
+      "store_id": "EKP-DE-010",
+      "size_class": "L",
+      "lane_number": 8,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-010-T09",
+      "store_id": "EKP-DE-010",
+      "size_class": "L",
+      "lane_number": 9,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-010-T10",
+      "store_id": "EKP-DE-010",
+      "size_class": "L",
+      "lane_number": 10,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-010-T11",
+      "store_id": "EKP-DE-010",
+      "size_class": "L",
+      "lane_number": 11,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-010-T12",
+      "store_id": "EKP-DE-010",
+      "size_class": "L",
+      "lane_number": 12,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-010-T13",
+      "store_id": "EKP-DE-010",
+      "size_class": "L",
+      "lane_number": 13,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-010-T14",
+      "store_id": "EKP-DE-010",
+      "size_class": "L",
+      "lane_number": 14,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-010-T15",
+      "store_id": "EKP-DE-010",
+      "size_class": "L",
+      "lane_number": 15,
+      "terminal_type": "SELF_CHECKOUT",
+      "is_self_checkout": true,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-010-T16",
+      "store_id": "EKP-DE-010",
+      "size_class": "L",
+      "lane_number": 16,
+      "terminal_type": "SELF_CHECKOUT",
+      "is_self_checkout": true,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-010-T17",
+      "store_id": "EKP-DE-010",
+      "size_class": "L",
+      "lane_number": 17,
+      "terminal_type": "SELF_CHECKOUT",
+      "is_self_checkout": true,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-010-T18",
+      "store_id": "EKP-DE-010",
+      "size_class": "L",
+      "lane_number": 18,
+      "terminal_type": "SELF_CHECKOUT",
+      "is_self_checkout": true,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-010-T19",
+      "store_id": "EKP-DE-010",
+      "size_class": "L",
+      "lane_number": 19,
+      "terminal_type": "SELF_CHECKOUT",
+      "is_self_checkout": true,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-010-T20",
+      "store_id": "EKP-DE-010",
+      "size_class": "L",
+      "lane_number": 20,
+      "terminal_type": "SELF_CHECKOUT",
+      "is_self_checkout": true,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-011-T01",
+      "store_id": "EKP-DE-011",
+      "size_class": "L",
+      "lane_number": 1,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-011-T02",
+      "store_id": "EKP-DE-011",
+      "size_class": "L",
+      "lane_number": 2,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-011-T03",
+      "store_id": "EKP-DE-011",
+      "size_class": "L",
+      "lane_number": 3,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-011-T04",
+      "store_id": "EKP-DE-011",
+      "size_class": "L",
+      "lane_number": 4,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-011-T05",
+      "store_id": "EKP-DE-011",
+      "size_class": "L",
+      "lane_number": 5,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-011-T06",
+      "store_id": "EKP-DE-011",
+      "size_class": "L",
+      "lane_number": 6,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-011-T07",
+      "store_id": "EKP-DE-011",
+      "size_class": "L",
+      "lane_number": 7,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-011-T08",
+      "store_id": "EKP-DE-011",
+      "size_class": "L",
+      "lane_number": 8,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-011-T09",
+      "store_id": "EKP-DE-011",
+      "size_class": "L",
+      "lane_number": 9,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-011-T10",
+      "store_id": "EKP-DE-011",
+      "size_class": "L",
+      "lane_number": 10,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-011-T11",
+      "store_id": "EKP-DE-011",
+      "size_class": "L",
+      "lane_number": 11,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-011-T12",
+      "store_id": "EKP-DE-011",
+      "size_class": "L",
+      "lane_number": 12,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-011-T13",
+      "store_id": "EKP-DE-011",
+      "size_class": "L",
+      "lane_number": 13,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-011-T14",
+      "store_id": "EKP-DE-011",
+      "size_class": "L",
+      "lane_number": 14,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-011-T15",
+      "store_id": "EKP-DE-011",
+      "size_class": "L",
+      "lane_number": 15,
+      "terminal_type": "SELF_CHECKOUT",
+      "is_self_checkout": true,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-011-T16",
+      "store_id": "EKP-DE-011",
+      "size_class": "L",
+      "lane_number": 16,
+      "terminal_type": "SELF_CHECKOUT",
+      "is_self_checkout": true,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-011-T17",
+      "store_id": "EKP-DE-011",
+      "size_class": "L",
+      "lane_number": 17,
+      "terminal_type": "SELF_CHECKOUT",
+      "is_self_checkout": true,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-011-T18",
+      "store_id": "EKP-DE-011",
+      "size_class": "L",
+      "lane_number": 18,
+      "terminal_type": "SELF_CHECKOUT",
+      "is_self_checkout": true,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-011-T19",
+      "store_id": "EKP-DE-011",
+      "size_class": "L",
+      "lane_number": 19,
+      "terminal_type": "SELF_CHECKOUT",
+      "is_self_checkout": true,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-011-T20",
+      "store_id": "EKP-DE-011",
+      "size_class": "L",
+      "lane_number": 20,
+      "terminal_type": "SELF_CHECKOUT",
+      "is_self_checkout": true,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-012-T01",
+      "store_id": "EKP-DE-012",
+      "size_class": "L",
+      "lane_number": 1,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-012-T02",
+      "store_id": "EKP-DE-012",
+      "size_class": "L",
+      "lane_number": 2,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-012-T03",
+      "store_id": "EKP-DE-012",
+      "size_class": "L",
+      "lane_number": 3,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-012-T04",
+      "store_id": "EKP-DE-012",
+      "size_class": "L",
+      "lane_number": 4,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-012-T05",
+      "store_id": "EKP-DE-012",
+      "size_class": "L",
+      "lane_number": 5,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-012-T06",
+      "store_id": "EKP-DE-012",
+      "size_class": "L",
+      "lane_number": 6,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-012-T07",
+      "store_id": "EKP-DE-012",
+      "size_class": "L",
+      "lane_number": 7,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-012-T08",
+      "store_id": "EKP-DE-012",
+      "size_class": "L",
+      "lane_number": 8,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-012-T09",
+      "store_id": "EKP-DE-012",
+      "size_class": "L",
+      "lane_number": 9,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-012-T10",
+      "store_id": "EKP-DE-012",
+      "size_class": "L",
+      "lane_number": 10,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-012-T11",
+      "store_id": "EKP-DE-012",
+      "size_class": "L",
+      "lane_number": 11,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-012-T12",
+      "store_id": "EKP-DE-012",
+      "size_class": "L",
+      "lane_number": 12,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-012-T13",
+      "store_id": "EKP-DE-012",
+      "size_class": "L",
+      "lane_number": 13,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-012-T14",
+      "store_id": "EKP-DE-012",
+      "size_class": "L",
+      "lane_number": 14,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-012-T15",
+      "store_id": "EKP-DE-012",
+      "size_class": "L",
+      "lane_number": 15,
+      "terminal_type": "SELF_CHECKOUT",
+      "is_self_checkout": true,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-012-T16",
+      "store_id": "EKP-DE-012",
+      "size_class": "L",
+      "lane_number": 16,
+      "terminal_type": "SELF_CHECKOUT",
+      "is_self_checkout": true,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-012-T17",
+      "store_id": "EKP-DE-012",
+      "size_class": "L",
+      "lane_number": 17,
+      "terminal_type": "SELF_CHECKOUT",
+      "is_self_checkout": true,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-012-T18",
+      "store_id": "EKP-DE-012",
+      "size_class": "L",
+      "lane_number": 18,
+      "terminal_type": "SELF_CHECKOUT",
+      "is_self_checkout": true,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-012-T19",
+      "store_id": "EKP-DE-012",
+      "size_class": "L",
+      "lane_number": 19,
+      "terminal_type": "SELF_CHECKOUT",
+      "is_self_checkout": true,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-012-T20",
+      "store_id": "EKP-DE-012",
+      "size_class": "L",
+      "lane_number": 20,
+      "terminal_type": "SELF_CHECKOUT",
+      "is_self_checkout": true,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-013-T01",
+      "store_id": "EKP-DE-013",
+      "size_class": "L",
+      "lane_number": 1,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-013-T02",
+      "store_id": "EKP-DE-013",
+      "size_class": "L",
+      "lane_number": 2,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-013-T03",
+      "store_id": "EKP-DE-013",
+      "size_class": "L",
+      "lane_number": 3,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-013-T04",
+      "store_id": "EKP-DE-013",
+      "size_class": "L",
+      "lane_number": 4,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-013-T05",
+      "store_id": "EKP-DE-013",
+      "size_class": "L",
+      "lane_number": 5,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-013-T06",
+      "store_id": "EKP-DE-013",
+      "size_class": "L",
+      "lane_number": 6,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-013-T07",
+      "store_id": "EKP-DE-013",
+      "size_class": "L",
+      "lane_number": 7,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-013-T08",
+      "store_id": "EKP-DE-013",
+      "size_class": "L",
+      "lane_number": 8,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-013-T09",
+      "store_id": "EKP-DE-013",
+      "size_class": "L",
+      "lane_number": 9,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-013-T10",
+      "store_id": "EKP-DE-013",
+      "size_class": "L",
+      "lane_number": 10,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-013-T11",
+      "store_id": "EKP-DE-013",
+      "size_class": "L",
+      "lane_number": 11,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-013-T12",
+      "store_id": "EKP-DE-013",
+      "size_class": "L",
+      "lane_number": 12,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-013-T13",
+      "store_id": "EKP-DE-013",
+      "size_class": "L",
+      "lane_number": 13,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-013-T14",
+      "store_id": "EKP-DE-013",
+      "size_class": "L",
+      "lane_number": 14,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-013-T15",
+      "store_id": "EKP-DE-013",
+      "size_class": "L",
+      "lane_number": 15,
+      "terminal_type": "SELF_CHECKOUT",
+      "is_self_checkout": true,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-013-T16",
+      "store_id": "EKP-DE-013",
+      "size_class": "L",
+      "lane_number": 16,
+      "terminal_type": "SELF_CHECKOUT",
+      "is_self_checkout": true,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-013-T17",
+      "store_id": "EKP-DE-013",
+      "size_class": "L",
+      "lane_number": 17,
+      "terminal_type": "SELF_CHECKOUT",
+      "is_self_checkout": true,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-013-T18",
+      "store_id": "EKP-DE-013",
+      "size_class": "L",
+      "lane_number": 18,
+      "terminal_type": "SELF_CHECKOUT",
+      "is_self_checkout": true,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-013-T19",
+      "store_id": "EKP-DE-013",
+      "size_class": "L",
+      "lane_number": 19,
+      "terminal_type": "SELF_CHECKOUT",
+      "is_self_checkout": true,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-013-T20",
+      "store_id": "EKP-DE-013",
+      "size_class": "L",
+      "lane_number": 20,
+      "terminal_type": "SELF_CHECKOUT",
+      "is_self_checkout": true,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-014-T01",
+      "store_id": "EKP-DE-014",
+      "size_class": "L",
+      "lane_number": 1,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-014-T02",
+      "store_id": "EKP-DE-014",
+      "size_class": "L",
+      "lane_number": 2,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-014-T03",
+      "store_id": "EKP-DE-014",
+      "size_class": "L",
+      "lane_number": 3,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-014-T04",
+      "store_id": "EKP-DE-014",
+      "size_class": "L",
+      "lane_number": 4,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-014-T05",
+      "store_id": "EKP-DE-014",
+      "size_class": "L",
+      "lane_number": 5,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-014-T06",
+      "store_id": "EKP-DE-014",
+      "size_class": "L",
+      "lane_number": 6,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-014-T07",
+      "store_id": "EKP-DE-014",
+      "size_class": "L",
+      "lane_number": 7,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-014-T08",
+      "store_id": "EKP-DE-014",
+      "size_class": "L",
+      "lane_number": 8,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-014-T09",
+      "store_id": "EKP-DE-014",
+      "size_class": "L",
+      "lane_number": 9,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-014-T10",
+      "store_id": "EKP-DE-014",
+      "size_class": "L",
+      "lane_number": 10,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-014-T11",
+      "store_id": "EKP-DE-014",
+      "size_class": "L",
+      "lane_number": 11,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-014-T12",
+      "store_id": "EKP-DE-014",
+      "size_class": "L",
+      "lane_number": 12,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-014-T13",
+      "store_id": "EKP-DE-014",
+      "size_class": "L",
+      "lane_number": 13,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-014-T14",
+      "store_id": "EKP-DE-014",
+      "size_class": "L",
+      "lane_number": 14,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-014-T15",
+      "store_id": "EKP-DE-014",
+      "size_class": "L",
+      "lane_number": 15,
+      "terminal_type": "SELF_CHECKOUT",
+      "is_self_checkout": true,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-014-T16",
+      "store_id": "EKP-DE-014",
+      "size_class": "L",
+      "lane_number": 16,
+      "terminal_type": "SELF_CHECKOUT",
+      "is_self_checkout": true,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-014-T17",
+      "store_id": "EKP-DE-014",
+      "size_class": "L",
+      "lane_number": 17,
+      "terminal_type": "SELF_CHECKOUT",
+      "is_self_checkout": true,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-014-T18",
+      "store_id": "EKP-DE-014",
+      "size_class": "L",
+      "lane_number": 18,
+      "terminal_type": "SELF_CHECKOUT",
+      "is_self_checkout": true,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-014-T19",
+      "store_id": "EKP-DE-014",
+      "size_class": "L",
+      "lane_number": 19,
+      "terminal_type": "SELF_CHECKOUT",
+      "is_self_checkout": true,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-014-T20",
+      "store_id": "EKP-DE-014",
+      "size_class": "L",
+      "lane_number": 20,
+      "terminal_type": "SELF_CHECKOUT",
+      "is_self_checkout": true,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-015-T01",
+      "store_id": "EKP-DE-015",
+      "size_class": "L",
+      "lane_number": 1,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-015-T02",
+      "store_id": "EKP-DE-015",
+      "size_class": "L",
+      "lane_number": 2,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-015-T03",
+      "store_id": "EKP-DE-015",
+      "size_class": "L",
+      "lane_number": 3,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-015-T04",
+      "store_id": "EKP-DE-015",
+      "size_class": "L",
+      "lane_number": 4,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-015-T05",
+      "store_id": "EKP-DE-015",
+      "size_class": "L",
+      "lane_number": 5,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-015-T06",
+      "store_id": "EKP-DE-015",
+      "size_class": "L",
+      "lane_number": 6,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-015-T07",
+      "store_id": "EKP-DE-015",
+      "size_class": "L",
+      "lane_number": 7,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-015-T08",
+      "store_id": "EKP-DE-015",
+      "size_class": "L",
+      "lane_number": 8,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-015-T09",
+      "store_id": "EKP-DE-015",
+      "size_class": "L",
+      "lane_number": 9,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-015-T10",
+      "store_id": "EKP-DE-015",
+      "size_class": "L",
+      "lane_number": 10,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-015-T11",
+      "store_id": "EKP-DE-015",
+      "size_class": "L",
+      "lane_number": 11,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-015-T12",
+      "store_id": "EKP-DE-015",
+      "size_class": "L",
+      "lane_number": 12,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-015-T13",
+      "store_id": "EKP-DE-015",
+      "size_class": "L",
+      "lane_number": 13,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-015-T14",
+      "store_id": "EKP-DE-015",
+      "size_class": "L",
+      "lane_number": 14,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-015-T15",
+      "store_id": "EKP-DE-015",
+      "size_class": "L",
+      "lane_number": 15,
+      "terminal_type": "SELF_CHECKOUT",
+      "is_self_checkout": true,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-015-T16",
+      "store_id": "EKP-DE-015",
+      "size_class": "L",
+      "lane_number": 16,
+      "terminal_type": "SELF_CHECKOUT",
+      "is_self_checkout": true,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-015-T17",
+      "store_id": "EKP-DE-015",
+      "size_class": "L",
+      "lane_number": 17,
+      "terminal_type": "SELF_CHECKOUT",
+      "is_self_checkout": true,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-015-T18",
+      "store_id": "EKP-DE-015",
+      "size_class": "L",
+      "lane_number": 18,
+      "terminal_type": "SELF_CHECKOUT",
+      "is_self_checkout": true,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-015-T19",
+      "store_id": "EKP-DE-015",
+      "size_class": "L",
+      "lane_number": 19,
+      "terminal_type": "SELF_CHECKOUT",
+      "is_self_checkout": true,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-015-T20",
+      "store_id": "EKP-DE-015",
+      "size_class": "L",
+      "lane_number": 20,
+      "terminal_type": "SELF_CHECKOUT",
+      "is_self_checkout": true,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-016-T01",
+      "store_id": "EKP-DE-016",
+      "size_class": "L",
+      "lane_number": 1,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-016-T02",
+      "store_id": "EKP-DE-016",
+      "size_class": "L",
+      "lane_number": 2,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-016-T03",
+      "store_id": "EKP-DE-016",
+      "size_class": "L",
+      "lane_number": 3,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-016-T04",
+      "store_id": "EKP-DE-016",
+      "size_class": "L",
+      "lane_number": 4,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-016-T05",
+      "store_id": "EKP-DE-016",
+      "size_class": "L",
+      "lane_number": 5,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-016-T06",
+      "store_id": "EKP-DE-016",
+      "size_class": "L",
+      "lane_number": 6,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-016-T07",
+      "store_id": "EKP-DE-016",
+      "size_class": "L",
+      "lane_number": 7,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-016-T08",
+      "store_id": "EKP-DE-016",
+      "size_class": "L",
+      "lane_number": 8,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-016-T09",
+      "store_id": "EKP-DE-016",
+      "size_class": "L",
+      "lane_number": 9,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-016-T10",
+      "store_id": "EKP-DE-016",
+      "size_class": "L",
+      "lane_number": 10,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-016-T11",
+      "store_id": "EKP-DE-016",
+      "size_class": "L",
+      "lane_number": 11,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-016-T12",
+      "store_id": "EKP-DE-016",
+      "size_class": "L",
+      "lane_number": 12,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-016-T13",
+      "store_id": "EKP-DE-016",
+      "size_class": "L",
+      "lane_number": 13,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-016-T14",
+      "store_id": "EKP-DE-016",
+      "size_class": "L",
+      "lane_number": 14,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-016-T15",
+      "store_id": "EKP-DE-016",
+      "size_class": "L",
+      "lane_number": 15,
+      "terminal_type": "SELF_CHECKOUT",
+      "is_self_checkout": true,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-016-T16",
+      "store_id": "EKP-DE-016",
+      "size_class": "L",
+      "lane_number": 16,
+      "terminal_type": "SELF_CHECKOUT",
+      "is_self_checkout": true,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-016-T17",
+      "store_id": "EKP-DE-016",
+      "size_class": "L",
+      "lane_number": 17,
+      "terminal_type": "SELF_CHECKOUT",
+      "is_self_checkout": true,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-016-T18",
+      "store_id": "EKP-DE-016",
+      "size_class": "L",
+      "lane_number": 18,
+      "terminal_type": "SELF_CHECKOUT",
+      "is_self_checkout": true,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-016-T19",
+      "store_id": "EKP-DE-016",
+      "size_class": "L",
+      "lane_number": 19,
+      "terminal_type": "SELF_CHECKOUT",
+      "is_self_checkout": true,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-016-T20",
+      "store_id": "EKP-DE-016",
+      "size_class": "L",
+      "lane_number": 20,
+      "terminal_type": "SELF_CHECKOUT",
+      "is_self_checkout": true,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-017-T01",
+      "store_id": "EKP-DE-017",
+      "size_class": "L",
+      "lane_number": 1,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-017-T02",
+      "store_id": "EKP-DE-017",
+      "size_class": "L",
+      "lane_number": 2,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-017-T03",
+      "store_id": "EKP-DE-017",
+      "size_class": "L",
+      "lane_number": 3,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-017-T04",
+      "store_id": "EKP-DE-017",
+      "size_class": "L",
+      "lane_number": 4,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-017-T05",
+      "store_id": "EKP-DE-017",
+      "size_class": "L",
+      "lane_number": 5,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-017-T06",
+      "store_id": "EKP-DE-017",
+      "size_class": "L",
+      "lane_number": 6,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-017-T07",
+      "store_id": "EKP-DE-017",
+      "size_class": "L",
+      "lane_number": 7,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-017-T08",
+      "store_id": "EKP-DE-017",
+      "size_class": "L",
+      "lane_number": 8,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-017-T09",
+      "store_id": "EKP-DE-017",
+      "size_class": "L",
+      "lane_number": 9,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-017-T10",
+      "store_id": "EKP-DE-017",
+      "size_class": "L",
+      "lane_number": 10,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-017-T11",
+      "store_id": "EKP-DE-017",
+      "size_class": "L",
+      "lane_number": 11,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-017-T12",
+      "store_id": "EKP-DE-017",
+      "size_class": "L",
+      "lane_number": 12,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-017-T13",
+      "store_id": "EKP-DE-017",
+      "size_class": "L",
+      "lane_number": 13,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-017-T14",
+      "store_id": "EKP-DE-017",
+      "size_class": "L",
+      "lane_number": 14,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-017-T15",
+      "store_id": "EKP-DE-017",
+      "size_class": "L",
+      "lane_number": 15,
+      "terminal_type": "SELF_CHECKOUT",
+      "is_self_checkout": true,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-017-T16",
+      "store_id": "EKP-DE-017",
+      "size_class": "L",
+      "lane_number": 16,
+      "terminal_type": "SELF_CHECKOUT",
+      "is_self_checkout": true,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-017-T17",
+      "store_id": "EKP-DE-017",
+      "size_class": "L",
+      "lane_number": 17,
+      "terminal_type": "SELF_CHECKOUT",
+      "is_self_checkout": true,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-017-T18",
+      "store_id": "EKP-DE-017",
+      "size_class": "L",
+      "lane_number": 18,
+      "terminal_type": "SELF_CHECKOUT",
+      "is_self_checkout": true,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-017-T19",
+      "store_id": "EKP-DE-017",
+      "size_class": "L",
+      "lane_number": 19,
+      "terminal_type": "SELF_CHECKOUT",
+      "is_self_checkout": true,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-017-T20",
+      "store_id": "EKP-DE-017",
+      "size_class": "L",
+      "lane_number": 20,
+      "terminal_type": "SELF_CHECKOUT",
+      "is_self_checkout": true,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-018-T01",
+      "store_id": "EKP-DE-018",
+      "size_class": "L",
+      "lane_number": 1,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-018-T02",
+      "store_id": "EKP-DE-018",
+      "size_class": "L",
+      "lane_number": 2,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-018-T03",
+      "store_id": "EKP-DE-018",
+      "size_class": "L",
+      "lane_number": 3,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-018-T04",
+      "store_id": "EKP-DE-018",
+      "size_class": "L",
+      "lane_number": 4,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-018-T05",
+      "store_id": "EKP-DE-018",
+      "size_class": "L",
+      "lane_number": 5,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-018-T06",
+      "store_id": "EKP-DE-018",
+      "size_class": "L",
+      "lane_number": 6,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-018-T07",
+      "store_id": "EKP-DE-018",
+      "size_class": "L",
+      "lane_number": 7,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-018-T08",
+      "store_id": "EKP-DE-018",
+      "size_class": "L",
+      "lane_number": 8,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-018-T09",
+      "store_id": "EKP-DE-018",
+      "size_class": "L",
+      "lane_number": 9,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-018-T10",
+      "store_id": "EKP-DE-018",
+      "size_class": "L",
+      "lane_number": 10,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-018-T11",
+      "store_id": "EKP-DE-018",
+      "size_class": "L",
+      "lane_number": 11,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-018-T12",
+      "store_id": "EKP-DE-018",
+      "size_class": "L",
+      "lane_number": 12,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-018-T13",
+      "store_id": "EKP-DE-018",
+      "size_class": "L",
+      "lane_number": 13,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-018-T14",
+      "store_id": "EKP-DE-018",
+      "size_class": "L",
+      "lane_number": 14,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-018-T15",
+      "store_id": "EKP-DE-018",
+      "size_class": "L",
+      "lane_number": 15,
+      "terminal_type": "SELF_CHECKOUT",
+      "is_self_checkout": true,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-018-T16",
+      "store_id": "EKP-DE-018",
+      "size_class": "L",
+      "lane_number": 16,
+      "terminal_type": "SELF_CHECKOUT",
+      "is_self_checkout": true,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-018-T17",
+      "store_id": "EKP-DE-018",
+      "size_class": "L",
+      "lane_number": 17,
+      "terminal_type": "SELF_CHECKOUT",
+      "is_self_checkout": true,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-018-T18",
+      "store_id": "EKP-DE-018",
+      "size_class": "L",
+      "lane_number": 18,
+      "terminal_type": "SELF_CHECKOUT",
+      "is_self_checkout": true,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-018-T19",
+      "store_id": "EKP-DE-018",
+      "size_class": "L",
+      "lane_number": 19,
+      "terminal_type": "SELF_CHECKOUT",
+      "is_self_checkout": true,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-018-T20",
+      "store_id": "EKP-DE-018",
+      "size_class": "L",
+      "lane_number": 20,
+      "terminal_type": "SELF_CHECKOUT",
+      "is_self_checkout": true,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-019-T01",
+      "store_id": "EKP-DE-019",
+      "size_class": "L",
+      "lane_number": 1,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-019-T02",
+      "store_id": "EKP-DE-019",
+      "size_class": "L",
+      "lane_number": 2,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-019-T03",
+      "store_id": "EKP-DE-019",
+      "size_class": "L",
+      "lane_number": 3,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-019-T04",
+      "store_id": "EKP-DE-019",
+      "size_class": "L",
+      "lane_number": 4,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-019-T05",
+      "store_id": "EKP-DE-019",
+      "size_class": "L",
+      "lane_number": 5,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-019-T06",
+      "store_id": "EKP-DE-019",
+      "size_class": "L",
+      "lane_number": 6,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-019-T07",
+      "store_id": "EKP-DE-019",
+      "size_class": "L",
+      "lane_number": 7,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-019-T08",
+      "store_id": "EKP-DE-019",
+      "size_class": "L",
+      "lane_number": 8,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-019-T09",
+      "store_id": "EKP-DE-019",
+      "size_class": "L",
+      "lane_number": 9,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-019-T10",
+      "store_id": "EKP-DE-019",
+      "size_class": "L",
+      "lane_number": 10,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-019-T11",
+      "store_id": "EKP-DE-019",
+      "size_class": "L",
+      "lane_number": 11,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-019-T12",
+      "store_id": "EKP-DE-019",
+      "size_class": "L",
+      "lane_number": 12,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-019-T13",
+      "store_id": "EKP-DE-019",
+      "size_class": "L",
+      "lane_number": 13,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-019-T14",
+      "store_id": "EKP-DE-019",
+      "size_class": "L",
+      "lane_number": 14,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-019-T15",
+      "store_id": "EKP-DE-019",
+      "size_class": "L",
+      "lane_number": 15,
+      "terminal_type": "SELF_CHECKOUT",
+      "is_self_checkout": true,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-019-T16",
+      "store_id": "EKP-DE-019",
+      "size_class": "L",
+      "lane_number": 16,
+      "terminal_type": "SELF_CHECKOUT",
+      "is_self_checkout": true,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-019-T17",
+      "store_id": "EKP-DE-019",
+      "size_class": "L",
+      "lane_number": 17,
+      "terminal_type": "SELF_CHECKOUT",
+      "is_self_checkout": true,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-019-T18",
+      "store_id": "EKP-DE-019",
+      "size_class": "L",
+      "lane_number": 18,
+      "terminal_type": "SELF_CHECKOUT",
+      "is_self_checkout": true,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-019-T19",
+      "store_id": "EKP-DE-019",
+      "size_class": "L",
+      "lane_number": 19,
+      "terminal_type": "SELF_CHECKOUT",
+      "is_self_checkout": true,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-019-T20",
+      "store_id": "EKP-DE-019",
+      "size_class": "L",
+      "lane_number": 20,
+      "terminal_type": "SELF_CHECKOUT",
+      "is_self_checkout": true,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-020-T01",
+      "store_id": "EKP-DE-020",
+      "size_class": "L",
+      "lane_number": 1,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-020-T02",
+      "store_id": "EKP-DE-020",
+      "size_class": "L",
+      "lane_number": 2,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-020-T03",
+      "store_id": "EKP-DE-020",
+      "size_class": "L",
+      "lane_number": 3,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-020-T04",
+      "store_id": "EKP-DE-020",
+      "size_class": "L",
+      "lane_number": 4,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-020-T05",
+      "store_id": "EKP-DE-020",
+      "size_class": "L",
+      "lane_number": 5,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-020-T06",
+      "store_id": "EKP-DE-020",
+      "size_class": "L",
+      "lane_number": 6,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-020-T07",
+      "store_id": "EKP-DE-020",
+      "size_class": "L",
+      "lane_number": 7,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-020-T08",
+      "store_id": "EKP-DE-020",
+      "size_class": "L",
+      "lane_number": 8,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-020-T09",
+      "store_id": "EKP-DE-020",
+      "size_class": "L",
+      "lane_number": 9,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-020-T10",
+      "store_id": "EKP-DE-020",
+      "size_class": "L",
+      "lane_number": 10,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-020-T11",
+      "store_id": "EKP-DE-020",
+      "size_class": "L",
+      "lane_number": 11,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-020-T12",
+      "store_id": "EKP-DE-020",
+      "size_class": "L",
+      "lane_number": 12,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-020-T13",
+      "store_id": "EKP-DE-020",
+      "size_class": "L",
+      "lane_number": 13,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-020-T14",
+      "store_id": "EKP-DE-020",
+      "size_class": "L",
+      "lane_number": 14,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-020-T15",
+      "store_id": "EKP-DE-020",
+      "size_class": "L",
+      "lane_number": 15,
+      "terminal_type": "SELF_CHECKOUT",
+      "is_self_checkout": true,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-020-T16",
+      "store_id": "EKP-DE-020",
+      "size_class": "L",
+      "lane_number": 16,
+      "terminal_type": "SELF_CHECKOUT",
+      "is_self_checkout": true,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-020-T17",
+      "store_id": "EKP-DE-020",
+      "size_class": "L",
+      "lane_number": 17,
+      "terminal_type": "SELF_CHECKOUT",
+      "is_self_checkout": true,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-020-T18",
+      "store_id": "EKP-DE-020",
+      "size_class": "L",
+      "lane_number": 18,
+      "terminal_type": "SELF_CHECKOUT",
+      "is_self_checkout": true,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-020-T19",
+      "store_id": "EKP-DE-020",
+      "size_class": "L",
+      "lane_number": 19,
+      "terminal_type": "SELF_CHECKOUT",
+      "is_self_checkout": true,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-020-T20",
+      "store_id": "EKP-DE-020",
+      "size_class": "L",
+      "lane_number": 20,
+      "terminal_type": "SELF_CHECKOUT",
+      "is_self_checkout": true,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-021-T01",
+      "store_id": "EKP-DE-021",
+      "size_class": "L",
+      "lane_number": 1,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-021-T02",
+      "store_id": "EKP-DE-021",
+      "size_class": "L",
+      "lane_number": 2,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-021-T03",
+      "store_id": "EKP-DE-021",
+      "size_class": "L",
+      "lane_number": 3,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-021-T04",
+      "store_id": "EKP-DE-021",
+      "size_class": "L",
+      "lane_number": 4,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-021-T05",
+      "store_id": "EKP-DE-021",
+      "size_class": "L",
+      "lane_number": 5,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-021-T06",
+      "store_id": "EKP-DE-021",
+      "size_class": "L",
+      "lane_number": 6,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-021-T07",
+      "store_id": "EKP-DE-021",
+      "size_class": "L",
+      "lane_number": 7,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-021-T08",
+      "store_id": "EKP-DE-021",
+      "size_class": "L",
+      "lane_number": 8,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-021-T09",
+      "store_id": "EKP-DE-021",
+      "size_class": "L",
+      "lane_number": 9,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-021-T10",
+      "store_id": "EKP-DE-021",
+      "size_class": "L",
+      "lane_number": 10,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-021-T11",
+      "store_id": "EKP-DE-021",
+      "size_class": "L",
+      "lane_number": 11,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-021-T12",
+      "store_id": "EKP-DE-021",
+      "size_class": "L",
+      "lane_number": 12,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-021-T13",
+      "store_id": "EKP-DE-021",
+      "size_class": "L",
+      "lane_number": 13,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-021-T14",
+      "store_id": "EKP-DE-021",
+      "size_class": "L",
+      "lane_number": 14,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-021-T15",
+      "store_id": "EKP-DE-021",
+      "size_class": "L",
+      "lane_number": 15,
+      "terminal_type": "SELF_CHECKOUT",
+      "is_self_checkout": true,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-021-T16",
+      "store_id": "EKP-DE-021",
+      "size_class": "L",
+      "lane_number": 16,
+      "terminal_type": "SELF_CHECKOUT",
+      "is_self_checkout": true,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-021-T17",
+      "store_id": "EKP-DE-021",
+      "size_class": "L",
+      "lane_number": 17,
+      "terminal_type": "SELF_CHECKOUT",
+      "is_self_checkout": true,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-021-T18",
+      "store_id": "EKP-DE-021",
+      "size_class": "L",
+      "lane_number": 18,
+      "terminal_type": "SELF_CHECKOUT",
+      "is_self_checkout": true,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-021-T19",
+      "store_id": "EKP-DE-021",
+      "size_class": "L",
+      "lane_number": 19,
+      "terminal_type": "SELF_CHECKOUT",
+      "is_self_checkout": true,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-021-T20",
+      "store_id": "EKP-DE-021",
+      "size_class": "L",
+      "lane_number": 20,
+      "terminal_type": "SELF_CHECKOUT",
+      "is_self_checkout": true,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-022-T01",
+      "store_id": "EKP-DE-022",
+      "size_class": "L",
+      "lane_number": 1,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-022-T02",
+      "store_id": "EKP-DE-022",
+      "size_class": "L",
+      "lane_number": 2,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-022-T03",
+      "store_id": "EKP-DE-022",
+      "size_class": "L",
+      "lane_number": 3,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-022-T04",
+      "store_id": "EKP-DE-022",
+      "size_class": "L",
+      "lane_number": 4,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-022-T05",
+      "store_id": "EKP-DE-022",
+      "size_class": "L",
+      "lane_number": 5,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-022-T06",
+      "store_id": "EKP-DE-022",
+      "size_class": "L",
+      "lane_number": 6,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-022-T07",
+      "store_id": "EKP-DE-022",
+      "size_class": "L",
+      "lane_number": 7,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-022-T08",
+      "store_id": "EKP-DE-022",
+      "size_class": "L",
+      "lane_number": 8,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-022-T09",
+      "store_id": "EKP-DE-022",
+      "size_class": "L",
+      "lane_number": 9,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-022-T10",
+      "store_id": "EKP-DE-022",
+      "size_class": "L",
+      "lane_number": 10,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-022-T11",
+      "store_id": "EKP-DE-022",
+      "size_class": "L",
+      "lane_number": 11,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-022-T12",
+      "store_id": "EKP-DE-022",
+      "size_class": "L",
+      "lane_number": 12,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-022-T13",
+      "store_id": "EKP-DE-022",
+      "size_class": "L",
+      "lane_number": 13,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-022-T14",
+      "store_id": "EKP-DE-022",
+      "size_class": "L",
+      "lane_number": 14,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-022-T15",
+      "store_id": "EKP-DE-022",
+      "size_class": "L",
+      "lane_number": 15,
+      "terminal_type": "SELF_CHECKOUT",
+      "is_self_checkout": true,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-022-T16",
+      "store_id": "EKP-DE-022",
+      "size_class": "L",
+      "lane_number": 16,
+      "terminal_type": "SELF_CHECKOUT",
+      "is_self_checkout": true,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-022-T17",
+      "store_id": "EKP-DE-022",
+      "size_class": "L",
+      "lane_number": 17,
+      "terminal_type": "SELF_CHECKOUT",
+      "is_self_checkout": true,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-022-T18",
+      "store_id": "EKP-DE-022",
+      "size_class": "L",
+      "lane_number": 18,
+      "terminal_type": "SELF_CHECKOUT",
+      "is_self_checkout": true,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-022-T19",
+      "store_id": "EKP-DE-022",
+      "size_class": "L",
+      "lane_number": 19,
+      "terminal_type": "SELF_CHECKOUT",
+      "is_self_checkout": true,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-022-T20",
+      "store_id": "EKP-DE-022",
+      "size_class": "L",
+      "lane_number": 20,
+      "terminal_type": "SELF_CHECKOUT",
+      "is_self_checkout": true,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-023-T01",
+      "store_id": "EKP-DE-023",
+      "size_class": "M",
+      "lane_number": 1,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-023-T02",
+      "store_id": "EKP-DE-023",
+      "size_class": "M",
+      "lane_number": 2,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-023-T03",
+      "store_id": "EKP-DE-023",
+      "size_class": "M",
+      "lane_number": 3,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-023-T04",
+      "store_id": "EKP-DE-023",
+      "size_class": "M",
+      "lane_number": 4,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-023-T05",
+      "store_id": "EKP-DE-023",
+      "size_class": "M",
+      "lane_number": 5,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-023-T06",
+      "store_id": "EKP-DE-023",
+      "size_class": "M",
+      "lane_number": 6,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-023-T07",
+      "store_id": "EKP-DE-023",
+      "size_class": "M",
+      "lane_number": 7,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-023-T08",
+      "store_id": "EKP-DE-023",
+      "size_class": "M",
+      "lane_number": 8,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-023-T09",
+      "store_id": "EKP-DE-023",
+      "size_class": "M",
+      "lane_number": 9,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-023-T10",
+      "store_id": "EKP-DE-023",
+      "size_class": "M",
+      "lane_number": 10,
+      "terminal_type": "SELF_CHECKOUT",
+      "is_self_checkout": true,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-023-T11",
+      "store_id": "EKP-DE-023",
+      "size_class": "M",
+      "lane_number": 11,
+      "terminal_type": "SELF_CHECKOUT",
+      "is_self_checkout": true,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-023-T12",
+      "store_id": "EKP-DE-023",
+      "size_class": "M",
+      "lane_number": 12,
+      "terminal_type": "SELF_CHECKOUT",
+      "is_self_checkout": true,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-024-T01",
+      "store_id": "EKP-DE-024",
+      "size_class": "M",
+      "lane_number": 1,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-024-T02",
+      "store_id": "EKP-DE-024",
+      "size_class": "M",
+      "lane_number": 2,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-024-T03",
+      "store_id": "EKP-DE-024",
+      "size_class": "M",
+      "lane_number": 3,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-024-T04",
+      "store_id": "EKP-DE-024",
+      "size_class": "M",
+      "lane_number": 4,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-024-T05",
+      "store_id": "EKP-DE-024",
+      "size_class": "M",
+      "lane_number": 5,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-024-T06",
+      "store_id": "EKP-DE-024",
+      "size_class": "M",
+      "lane_number": 6,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-024-T07",
+      "store_id": "EKP-DE-024",
+      "size_class": "M",
+      "lane_number": 7,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-024-T08",
+      "store_id": "EKP-DE-024",
+      "size_class": "M",
+      "lane_number": 8,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-024-T09",
+      "store_id": "EKP-DE-024",
+      "size_class": "M",
+      "lane_number": 9,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-024-T10",
+      "store_id": "EKP-DE-024",
+      "size_class": "M",
+      "lane_number": 10,
+      "terminal_type": "SELF_CHECKOUT",
+      "is_self_checkout": true,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-024-T11",
+      "store_id": "EKP-DE-024",
+      "size_class": "M",
+      "lane_number": 11,
+      "terminal_type": "SELF_CHECKOUT",
+      "is_self_checkout": true,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-024-T12",
+      "store_id": "EKP-DE-024",
+      "size_class": "M",
+      "lane_number": 12,
+      "terminal_type": "SELF_CHECKOUT",
+      "is_self_checkout": true,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-025-T01",
+      "store_id": "EKP-DE-025",
+      "size_class": "M",
+      "lane_number": 1,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-025-T02",
+      "store_id": "EKP-DE-025",
+      "size_class": "M",
+      "lane_number": 2,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-025-T03",
+      "store_id": "EKP-DE-025",
+      "size_class": "M",
+      "lane_number": 3,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-025-T04",
+      "store_id": "EKP-DE-025",
+      "size_class": "M",
+      "lane_number": 4,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-025-T05",
+      "store_id": "EKP-DE-025",
+      "size_class": "M",
+      "lane_number": 5,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-025-T06",
+      "store_id": "EKP-DE-025",
+      "size_class": "M",
+      "lane_number": 6,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-025-T07",
+      "store_id": "EKP-DE-025",
+      "size_class": "M",
+      "lane_number": 7,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-025-T08",
+      "store_id": "EKP-DE-025",
+      "size_class": "M",
+      "lane_number": 8,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-025-T09",
+      "store_id": "EKP-DE-025",
+      "size_class": "M",
+      "lane_number": 9,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-025-T10",
+      "store_id": "EKP-DE-025",
+      "size_class": "M",
+      "lane_number": 10,
+      "terminal_type": "SELF_CHECKOUT",
+      "is_self_checkout": true,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-025-T11",
+      "store_id": "EKP-DE-025",
+      "size_class": "M",
+      "lane_number": 11,
+      "terminal_type": "SELF_CHECKOUT",
+      "is_self_checkout": true,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-025-T12",
+      "store_id": "EKP-DE-025",
+      "size_class": "M",
+      "lane_number": 12,
+      "terminal_type": "SELF_CHECKOUT",
+      "is_self_checkout": true,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-026-T01",
+      "store_id": "EKP-DE-026",
+      "size_class": "M",
+      "lane_number": 1,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-026-T02",
+      "store_id": "EKP-DE-026",
+      "size_class": "M",
+      "lane_number": 2,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-026-T03",
+      "store_id": "EKP-DE-026",
+      "size_class": "M",
+      "lane_number": 3,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-026-T04",
+      "store_id": "EKP-DE-026",
+      "size_class": "M",
+      "lane_number": 4,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-026-T05",
+      "store_id": "EKP-DE-026",
+      "size_class": "M",
+      "lane_number": 5,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-026-T06",
+      "store_id": "EKP-DE-026",
+      "size_class": "M",
+      "lane_number": 6,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-026-T07",
+      "store_id": "EKP-DE-026",
+      "size_class": "M",
+      "lane_number": 7,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-026-T08",
+      "store_id": "EKP-DE-026",
+      "size_class": "M",
+      "lane_number": 8,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-026-T09",
+      "store_id": "EKP-DE-026",
+      "size_class": "M",
+      "lane_number": 9,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-026-T10",
+      "store_id": "EKP-DE-026",
+      "size_class": "M",
+      "lane_number": 10,
+      "terminal_type": "SELF_CHECKOUT",
+      "is_self_checkout": true,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-026-T11",
+      "store_id": "EKP-DE-026",
+      "size_class": "M",
+      "lane_number": 11,
+      "terminal_type": "SELF_CHECKOUT",
+      "is_self_checkout": true,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-026-T12",
+      "store_id": "EKP-DE-026",
+      "size_class": "M",
+      "lane_number": 12,
+      "terminal_type": "SELF_CHECKOUT",
+      "is_self_checkout": true,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-027-T01",
+      "store_id": "EKP-DE-027",
+      "size_class": "M",
+      "lane_number": 1,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-027-T02",
+      "store_id": "EKP-DE-027",
+      "size_class": "M",
+      "lane_number": 2,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-027-T03",
+      "store_id": "EKP-DE-027",
+      "size_class": "M",
+      "lane_number": 3,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-027-T04",
+      "store_id": "EKP-DE-027",
+      "size_class": "M",
+      "lane_number": 4,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-027-T05",
+      "store_id": "EKP-DE-027",
+      "size_class": "M",
+      "lane_number": 5,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-027-T06",
+      "store_id": "EKP-DE-027",
+      "size_class": "M",
+      "lane_number": 6,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-027-T07",
+      "store_id": "EKP-DE-027",
+      "size_class": "M",
+      "lane_number": 7,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-027-T08",
+      "store_id": "EKP-DE-027",
+      "size_class": "M",
+      "lane_number": 8,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-027-T09",
+      "store_id": "EKP-DE-027",
+      "size_class": "M",
+      "lane_number": 9,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-027-T10",
+      "store_id": "EKP-DE-027",
+      "size_class": "M",
+      "lane_number": 10,
+      "terminal_type": "SELF_CHECKOUT",
+      "is_self_checkout": true,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-027-T11",
+      "store_id": "EKP-DE-027",
+      "size_class": "M",
+      "lane_number": 11,
+      "terminal_type": "SELF_CHECKOUT",
+      "is_self_checkout": true,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-027-T12",
+      "store_id": "EKP-DE-027",
+      "size_class": "M",
+      "lane_number": 12,
+      "terminal_type": "SELF_CHECKOUT",
+      "is_self_checkout": true,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-028-T01",
+      "store_id": "EKP-DE-028",
+      "size_class": "M",
+      "lane_number": 1,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-028-T02",
+      "store_id": "EKP-DE-028",
+      "size_class": "M",
+      "lane_number": 2,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-028-T03",
+      "store_id": "EKP-DE-028",
+      "size_class": "M",
+      "lane_number": 3,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-028-T04",
+      "store_id": "EKP-DE-028",
+      "size_class": "M",
+      "lane_number": 4,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-028-T05",
+      "store_id": "EKP-DE-028",
+      "size_class": "M",
+      "lane_number": 5,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-028-T06",
+      "store_id": "EKP-DE-028",
+      "size_class": "M",
+      "lane_number": 6,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-028-T07",
+      "store_id": "EKP-DE-028",
+      "size_class": "M",
+      "lane_number": 7,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-028-T08",
+      "store_id": "EKP-DE-028",
+      "size_class": "M",
+      "lane_number": 8,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-028-T09",
+      "store_id": "EKP-DE-028",
+      "size_class": "M",
+      "lane_number": 9,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-028-T10",
+      "store_id": "EKP-DE-028",
+      "size_class": "M",
+      "lane_number": 10,
+      "terminal_type": "SELF_CHECKOUT",
+      "is_self_checkout": true,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-028-T11",
+      "store_id": "EKP-DE-028",
+      "size_class": "M",
+      "lane_number": 11,
+      "terminal_type": "SELF_CHECKOUT",
+      "is_self_checkout": true,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-028-T12",
+      "store_id": "EKP-DE-028",
+      "size_class": "M",
+      "lane_number": 12,
+      "terminal_type": "SELF_CHECKOUT",
+      "is_self_checkout": true,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-029-T01",
+      "store_id": "EKP-DE-029",
+      "size_class": "M",
+      "lane_number": 1,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-029-T02",
+      "store_id": "EKP-DE-029",
+      "size_class": "M",
+      "lane_number": 2,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-029-T03",
+      "store_id": "EKP-DE-029",
+      "size_class": "M",
+      "lane_number": 3,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-029-T04",
+      "store_id": "EKP-DE-029",
+      "size_class": "M",
+      "lane_number": 4,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-029-T05",
+      "store_id": "EKP-DE-029",
+      "size_class": "M",
+      "lane_number": 5,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-029-T06",
+      "store_id": "EKP-DE-029",
+      "size_class": "M",
+      "lane_number": 6,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-029-T07",
+      "store_id": "EKP-DE-029",
+      "size_class": "M",
+      "lane_number": 7,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-029-T08",
+      "store_id": "EKP-DE-029",
+      "size_class": "M",
+      "lane_number": 8,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-029-T09",
+      "store_id": "EKP-DE-029",
+      "size_class": "M",
+      "lane_number": 9,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-029-T10",
+      "store_id": "EKP-DE-029",
+      "size_class": "M",
+      "lane_number": 10,
+      "terminal_type": "SELF_CHECKOUT",
+      "is_self_checkout": true,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-029-T11",
+      "store_id": "EKP-DE-029",
+      "size_class": "M",
+      "lane_number": 11,
+      "terminal_type": "SELF_CHECKOUT",
+      "is_self_checkout": true,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-029-T12",
+      "store_id": "EKP-DE-029",
+      "size_class": "M",
+      "lane_number": 12,
+      "terminal_type": "SELF_CHECKOUT",
+      "is_self_checkout": true,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-030-T01",
+      "store_id": "EKP-DE-030",
+      "size_class": "M",
+      "lane_number": 1,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-030-T02",
+      "store_id": "EKP-DE-030",
+      "size_class": "M",
+      "lane_number": 2,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-030-T03",
+      "store_id": "EKP-DE-030",
+      "size_class": "M",
+      "lane_number": 3,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-030-T04",
+      "store_id": "EKP-DE-030",
+      "size_class": "M",
+      "lane_number": 4,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-030-T05",
+      "store_id": "EKP-DE-030",
+      "size_class": "M",
+      "lane_number": 5,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-030-T06",
+      "store_id": "EKP-DE-030",
+      "size_class": "M",
+      "lane_number": 6,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-030-T07",
+      "store_id": "EKP-DE-030",
+      "size_class": "M",
+      "lane_number": 7,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-030-T08",
+      "store_id": "EKP-DE-030",
+      "size_class": "M",
+      "lane_number": 8,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-030-T09",
+      "store_id": "EKP-DE-030",
+      "size_class": "M",
+      "lane_number": 9,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-030-T10",
+      "store_id": "EKP-DE-030",
+      "size_class": "M",
+      "lane_number": 10,
+      "terminal_type": "SELF_CHECKOUT",
+      "is_self_checkout": true,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-030-T11",
+      "store_id": "EKP-DE-030",
+      "size_class": "M",
+      "lane_number": 11,
+      "terminal_type": "SELF_CHECKOUT",
+      "is_self_checkout": true,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-030-T12",
+      "store_id": "EKP-DE-030",
+      "size_class": "M",
+      "lane_number": 12,
+      "terminal_type": "SELF_CHECKOUT",
+      "is_self_checkout": true,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-031-T01",
+      "store_id": "EKP-DE-031",
+      "size_class": "M",
+      "lane_number": 1,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-031-T02",
+      "store_id": "EKP-DE-031",
+      "size_class": "M",
+      "lane_number": 2,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-031-T03",
+      "store_id": "EKP-DE-031",
+      "size_class": "M",
+      "lane_number": 3,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-031-T04",
+      "store_id": "EKP-DE-031",
+      "size_class": "M",
+      "lane_number": 4,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-031-T05",
+      "store_id": "EKP-DE-031",
+      "size_class": "M",
+      "lane_number": 5,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-031-T06",
+      "store_id": "EKP-DE-031",
+      "size_class": "M",
+      "lane_number": 6,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-031-T07",
+      "store_id": "EKP-DE-031",
+      "size_class": "M",
+      "lane_number": 7,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-031-T08",
+      "store_id": "EKP-DE-031",
+      "size_class": "M",
+      "lane_number": 8,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-031-T09",
+      "store_id": "EKP-DE-031",
+      "size_class": "M",
+      "lane_number": 9,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-031-T10",
+      "store_id": "EKP-DE-031",
+      "size_class": "M",
+      "lane_number": 10,
+      "terminal_type": "SELF_CHECKOUT",
+      "is_self_checkout": true,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-031-T11",
+      "store_id": "EKP-DE-031",
+      "size_class": "M",
+      "lane_number": 11,
+      "terminal_type": "SELF_CHECKOUT",
+      "is_self_checkout": true,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-031-T12",
+      "store_id": "EKP-DE-031",
+      "size_class": "M",
+      "lane_number": 12,
+      "terminal_type": "SELF_CHECKOUT",
+      "is_self_checkout": true,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-032-T01",
+      "store_id": "EKP-DE-032",
+      "size_class": "M",
+      "lane_number": 1,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-032-T02",
+      "store_id": "EKP-DE-032",
+      "size_class": "M",
+      "lane_number": 2,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-032-T03",
+      "store_id": "EKP-DE-032",
+      "size_class": "M",
+      "lane_number": 3,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-032-T04",
+      "store_id": "EKP-DE-032",
+      "size_class": "M",
+      "lane_number": 4,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-032-T05",
+      "store_id": "EKP-DE-032",
+      "size_class": "M",
+      "lane_number": 5,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-032-T06",
+      "store_id": "EKP-DE-032",
+      "size_class": "M",
+      "lane_number": 6,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-032-T07",
+      "store_id": "EKP-DE-032",
+      "size_class": "M",
+      "lane_number": 7,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-032-T08",
+      "store_id": "EKP-DE-032",
+      "size_class": "M",
+      "lane_number": 8,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-032-T09",
+      "store_id": "EKP-DE-032",
+      "size_class": "M",
+      "lane_number": 9,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-032-T10",
+      "store_id": "EKP-DE-032",
+      "size_class": "M",
+      "lane_number": 10,
+      "terminal_type": "SELF_CHECKOUT",
+      "is_self_checkout": true,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-032-T11",
+      "store_id": "EKP-DE-032",
+      "size_class": "M",
+      "lane_number": 11,
+      "terminal_type": "SELF_CHECKOUT",
+      "is_self_checkout": true,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-032-T12",
+      "store_id": "EKP-DE-032",
+      "size_class": "M",
+      "lane_number": 12,
+      "terminal_type": "SELF_CHECKOUT",
+      "is_self_checkout": true,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-033-T01",
+      "store_id": "EKP-DE-033",
+      "size_class": "S",
+      "lane_number": 1,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-033-T02",
+      "store_id": "EKP-DE-033",
+      "size_class": "S",
+      "lane_number": 2,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-033-T03",
+      "store_id": "EKP-DE-033",
+      "size_class": "S",
+      "lane_number": 3,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-033-T04",
+      "store_id": "EKP-DE-033",
+      "size_class": "S",
+      "lane_number": 4,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-033-T05",
+      "store_id": "EKP-DE-033",
+      "size_class": "S",
+      "lane_number": 5,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-033-T06",
+      "store_id": "EKP-DE-033",
+      "size_class": "S",
+      "lane_number": 6,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-034-T01",
+      "store_id": "EKP-DE-034",
+      "size_class": "S",
+      "lane_number": 1,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-034-T02",
+      "store_id": "EKP-DE-034",
+      "size_class": "S",
+      "lane_number": 2,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-034-T03",
+      "store_id": "EKP-DE-034",
+      "size_class": "S",
+      "lane_number": 3,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-034-T04",
+      "store_id": "EKP-DE-034",
+      "size_class": "S",
+      "lane_number": 4,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-034-T05",
+      "store_id": "EKP-DE-034",
+      "size_class": "S",
+      "lane_number": 5,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-034-T06",
+      "store_id": "EKP-DE-034",
+      "size_class": "S",
+      "lane_number": 6,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-035-T01",
+      "store_id": "EKP-DE-035",
+      "size_class": "S",
+      "lane_number": 1,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-035-T02",
+      "store_id": "EKP-DE-035",
+      "size_class": "S",
+      "lane_number": 2,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-035-T03",
+      "store_id": "EKP-DE-035",
+      "size_class": "S",
+      "lane_number": 3,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-035-T04",
+      "store_id": "EKP-DE-035",
+      "size_class": "S",
+      "lane_number": 4,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-035-T05",
+      "store_id": "EKP-DE-035",
+      "size_class": "S",
+      "lane_number": 5,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-035-T06",
+      "store_id": "EKP-DE-035",
+      "size_class": "S",
+      "lane_number": 6,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-036-T01",
+      "store_id": "EKP-DE-036",
+      "size_class": "S",
+      "lane_number": 1,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-036-T02",
+      "store_id": "EKP-DE-036",
+      "size_class": "S",
+      "lane_number": 2,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-036-T03",
+      "store_id": "EKP-DE-036",
+      "size_class": "S",
+      "lane_number": 3,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-036-T04",
+      "store_id": "EKP-DE-036",
+      "size_class": "S",
+      "lane_number": 4,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-036-T05",
+      "store_id": "EKP-DE-036",
+      "size_class": "S",
+      "lane_number": 5,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-036-T06",
+      "store_id": "EKP-DE-036",
+      "size_class": "S",
+      "lane_number": 6,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-037-T01",
+      "store_id": "EKP-DE-037",
+      "size_class": "S",
+      "lane_number": 1,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-037-T02",
+      "store_id": "EKP-DE-037",
+      "size_class": "S",
+      "lane_number": 2,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-037-T03",
+      "store_id": "EKP-DE-037",
+      "size_class": "S",
+      "lane_number": 3,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-037-T04",
+      "store_id": "EKP-DE-037",
+      "size_class": "S",
+      "lane_number": 4,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-037-T05",
+      "store_id": "EKP-DE-037",
+      "size_class": "S",
+      "lane_number": 5,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-037-T06",
+      "store_id": "EKP-DE-037",
+      "size_class": "S",
+      "lane_number": 6,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-038-T01",
+      "store_id": "EKP-DE-038",
+      "size_class": "S",
+      "lane_number": 1,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-038-T02",
+      "store_id": "EKP-DE-038",
+      "size_class": "S",
+      "lane_number": 2,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-038-T03",
+      "store_id": "EKP-DE-038",
+      "size_class": "S",
+      "lane_number": 3,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-038-T04",
+      "store_id": "EKP-DE-038",
+      "size_class": "S",
+      "lane_number": 4,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-038-T05",
+      "store_id": "EKP-DE-038",
+      "size_class": "S",
+      "lane_number": 5,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-038-T06",
+      "store_id": "EKP-DE-038",
+      "size_class": "S",
+      "lane_number": 6,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-039-T01",
+      "store_id": "EKP-DE-039",
+      "size_class": "S",
+      "lane_number": 1,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-039-T02",
+      "store_id": "EKP-DE-039",
+      "size_class": "S",
+      "lane_number": 2,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-039-T03",
+      "store_id": "EKP-DE-039",
+      "size_class": "S",
+      "lane_number": 3,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-039-T04",
+      "store_id": "EKP-DE-039",
+      "size_class": "S",
+      "lane_number": 4,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-039-T05",
+      "store_id": "EKP-DE-039",
+      "size_class": "S",
+      "lane_number": 5,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-039-T06",
+      "store_id": "EKP-DE-039",
+      "size_class": "S",
+      "lane_number": 6,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-040-T01",
+      "store_id": "EKP-DE-040",
+      "size_class": "S",
+      "lane_number": 1,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-040-T02",
+      "store_id": "EKP-DE-040",
+      "size_class": "S",
+      "lane_number": 2,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-040-T03",
+      "store_id": "EKP-DE-040",
+      "size_class": "S",
+      "lane_number": 3,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-040-T04",
+      "store_id": "EKP-DE-040",
+      "size_class": "S",
+      "lane_number": 4,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-040-T05",
+      "store_id": "EKP-DE-040",
+      "size_class": "S",
+      "lane_number": 5,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-040-T06",
+      "store_id": "EKP-DE-040",
+      "size_class": "S",
+      "lane_number": 6,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-041-T01",
+      "store_id": "EKP-DE-041",
+      "size_class": "S",
+      "lane_number": 1,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-041-T02",
+      "store_id": "EKP-DE-041",
+      "size_class": "S",
+      "lane_number": 2,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-041-T03",
+      "store_id": "EKP-DE-041",
+      "size_class": "S",
+      "lane_number": 3,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-041-T04",
+      "store_id": "EKP-DE-041",
+      "size_class": "S",
+      "lane_number": 4,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-041-T05",
+      "store_id": "EKP-DE-041",
+      "size_class": "S",
+      "lane_number": 5,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-041-T06",
+      "store_id": "EKP-DE-041",
+      "size_class": "S",
+      "lane_number": 6,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-042-T01",
+      "store_id": "EKP-DE-042",
+      "size_class": "S",
+      "lane_number": 1,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-042-T02",
+      "store_id": "EKP-DE-042",
+      "size_class": "S",
+      "lane_number": 2,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-042-T03",
+      "store_id": "EKP-DE-042",
+      "size_class": "S",
+      "lane_number": 3,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-042-T04",
+      "store_id": "EKP-DE-042",
+      "size_class": "S",
+      "lane_number": 4,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-042-T05",
+      "store_id": "EKP-DE-042",
+      "size_class": "S",
+      "lane_number": 5,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-042-T06",
+      "store_id": "EKP-DE-042",
+      "size_class": "S",
+      "lane_number": 6,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-043-T01",
+      "store_id": "EKP-DE-043",
+      "size_class": "S",
+      "lane_number": 1,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-043-T02",
+      "store_id": "EKP-DE-043",
+      "size_class": "S",
+      "lane_number": 2,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-043-T03",
+      "store_id": "EKP-DE-043",
+      "size_class": "S",
+      "lane_number": 3,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-043-T04",
+      "store_id": "EKP-DE-043",
+      "size_class": "S",
+      "lane_number": 4,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-043-T05",
+      "store_id": "EKP-DE-043",
+      "size_class": "S",
+      "lane_number": 5,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-043-T06",
+      "store_id": "EKP-DE-043",
+      "size_class": "S",
+      "lane_number": 6,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-044-T01",
+      "store_id": "EKP-DE-044",
+      "size_class": "S",
+      "lane_number": 1,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-044-T02",
+      "store_id": "EKP-DE-044",
+      "size_class": "S",
+      "lane_number": 2,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-044-T03",
+      "store_id": "EKP-DE-044",
+      "size_class": "S",
+      "lane_number": 3,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-044-T04",
+      "store_id": "EKP-DE-044",
+      "size_class": "S",
+      "lane_number": 4,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-044-T05",
+      "store_id": "EKP-DE-044",
+      "size_class": "S",
+      "lane_number": 5,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-044-T06",
+      "store_id": "EKP-DE-044",
+      "size_class": "S",
+      "lane_number": 6,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-045-T01",
+      "store_id": "EKP-DE-045",
+      "size_class": "S",
+      "lane_number": 1,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-045-T02",
+      "store_id": "EKP-DE-045",
+      "size_class": "S",
+      "lane_number": 2,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-045-T03",
+      "store_id": "EKP-DE-045",
+      "size_class": "S",
+      "lane_number": 3,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-045-T04",
+      "store_id": "EKP-DE-045",
+      "size_class": "S",
+      "lane_number": 4,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-045-T05",
+      "store_id": "EKP-DE-045",
+      "size_class": "S",
+      "lane_number": 5,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-045-T06",
+      "store_id": "EKP-DE-045",
+      "size_class": "S",
+      "lane_number": 6,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-046-T01",
+      "store_id": "EKP-DE-046",
+      "size_class": "S",
+      "lane_number": 1,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-046-T02",
+      "store_id": "EKP-DE-046",
+      "size_class": "S",
+      "lane_number": 2,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-046-T03",
+      "store_id": "EKP-DE-046",
+      "size_class": "S",
+      "lane_number": 3,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-046-T04",
+      "store_id": "EKP-DE-046",
+      "size_class": "S",
+      "lane_number": 4,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-046-T05",
+      "store_id": "EKP-DE-046",
+      "size_class": "S",
+      "lane_number": 5,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-046-T06",
+      "store_id": "EKP-DE-046",
+      "size_class": "S",
+      "lane_number": 6,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-047-T01",
+      "store_id": "EKP-DE-047",
+      "size_class": "S",
+      "lane_number": 1,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-047-T02",
+      "store_id": "EKP-DE-047",
+      "size_class": "S",
+      "lane_number": 2,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-047-T03",
+      "store_id": "EKP-DE-047",
+      "size_class": "S",
+      "lane_number": 3,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-047-T04",
+      "store_id": "EKP-DE-047",
+      "size_class": "S",
+      "lane_number": 4,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-047-T05",
+      "store_id": "EKP-DE-047",
+      "size_class": "S",
+      "lane_number": 5,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-047-T06",
+      "store_id": "EKP-DE-047",
+      "size_class": "S",
+      "lane_number": 6,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-048-T01",
+      "store_id": "EKP-DE-048",
+      "size_class": "S",
+      "lane_number": 1,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-048-T02",
+      "store_id": "EKP-DE-048",
+      "size_class": "S",
+      "lane_number": 2,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-048-T03",
+      "store_id": "EKP-DE-048",
+      "size_class": "S",
+      "lane_number": 3,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-048-T04",
+      "store_id": "EKP-DE-048",
+      "size_class": "S",
+      "lane_number": 4,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-048-T05",
+      "store_id": "EKP-DE-048",
+      "size_class": "S",
+      "lane_number": 5,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-048-T06",
+      "store_id": "EKP-DE-048",
+      "size_class": "S",
+      "lane_number": 6,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-049-T01",
+      "store_id": "EKP-DE-049",
+      "size_class": "S",
+      "lane_number": 1,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-049-T02",
+      "store_id": "EKP-DE-049",
+      "size_class": "S",
+      "lane_number": 2,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-049-T03",
+      "store_id": "EKP-DE-049",
+      "size_class": "S",
+      "lane_number": 3,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-049-T04",
+      "store_id": "EKP-DE-049",
+      "size_class": "S",
+      "lane_number": 4,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-049-T05",
+      "store_id": "EKP-DE-049",
+      "size_class": "S",
+      "lane_number": 5,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-049-T06",
+      "store_id": "EKP-DE-049",
+      "size_class": "S",
+      "lane_number": 6,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-050-T01",
+      "store_id": "EKP-DE-050",
+      "size_class": "S",
+      "lane_number": 1,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-050-T02",
+      "store_id": "EKP-DE-050",
+      "size_class": "S",
+      "lane_number": 2,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-050-T03",
+      "store_id": "EKP-DE-050",
+      "size_class": "S",
+      "lane_number": 3,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-050-T04",
+      "store_id": "EKP-DE-050",
+      "size_class": "S",
+      "lane_number": 4,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-050-T05",
+      "store_id": "EKP-DE-050",
+      "size_class": "S",
+      "lane_number": 5,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    },
+    {
+      "terminal_id": "POS-EKP-DE-050-T06",
+      "store_id": "EKP-DE-050",
+      "size_class": "S",
+      "lane_number": 6,
+      "terminal_type": "CASHIER",
+      "is_self_checkout": false,
+      "is_active": true
+    }
+  ]
+}

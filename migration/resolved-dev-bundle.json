@@ -1,0 +1,285 @@
+{
+  "bundle": {
+    "deployment": {
+      "lock": {
+        "enabled": false
+      }
+    },
+    "environment": "dev",
+    "git": {
+      "actual_branch": "main",
+      "branch": "main",
+      "bundle_root_path": ".",
+      "commit": "ce3c9508a82ce79061f8a6a09e7690257eaee9b8",
+      "origin_url": "git@github.com:diwashrestha/retail_analytics_pipeline.git"
+    },
+    "mode": "development",
+    "name": "einkaufpark-retail-platform",
+    "target": "dev"
+  },
+  "experimental": {
+    "skip_name_prefix_for_schema": true
+  },
+  "include": [
+    "resources/medallion_pipeline.yml",
+    "resources/retail_job.yml",
+    "resources/unity_catalog.yml"
+  ],
+  "presets": {
+    "jobs_max_concurrent_runs": 4,
+    "name_prefix": "[dev diwash_shrestha] ",
+    "pipelines_development": true,
+    "tags": {
+      "dev": "diwash_shrestha"
+    },
+    "trigger_pause_status": "PAUSED"
+  },
+  "resources": {
+    "jobs": {
+      "retail_medallion_job": {
+        "deployment": {
+          "kind": "BUNDLE",
+          "metadata_file_path": "/Workspace/Users/diwash.shrestha@outlook.com/.bundle/einkaufpark-retail-platform/dev/state/metadata.json"
+        },
+        "edit_mode": "UI_LOCKED",
+        "format": "MULTI_TASK",
+        "max_concurrent_runs": 1,
+        "name": "[dev diwash_shrestha] dev - Einkaufpark Medallion Job",
+        "queue": {
+          "enabled": true
+        },
+        "tags": {
+          "dev": "diwash_shrestha"
+        },
+        "tasks": [
+          {
+            "pipeline_task": {
+              "full_refresh": false,
+              "pipeline_id": "${resources.pipelines.retail_medallion_pipeline.id}"
+            },
+            "task_key": "refresh_bronze_and_silver"
+          }
+        ]
+      }
+    },
+    "pipelines": {
+      "retail_medallion_pipeline": {
+        "catalog": "workspace",
+        "channel": "CURRENT",
+        "continuous": false,
+        "deployment": {
+          "kind": "BUNDLE",
+          "metadata_file_path": "/Workspace/Users/diwash.shrestha@outlook.com/.bundle/einkaufpark-retail-platform/dev/state/metadata.json"
+        },
+        "development": true,
+        "edition": "ADVANCED",
+        "libraries": [
+          {
+            "file": {
+              "path": "/Workspace/Users/diwash.shrestha@outlook.com/.bundle/einkaufpark-retail-platform/dev/files/pipelines/00_bronze.sql"
+            }
+          },
+          {
+            "file": {
+              "path": "/Workspace/Users/diwash.shrestha@outlook.com/.bundle/einkaufpark-retail-platform/dev/files/pipelines/10_silver_dimensions.sql"
+            }
+          },
+          {
+            "file": {
+              "path": "/Workspace/Users/diwash.shrestha@outlook.com/.bundle/einkaufpark-retail-platform/dev/files/pipelines/11_silver_sales.sql"
+            }
+          },
+          {
+            "file": {
+              "path": "/Workspace/Users/diwash.shrestha@outlook.com/.bundle/einkaufpark-retail-platform/dev/files/pipelines/12_silver_returns.sql"
+            }
+          },
+          {
+            "file": {
+              "path": "/Workspace/Users/diwash.shrestha@outlook.com/.bundle/einkaufpark-retail-platform/dev/files/pipelines/13_silver_quality.sql"
+            }
+          },
+          {
+            "file": {
+              "path": "/Workspace/Users/diwash.shrestha@outlook.com/.bundle/einkaufpark-retail-platform/dev/files/pipelines/20_gold_baskets.sql"
+            }
+          },
+          {
+            "file": {
+              "path": "/Workspace/Users/diwash.shrestha@outlook.com/.bundle/einkaufpark-retail-platform/dev/files/pipelines/21_gold_sales_stores.sql"
+            }
+          },
+          {
+            "file": {
+              "path": "/Workspace/Users/diwash.shrestha@outlook.com/.bundle/einkaufpark-retail-platform/dev/files/pipelines/22_gold_products.sql"
+            }
+          },
+          {
+            "file": {
+              "path": "/Workspace/Users/diwash.shrestha@outlook.com/.bundle/einkaufpark-retail-platform/dev/files/pipelines/23_gold_customers_returns_traffic.sql"
+            }
+          },
+          {
+            "file": {
+              "path": "/Workspace/Users/diwash.shrestha@outlook.com/.bundle/einkaufpark-retail-platform/dev/files/pipelines/24_gold_quality.sql"
+            }
+          }
+        ],
+        "name": "[dev diwash_shrestha] dev - Einkaufpark Retail Medallion",
+        "parameters": {
+          "customers_path": "/Volumes/workspace/retail_dev_raw/retail_input/dimensions/dim_customers.csv",
+          "max_return_window_days": "30",
+          "price_tolerance_eur": "0.02",
+          "products_path": "/Volumes/workspace/retail_dev_raw/retail_input/dimensions/dim_products.csv",
+          "products_scd2_path": "/Volumes/workspace/retail_dev_raw/retail_input/dimensions/dim_products_scd2.csv",
+          "returns_path": "/Volumes/workspace/retail_dev_raw/retail_input/returns",
+          "revenue_tolerance_eur": "0.02",
+          "stores_path": "/Volumes/workspace/retail_dev_raw/retail_input/dimensions/dim_stores.csv",
+          "transactions_path": "/Volumes/workspace/retail_dev_raw/retail_input/transactions"
+        },
+        "schema": "${resources.schemas.retail_bronze_schema.name}",
+        "serverless": true,
+        "tags": {
+          "dev": "diwash_shrestha"
+        }
+      }
+    },
+    "schemas": {
+      "retail_bronze_schema": {
+        "catalog_name": "workspace",
+        "comment": "Bronze tables containing typed and quarantined source data.",
+        "name": "retail_dev_bronze"
+      },
+      "retail_gold_schema": {
+        "catalog_name": "workspace",
+        "comment": "Business-level retail analytical tables.",
+        "name": "retail_dev_gold"
+      },
+      "retail_raw_schema": {
+        "catalog_name": "workspace",
+        "comment": "Raw landing schema for Einkaufpark retail input files.",
+        "name": "retail_dev_raw"
+      },
+      "retail_reporting_schema": {
+        "catalog_name": "workspace",
+        "comment": "Stable reporting views for Power BI.",
+        "name": "retail_dev_reporting"
+      },
+      "retail_silver_schema": {
+        "catalog_name": "workspace",
+        "comment": "Trusted and validated retail dimensions and facts.",
+        "name": "retail_dev_silver"
+      }
+    },
+    "volumes": {
+      "retail_input_volume": {
+        "catalog_name": "workspace",
+        "comment": "Input Volume for transactions, returns, and dimensions.",
+        "name": "retail_input",
+        "schema_name": "${resources.schemas.retail_raw_schema.name}",
+        "volume_path": "/Volumes/workspace/retail_dev_raw/retail_input",
+        "volume_type": "MANAGED"
+      }
+    }
+  },
+  "sync": {
+    "paths": [
+      "."
+    ]
+  },
+  "variables": {
+    "bronze_schema": {
+      "default": "retail_dev_bronze",
+      "value": "retail_dev_bronze"
+    },
+    "catalog": {
+      "default": "workspace",
+      "description": "Unity Catalog catalog",
+      "value": "workspace"
+    },
+    "gold_schema": {
+      "default": "retail_dev_gold",
+      "value": "retail_dev_gold"
+    },
+    "input_volume": {
+      "default": "retail_input",
+      "value": "retail_input"
+    },
+    "max_return_window_days": {
+      "default": "30",
+      "value": "30"
+    },
+    "price_tolerance_eur": {
+      "default": "0.02",
+      "value": "0.02"
+    },
+    "raw_schema": {
+      "default": "retail_dev_raw",
+      "value": "retail_dev_raw"
+    },
+    "reporting_schema": {
+      "default": "retail_dev_reporting",
+      "value": "retail_dev_reporting"
+    },
+    "revenue_tolerance_eur": {
+      "default": "0.02",
+      "value": "0.02"
+    },
+    "silver_schema": {
+      "default": "retail_dev_silver",
+      "value": "retail_dev_silver"
+    }
+  },
+  "workspace": {
+    "artifact_path": "/Workspace/Users/diwash.shrestha@outlook.com/.bundle/einkaufpark-retail-platform/dev/artifacts",
+    "current_user": {
+      "active": true,
+      "displayName": "diwash.shrestha@outlook.com",
+      "domain_friendly_name": "diwash-shrestha",
+      "emails": [
+        {
+          "primary": true,
+          "type": "work",
+          "value": "diwash.shrestha@outlook.com"
+        }
+      ],
+      "entitlements": [
+        {
+          "value": "allow-cluster-create"
+        },
+        {
+          "value": "allow-instance-pool-create"
+        }
+      ],
+      "groups": [
+        {
+          "$ref": "Groups/81061540530071",
+          "display": "admins",
+          "type": "direct",
+          "value": "81061540530071"
+        },
+        {
+          "$ref": "Groups/82212299982432",
+          "display": "users",
+          "type": "direct",
+          "value": "82212299982432"
+        }
+      ],
+      "id": "7821157301511261",
+      "name": {
+        "givenName": "diwash.shrestha@outlook.com"
+      },
+      "schemas": [
+        "urn:ietf:params:scim:schemas:core:2.0:User",
+        "urn:ietf:params:scim:schemas:extension:workspace:2.0:User"
+      ],
+      "short_name": "diwash_shrestha",
+      "userName": "diwash.shrestha@outlook.com"
+    },
+    "file_path": "/Workspace/Users/diwash.shrestha@outlook.com/.bundle/einkaufpark-retail-platform/dev/files",
+    "profile": "einkaufpark-free",
+    "resource_path": "/Workspace/Users/diwash.shrestha@outlook.com/.bundle/einkaufpark-retail-platform/dev/resources",
+    "root_path": "/Workspace/Users/diwash.shrestha@outlook.com/.bundle/einkaufpark-retail-platform/dev",
+    "state_path": "/Workspace/Users/diwash.shrestha@outlook.com/.bundle/einkaufpark-retail-platform/dev/state"
+  }
+}

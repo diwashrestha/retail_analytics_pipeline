@@ -1,53 +1,106 @@
 bundle:
   name: einkaufpark-retail-platform
-  databricks_cli_version: ">= 0.287.0"
 
 include:
   - resources/*.yml
 
+experimental:
+  skip_name_prefix_for_schema: true
+
 variables:
   catalog:
-    description: Unity Catalog catalog available in Databricks Free Edition.
+    description: Unity Catalog catalog.
     default: workspace
 
   raw_schema:
-    description: Schema containing the raw managed Volume.
-    default: retail_raw
-
-  raw_volume:
-    description: Managed Volume containing generated CSV files.
-    default: retail_input
+    description: Schema containing the managed raw Volume.
+    default: retail_dev_raw
 
   bronze_schema:
     description: Bronze target schema.
-    default: retail_bronze
+    default: retail_dev_bronze
 
   silver_schema:
     description: Silver target schema.
-    default: retail_silver
+    default: retail_dev_silver
+
+  gold_schema:
+    description: Gold target schema.
+    default: retail_dev_gold
+
+  reporting_schema:
+    description: Power BI reporting schema.
+    default: retail_dev_reporting
+
+  input_volume:
+    description: Managed Volume containing generated CSV files.
+    default: retail_input
+
+  price_tolerance_eur:
+    description: Maximum allowed unit-price difference.
+    default: "0.02"
+
+  revenue_tolerance_eur:
+    description: Maximum allowed revenue calculation difference.
+    default: "0.02"
+
+  max_return_window_days:
+    description: Maximum accepted number of days between sale and return.
+    default: "30"
+
+  demo_records:
+    description: Number of transaction lines in the standard demo.
+    default: "100000"
+
+  demo_customers:
+    description: Number of generated customers.
+    default: "10000"
+
+  generator_seed:
+    description: Fixed random seed for reproducible demo data.
+    default: "42"
+
+  demo_start_date:
+    description: First business date generated for the demo.
+    default: "2023-01-01"
+
+  demo_end_date:
+    description: Last business date generated for the demo.
+    default: "2025-03-31"
 
 targets:
   dev:
-    default: true
     mode: development
+    default: true
+
     presets:
-      skip_name_prefix_for_schema: true
       pipelines_development: true
+      trigger_pause_status: PAUSED
+
     variables:
       catalog: workspace
       raw_schema: retail_dev_raw
-      raw_volume: retail_input
       bronze_schema: retail_dev_bronze
       silver_schema: retail_dev_silver
+      gold_schema: retail_dev_gold
+      reporting_schema: retail_dev_reporting
+      input_volume: retail_input
 
   release:
     mode: production
+
+    workspace:
+      root_path: /Workspace/Users/${workspace.current_user.userName}/.bundle/${bundle.name}/${bundle.target}
+
     presets:
-      skip_name_prefix_for_schema: true
       pipelines_development: false
+      trigger_pause_status: PAUSED
+
     variables:
       catalog: workspace
       raw_schema: retail_raw
-      raw_volume: retail_input
       bronze_schema: retail_bronze
       silver_schema: retail_silver
+      gold_schema: retail_gold
+      reporting_schema: retail_reporting
+      input_volume: retail_input

@@ -1,42 +1,60 @@
 resources:
   pipelines:
     retail_medallion_pipeline:
-      name: "${bundle.target} - Einkaufpark Bronze and Silver"
+      name: "${bundle.target} - Einkaufpark Retail Medallion"
+
       catalog: ${var.catalog}
       schema: ${resources.schemas.retail_bronze_schema.name}
+
       serverless: true
       continuous: false
       edition: ADVANCED
       channel: CURRENT
 
       parameters:
-        # Bronze landing paths.
-        transactions_path: "/Volumes/${var.catalog}/${resources.schemas.retail_raw_schema.name}/${resources.volumes.retail_raw_volume.name}/transactions"
-        returns_path: "/Volumes/${var.catalog}/${resources.schemas.retail_raw_schema.name}/${resources.volumes.retail_raw_volume.name}/returns"
-        stores_path: "/Volumes/${var.catalog}/${resources.schemas.retail_raw_schema.name}/${resources.volumes.retail_raw_volume.name}/dimensions/dim_stores.csv"
-        customers_path: "/Volumes/${var.catalog}/${resources.schemas.retail_raw_schema.name}/${resources.volumes.retail_raw_volume.name}/dimensions/dim_customers.csv"
-        products_path: "/Volumes/${var.catalog}/${resources.schemas.retail_raw_schema.name}/${resources.volumes.retail_raw_volume.name}/dimensions/dim_products.csv"
-        product_prices_path: "/Volumes/${var.catalog}/${resources.schemas.retail_raw_schema.name}/${resources.volumes.retail_raw_volume.name}/dimensions/dim_products_scd2.csv"
+        transactions_path: "/Volumes/${var.catalog}/${var.raw_schema}/${var.input_volume}/transactions"
 
-        # Cross-schema identifiers used by the Silver SQL source files.
-        bronze_catalog: ${var.catalog}
-        bronze_schema: ${resources.schemas.retail_bronze_schema.name}
-        silver_catalog: ${var.catalog}
-        silver_schema: ${resources.schemas.retail_silver_schema.name}
+        returns_path: "/Volumes/${var.catalog}/${var.raw_schema}/${var.input_volume}/returns"
 
-        # Business-rule tolerances. Pipeline parameter values are strings.
-        price_tolerance_eur: "0.02"
-        revenue_tolerance_eur: "0.02"
-        max_return_window_days: "30"
+        customers_path: "/Volumes/${var.catalog}/${var.raw_schema}/${var.input_volume}/dimensions/dim_customers.csv"
+
+        stores_path: "/Volumes/${var.catalog}/${var.raw_schema}/${var.input_volume}/dimensions/dim_stores.csv"
+
+        products_path: "/Volumes/${var.catalog}/${var.raw_schema}/${var.input_volume}/dimensions/dim_products.csv"
+
+        products_scd2_path: "/Volumes/${var.catalog}/${var.raw_schema}/${var.input_volume}/dimensions/dim_products_scd2.csv"
+
+        price_tolerance_eur: ${var.price_tolerance_eur}
+        revenue_tolerance_eur: ${var.revenue_tolerance_eur}
+        max_return_window_days: ${var.max_return_window_days}
 
       libraries:
         - file:
             path: ../pipelines/00_bronze.sql
+
         - file:
             path: ../pipelines/10_silver_dimensions.sql
+
         - file:
             path: ../pipelines/11_silver_sales.sql
+
         - file:
             path: ../pipelines/12_silver_returns.sql
+
         - file:
             path: ../pipelines/13_silver_quality.sql
+
+        - file:
+            path: ../pipelines/20_gold_baskets.sql
+
+        - file:
+            path: ../pipelines/21_gold_sales_stores.sql
+
+        - file:
+            path: ../pipelines/22_gold_products.sql
+
+        - file:
+            path: ../pipelines/23_gold_customers_returns_traffic.sql
+
+        - file:
+            path: ../pipelines/24_gold_quality.sql

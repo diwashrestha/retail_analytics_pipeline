@@ -1,0 +1,14 @@
+resources:
+  pipelines:
+    einkaufpark_retail_medallion_dev:
+      name: einkaufpark-retail-medallion-dev
+      libraries:
+        - glob:
+            include: ../generated-src/pipelines/**
+      catalog: workspace
+      channel: CURRENT
+      continuous: false
+      photon: true
+      root_path: ../generated-src
+      schema: default
+      serverless: true

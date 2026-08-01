@@ -1,0 +1,141 @@
+# Databricks notebook source
+import os
+
+print(os.getcwd())
+
+# COMMAND ----------
+
+!pwd
+!ls
+
+# COMMAND ----------
+
+!python data_generator/incremental.py \
+    --records 100000 \
+    --customers 10000 \
+    --start-date 2025-01-01 \
+    --end-date 2025-03-31 \
+    --generation-date 2025-03-31 \
+    --walkin-rate 0.10 \
+    --late-rate 0.05 \
+    --return-rate 0.04 \
+    --duplicate-rate 0.004 \
+    --output-dir data/raw \
+    --master-dir master
+
+# COMMAND ----------
+
+from pathlib import Path
+import shutil
+
+source_root = Path(
+    "/Workspace/retail_etl_pipeline/"
+    "retail_analytics_pipeline/data/raw"
+)
+
+destination_root = Path(
+    "/Volumes/workspace/retail_dev_raw/retail_input"
+)
+
+print("Source exists:", source_root.exists())
+print("Destination exists:", destination_root.exists())
+
+# COMMAND ----------
+
+folders = ["transactions", "returns", "dimensions"]
+
+for folder in folders:
+    source = source_root / folder
+    destination = destination_root / folder
+
+    if not source.exists():
+        print(f"Missing source folder: {source}")
+        continue
+
+    shutil.copytree(
+        source,
+        destination,
+        dirs_exist_ok=True
+    )
+
+    print(f"Copied: {source} -> {destination}")
+
+# COMMAND ----------
+
+# MAGIC %sql
+# MAGIC
+# MAGIC SHOW CATALOGS;
+
+# COMMAND ----------
+
+# MAGIC %sql
+# MAGIC
+# MAGIC CREATE SCHEMA IF NOT EXISTS workspace.retail_dev_raw;
+# MAGIC
+# MAGIC CREATE VOLUME IF NOT EXISTS workspace.retail_dev_raw.retail_input;
+
+# COMMAND ----------
+
+# MAGIC %sql
+# MAGIC
+# MAGIC SHOW VOLUMES IN workspace.retail_dev_raw;
+
+# COMMAND ----------
+
+from pathlib import Path
+
+source_root = Path(
+    "/Workspace/retail_etl_pipeline/"
+    "retail_analytics_pipeline/data/raw"
+)
+
+destination_root = Path(
+    "/Volumes/workspace/retail_dev_raw/retail_input"
+)
+
+print("Source exists:", source_root.exists())
+print("Destination exists:", destination_root.exists())
+
+# COMMAND ----------
+
+import shutil
+
+folders = ["transactions", "returns", "dimensions"]
+
+for folder in folders:
+    source = source_root / folder
+    destination = destination_root / folder
+
+    if not source.exists():
+        print(f"Missing source folder: {source}")
+        continue
+
+    shutil.copytree(
+        source,
+        destination,
+        dirs_exist_ok=True
+    )
+
+    print(f"Copied {folder}")
+
+# COMMAND ----------
+
+for folder in folders:
+    folder_path = destination_root / folder
+    csv_files = list(folder_path.rglob("*.csv"))
+
+    print(f"{folder}: {len(csv_files)} CSV files")
+
+    for file in csv_files[:5]:
+        print("  ", file)
+
+# COMMAND ----------
+
+display(
+    dbutils.fs.ls(
+        "/Volumes/workspace/retail_dev_raw/retail_input"
+    )
+)
+
+# COMMAND ----------
+

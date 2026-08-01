@@ -1,0 +1,53 @@
+bundle:
+  name: einkaufpark-retail-platform
+  databricks_cli_version: ">= 0.287.0"
+
+include:
+  - resources/*.yml
+
+variables:
+  catalog:
+    description: Unity Catalog catalog available in Databricks Free Edition.
+    default: workspace
+
+  raw_schema:
+    description: Schema containing the raw managed Volume.
+    default: retail_raw
+
+  raw_volume:
+    description: Managed Volume containing generated CSV files.
+    default: retail_input
+
+  bronze_schema:
+    description: Bronze target schema.
+    default: retail_bronze
+
+  silver_schema:
+    description: Silver target schema.
+    default: retail_silver
+
+targets:
+  dev:
+    default: true
+    mode: development
+    presets:
+      skip_name_prefix_for_schema: true
+      pipelines_development: true
+    variables:
+      catalog: workspace
+      raw_schema: retail_dev_raw
+      raw_volume: retail_input
+      bronze_schema: retail_dev_bronze
+      silver_schema: retail_dev_silver
+
+  release:
+    mode: production
+    presets:
+      skip_name_prefix_for_schema: true
+      pipelines_development: false
+    variables:
+      catalog: workspace
+      raw_schema: retail_raw
+      raw_volume: retail_input
+      bronze_schema: retail_bronze
+      silver_schema: retail_silver

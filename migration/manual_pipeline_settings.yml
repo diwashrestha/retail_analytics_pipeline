@@ -1,0 +1,14 @@
+id: 916ce49f-a64c-40b8-a770-5e7e4eaf6fd0
+pipeline_type: WORKSPACE
+name: einkaufpark-retail-medallion-dev
+libraries:
+  - glob:
+      include: /Workspace/retail_etl_pipeline/retail_analytics_pipeline/pipelines/**
+schema: default
+continuous: false
+development: false
+photon: true
+channel: CURRENT
+catalog: workspace
+serverless: true
+root_path: /Workspace/retail_etl_pipeline/retail_analytics_pipeline

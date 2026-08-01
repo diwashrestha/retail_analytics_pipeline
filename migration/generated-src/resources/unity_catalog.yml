@@ -3,32 +3,32 @@ resources:
     retail_raw_schema:
       name: ${var.raw_schema}
       catalog_name: ${var.catalog}
-      comment: Raw landing schema for Einkaufpark retail input files.
+      comment: Raw landing schema for Einkaufpark generated files.
 
     retail_bronze_schema:
       name: ${var.bronze_schema}
       catalog_name: ${var.catalog}
-      comment: Bronze tables containing typed and quarantined source data.
+      comment: Source-aligned Bronze tables and quarantine datasets.
 
     retail_silver_schema:
       name: ${var.silver_schema}
       catalog_name: ${var.catalog}
-      comment: Trusted and validated retail dimensions and facts.
+      comment: Trusted conformed facts, dimensions, and review datasets.
 
     retail_gold_schema:
       name: ${var.gold_schema}
       catalog_name: ${var.catalog}
-      comment: Business-level retail analytical tables.
+      comment: Business-ready analytical aggregates and quality datasets.
 
     retail_reporting_schema:
       name: ${var.reporting_schema}
       catalog_name: ${var.catalog}
-      comment: Stable reporting views for Power BI.
+      comment: Optional Power BI-facing SQL views over trusted Gold datasets.
 
   volumes:
-    retail_input_volume:
-      name: ${var.input_volume}
+    retail_raw_volume:
+      name: ${var.raw_volume}
       catalog_name: ${var.catalog}
       schema_name: ${resources.schemas.retail_raw_schema.name}
       volume_type: MANAGED
-      comment: Input Volume for transactions, returns, and dimensions.
+      comment: Managed landing volume for generated Einkaufpark CSV files.

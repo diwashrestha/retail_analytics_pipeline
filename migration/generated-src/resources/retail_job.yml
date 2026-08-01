@@ -1,0 +1,11 @@
+resources:
+  jobs:
+    retail_medallion_job:
+      name: "${bundle.target} - Einkaufpark Medallion Job"
+      max_concurrent_runs: 1
+
+      tasks:
+        - task_key: refresh_bronze_silver_gold
+          pipeline_task:
+            pipeline_id: ${resources.pipelines.retail_medallion_pipeline.id}
+            full_refresh: false
