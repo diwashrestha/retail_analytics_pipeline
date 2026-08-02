@@ -66,7 +66,23 @@ variables:
 
   demo_end_date:
     description: Last business date generated for the demo.
-    default: "2025-03-31"
+    default: "2026-03-31"
+
+  price_history_end_date:
+    description: Final date covered by product SCD2 prices.
+    default: "2026-12-31"
+  
+  default_walkin_rate:
+    default: "0.10"
+  
+  default_late_rate:
+    default: "0.05"
+  
+  default_return_rate:
+    default: "0.04"
+  
+  default_duplicate_rate:
+    default: "0.001"
 
 targets:
   dev:

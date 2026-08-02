@@ -25,14 +25,33 @@ from datetime import datetime, timedelta
 from pathlib import Path
 from random import Random
 
+from dataclasses import dataclass
+from datetime import datetime, timedelta
+from pathlib import Path
+from random import Random
+
 # Reuse infrastructure from generator and price_history.
 from generator import (
-    DOW_WEIGHTS, MONTH_WEIGHTS, GENERATOR_VERSION, DUPLICATE_BASKET_RATE,
-    build_customers, generate_basket, is_promo_period, mark_duplicate_basket,
-    load_stores, load_terminals, make_return_rows,
-    write_dim_stores, write_dim_products, write_dim_customers,
-    _DIM_DROP, _FACT_RETURNS_COLS,
+    DOW_WEIGHTS, 
+    MONTH_WEIGHTS, 
+    GENERATOR_VERSION, 
+    DUPLICATE_BASKET_RATE,
+    build_customers, 
+    generate_basket, 
+    is_promo_period, 
+    mark_duplicate_basket,
+    load_stores, 
+    load_terminals, 
+    make_return_rows,
+    write_dim_stores, 
+    write_dim_products, 
+    write_dim_customers,
+    _DIM_DROP, 
+    _FACT_RETURNS_COLS,
 )
+
+
+
 from price_history import PriceIndex, write_scd2, validate as validate_scd2
 from progress import ProgressBar
 
@@ -45,6 +64,38 @@ LATE_ARRIVAL_DELAY_WEIGHTS = [0.60, 0.30, 0.10]  # 1, 2, or 3 days late
 LATE_ARRIVAL_FLAG          = "INFO:LATE_ARRIVAL"
 DAILY_VOLUME_NOISE         = 0.15                # ±15% per-day jitter
 DEFAULT_RETURN_RATE        = 0.04
+
+
+@dataclass(frozen=True)
+class LandingPaths:
+    root: Path
+    dimensions: Path
+    transactions: Path
+    returns: Path
+    manifests: Path
+    staging: Path
+
+
+def get_landing_paths(root: Path) -> LandingPaths:
+    return LandingPaths(
+        root=root,
+        dimensions=root / "dimensions",
+        transactions=root / "transactions",
+        returns=root / "returns",
+        manifests=root / "_manifests",
+        staging=root / "_staging",
+    )
+
+
+def create_landing_directories(paths: LandingPaths) -> None:
+    for path in (
+        paths.dimensions,
+        paths.transactions,
+        paths.returns,
+        paths.manifests,
+        paths.staging,
+    ):
+        path.mkdir(parents=True, exist_ok=True)
 
 
 # ═══════════════════════════════════════════════════════════════════════════
@@ -154,7 +205,11 @@ def write_incremental(args, out_dir: Path) -> dict:
         managed_dir.mkdir(parents=True, exist_ok=True)
 
     # Remove files/directories produced by generator versions before v2.1.0.
-    legacy_batch_dir = out_dir / "batches"
+    paths = get_landing_paths(out_dir)
+    create_landing_directories(paths)
+
+    legacy_batch_dir = paths.transactions
+    
     if legacy_batch_dir.exists():
         shutil.rmtree(legacy_batch_dir)
     for legacy_name in (
@@ -171,14 +226,14 @@ def write_incremental(args, out_dir: Path) -> dict:
     stores, store_weights = load_stores(master_dir)
     terminals             = load_terminals(master_dir)
     customers_map, cids, cws = build_customers(args.customers, rng)
-    write_dim_stores(stores, dimensions_dir)
-    write_dim_products(dimensions_dir)
-    write_dim_customers(customers_map, dimensions_dir)
+    write_dim_stores(stores, paths.dimensions)
+    write_dim_products(paths.dimensions)
+    write_dim_customers(customers_map, paths.dimensions)
 
     # SCD2 price history (separate concern, delegated).
     print(f"  [2/4] Generating SCD2 price history ...", flush=True)
-    write_scd2(rng, start, end, dimensions_dir)
-    price_index = PriceIndex.from_csv(dimensions_dir / "dim_products_scd2.csv")
+    write_scd2(rng, start, end, paths.dimensions)
+    price_index = PriceIndex.from_csv(paths.dimensions / "dim_products_scd2.csv")
 
     # Daily volume plan.
     print(f"  [3/4] Planning daily volumes ...", flush=True)
@@ -414,6 +469,41 @@ def scan_batches(out_dir: Path, stats: dict, target_late: float) -> dict[str, tu
 
     return results
 
+def make_batch_id(args: argparse.Namespace) -> str:
+    config = {
+        "generator_version": GENERATOR_VERSION,
+        "mode": args.mode,
+        "records": args.records,
+        "customers": args.customers,
+        "seed": args.seed,
+        "start_date": args.start_date,
+        "end_date": args.end_date,
+        "price_history_end_date": args.price_history_end_date,
+        "walkin_rate": args.walkin_rate,
+        "late_rate": args.late_rate,
+        "return_rate": args.return_rate,
+        "duplicate_rate": args.duplicate_rate,
+        "generation_date": args.generation_date or args.end_date,
+    }
+
+    digest = hashlib.sha256(
+        json.dumps(config, sort_keys=True).encode("utf-8")
+    ).hexdigest()[:16].upper()
+
+    return f"BATCH_{digest}"
+
+
+def stable_seed(base_seed: int, namespace: str) -> int:
+    digest = hashlib.sha256(
+        f"{base_seed}:{namespace}".encode("utf-8")
+    ).digest()
+
+    return int.from_bytes(digest[:8], byteorder="big", signed=False)
+
+
+def get_rng(base_seed: int, namespace: str) -> Random:
+    return Random(stable_seed(base_seed, namespace))
+
 
 def validate(out_dir: Path, stats: dict, late_rate: float,
              start: datetime, end: datetime) -> bool:
@@ -455,6 +545,23 @@ def parse_args() -> argparse.Namespace:
     p = argparse.ArgumentParser(description="Generate daily batch files + SCD2 prices")
     p.add_argument("--records",     type=int, default=1_000_000)
     p.add_argument("--seed",        type=int, default=10)
+    p.add_argument(
+    "--mode",
+    choices=("demo", "incremental", "reset"),
+    default="demo",
+    help=(
+        "demo creates the initial dataset; incremental appends a new period; "
+        "reset deletes only files owned by this generator"
+    ),)
+    p.add_argument(
+    "--mode",
+    choices=("demo", "incremental", "reset"),
+    default="demo",
+    help=(
+        "demo creates the initial dataset; incremental appends a new period; "
+        "reset deletes only files owned by this generator"
+    ),
+)
     p.add_argument("--start-date",  type=str, default="2023-01-01")
     p.add_argument("--end-date",    type=str, default="2026-03-31")
     p.add_argument("--customers",   type=int, default=500_000)
@@ -472,9 +579,74 @@ def parse_args() -> argparse.Namespace:
     return p.parse_args()
 
 
+OWNED_DIRECTORIES = (
+    "dimensions",
+    "transactions",
+    "returns",
+    "_manifests",
+    "_staging",
+)
+
+
+def validate_reset_path(root: Path) -> None:
+    text = root.as_posix().rstrip("/")
+
+    forbidden = {
+        "",
+        "/",
+        "/Volumes",
+        "/Workspace",
+        "/dbfs",
+    }
+
+    if text in forbidden:
+        raise ValueError(f"Refusing to reset unsafe path: {text}")
+
+    allowed = (
+        text.startswith("/Volumes/"),
+        text.endswith("/data/raw"),
+        text.endswith("data/raw"),
+    )
+
+    if not any(allowed):
+        raise ValueError(
+            "Reset is only allowed for a project raw-data directory "
+            "or a Unity Catalog Volume path."
+        )
+
+def stable_seed(base_seed: int, namespace: str) -> int:
+    digest = hashlib.sha256(
+        f"{base_seed}:{namespace}".encode("utf-8")
+    ).digest()
+
+    return int.from_bytes(digest[:8], byteorder="big", signed=False)
+
+
+def get_rng(base_seed: int, namespace: str) -> Random:
+    return Random(stable_seed(base_seed, namespace))
+
+
+
+def reset_generated_data(root: Path) -> None:
+    validate_reset_path(root)
+
+    for directory_name in OWNED_DIRECTORIES:
+        target = root / directory_name
+
+        if target.exists():
+            shutil.rmtree(target)
+            print(f"Deleted {target}")
+
+    print("Generator-managed landing data reset successfully.")
+    
+
 def main() -> int:
     args = parse_args()
     out_dir = Path(args.output_dir); out_dir.mkdir(parents=True, exist_ok=True)
+    
+    if args.mode == "reset":
+        reset_generated_data(out_dir)
+        return 0
 
     print(f"\n  Einkaufpark DE — Incremental Mode")
     print(f"  {chr(9472)*60}")
