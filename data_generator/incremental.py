@@ -1068,4 +1068,9 @@ def main() -> int:
 
 
 if __name__ == "__main__":
-    sys.exit(main())
+    exit_code = main()
+
+    if exit_code != 0:
+        raise RuntimeError(
+            f"Retail data generator failed with exit code {exit_code}."
+        )
