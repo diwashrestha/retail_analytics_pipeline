@@ -12,17 +12,18 @@ resources:
       channel: CURRENT
 
       parameters:
-        transactions_path: "/Volumes/${var.catalog}/${var.raw_schema}/${var.input_volume}/transactions"
+      parameters:
+        transactions_path: "/Volumes/${var.catalog}/${resources.schemas.retail_raw_schema.name}/${resources.volumes.retail_input_volume.name}/transactions"
 
-        returns_path: "/Volumes/${var.catalog}/${var.raw_schema}/${var.input_volume}/returns"
+        returns_path: "/Volumes/${var.catalog}/${resources.schemas.retail_raw_schema.name}/${resources.volumes.retail_input_volume.name}/returns"
 
-        customers_path: "/Volumes/${var.catalog}/${var.raw_schema}/${var.input_volume}/dimensions/dim_customers.csv"
+        customers_path: "/Volumes/${var.catalog}/${resources.schemas.retail_raw_schema.name}/${resources.volumes.retail_input_volume.name}/dimensions/dim_customers.csv"
 
-        stores_path: "/Volumes/${var.catalog}/${var.raw_schema}/${var.input_volume}/dimensions/dim_stores.csv"
+        stores_path: "/Volumes/${var.catalog}/${resources.schemas.retail_raw_schema.name}/${resources.volumes.retail_input_volume.name}/dimensions/dim_stores.csv"
 
-        products_path: "/Volumes/${var.catalog}/${var.raw_schema}/${var.input_volume}/dimensions/dim_products.csv"
+        products_path: "/Volumes/${var.catalog}/${resources.schemas.retail_raw_schema.name}/${resources.volumes.retail_input_volume.name}/dimensions/dim_products.csv"
 
-        products_scd2_path: "/Volumes/${var.catalog}/${var.raw_schema}/${var.input_volume}/dimensions/dim_products_scd2.csv"
+        products_scd2_path: "/Volumes/${var.catalog}/${resources.schemas.retail_raw_schema.name}/${resources.volumes.retail_input_volume.name}/dimensions/dim_products_scd2.csv"
 
         price_tolerance_eur: ${var.price_tolerance_eur}
         revenue_tolerance_eur: ${var.revenue_tolerance_eur}

@@ -1,11 +1,150 @@
 resources:
   jobs:
     retail_medallion_job:
-      name: "${bundle.target} - Einkaufpark Medallion Job"
+      name: "${bundle.target} - Einkaufpark Setup and Run"
+
+      description: >
+        Generates reproducible retail source data, refreshes the complete
+        Bronze-Silver-Gold Lakeflow pipeline, and validates quality gates.
+
       max_concurrent_runs: 1
 
+      parameters:
+        - name: mode
+          default: "demo"
+
+        - name: records
+          default: ${var.demo_records}
+
+        - name: customers
+          default: ${var.demo_customers}
+
+        - name: seed
+          default: ${var.generator_seed}
+
+        - name: start_date
+          default: ${var.demo_start_date}
+
+        - name: end_date
+          default: ${var.demo_end_date}
+
+        - name: price_history_end_date
+          default: ${var.price_history_end_date}
+
+        - name: walkin_rate
+          default: ${var.default_walkin_rate}
+
+        - name: late_rate
+          default: ${var.default_late_rate}
+
+        - name: return_rate
+          default: ${var.default_return_rate}
+
+        - name: duplicate_rate
+          default: ${var.default_duplicate_rate}
+
       tasks:
-        - task_key: refresh_bronze_and_silver
+        - task_key: generate_retail_data
+
+          description: >
+            Creates the deterministic demo dataset or appends a deterministic
+            incremental date range directly to the Unity Catalog Volume.
+
+          spark_python_task:
+            python_file: ../data_generator/incremental.py
+
+            parameters:
+              - "--mode"
+              - "{{job.parameters.mode}}"
+
+              - "--records"
+              - "{{job.parameters.records}}"
+
+              - "--customers"
+              - "{{job.parameters.customers}}"
+
+              - "--seed"
+              - "{{job.parameters.seed}}"
+
+              - "--start-date"
+              - "{{job.parameters.start_date}}"
+
+              - "--end-date"
+              - "{{job.parameters.end_date}}"
+
+              - "--price-history-end-date"
+              - "{{job.parameters.price_history_end_date}}"
+
+              - "--walkin-rate"
+              - "{{job.parameters.walkin_rate}}"
+
+              - "--late-rate"
+              - "{{job.parameters.late_rate}}"
+
+              - "--return-rate"
+              - "{{job.parameters.return_rate}}"
+
+              - "--duplicate-rate"
+              - "{{job.parameters.duplicate_rate}}"
+
+              - "--generation-date"
+              - "{{job.parameters.end_date}}"
+
+              - "--output-dir"
+              - "/Volumes/${var.catalog}/${resources.schemas.retail_raw_schema.name}/${resources.volumes.retail_input_volume.name}"
+
+              - "--master-dir"
+              - "${workspace.file_path}/master"
+
+          environment_key: default
+          timeout_seconds: 7200
+          max_retries: 1
+          min_retry_interval_millis: 30000
+
+        - task_key: refresh_bronze_silver_gold
+
+          description: >
+            Refreshes the complete medallion Lakeflow pipeline after source
+            generation succeeds.
+
+          depends_on:
+            - task_key: generate_retail_data
+
           pipeline_task:
             pipeline_id: ${resources.pipelines.retail_medallion_pipeline.id}
             full_refresh: false
+
+          timeout_seconds: 7200
+
+        - task_key: validate_medallion
+
+          description: >
+            Verifies Silver and Gold gates, reconciliations, trusted sales,
+            and the expected latest business date.
+
+          depends_on:
+            - task_key: refresh_bronze_silver_gold
+
+          spark_python_task:
+            python_file: ../scripts/validate_medallion.py
+
+            parameters:
+              - "--catalog"
+              - "${var.catalog}"
+
+              - "--silver-schema"
+              - "${resources.schemas.retail_silver_schema.name}"
+
+              - "--gold-schema"
+              - "${resources.schemas.retail_gold_schema.name}"
+
+              - "--expected-end-date"
+              - "{{job.parameters.end_date}}"
+
+          environment_key: default
+          timeout_seconds: 1800
+
+      environments:
+        - environment_key: default
+          spec:
+            environment_version: "2"
