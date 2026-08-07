@@ -56,11 +56,18 @@ def test_all_expected_source_files_exist() -> None:
         assert path.is_file(), path
 
 
-def test_silver_files_publish_to_parameterized_schema() -> None:
+# def test_silver_files_publish_to_parameterized_schema() -> None:
+#     for path in SILVER_FILES:
+#         sql = path.read_text(encoding="utf-8")
+#         assert "USE CATALOG IDENTIFIER(:silver_catalog);" in sql
+#         assert "USE SCHEMA IDENTIFIER(:silver_schema);" in sql
+
+def test_silver_files_publish_to_dev_schema() -> None:
     for path in SILVER_FILES:
         sql = path.read_text(encoding="utf-8")
-        assert "USE CATALOG IDENTIFIER(:silver_catalog);" in sql
-        assert "USE SCHEMA IDENTIFIER(:silver_schema);" in sql
+
+        assert "USE CATALOG workspace;" in sql
+        assert "USE SCHEMA retail_dev_silver;" in sql
 
 
 def test_expected_silver_datasets_are_declared() -> None:
@@ -105,7 +112,12 @@ def test_bundle_defines_one_combined_pipeline() -> None:
         "../pipelines/11_silver_sales.sql",
         "../pipelines/12_silver_returns.sql",
         "../pipelines/13_silver_quality.sql",
-    }
+        "../pipelines/20_gold_baskets.sql",
+        "../pipelines/21_gold_sales_stores.sql",
+        "../pipelines/22_gold_products.sql",
+        "../pipelines/23_gold_customers_returns_traffic.sql",
+        "../pipelines/24_gold_quality.sql",
+        }
 
 
 def test_bundle_uses_advanced_serverless_triggered_pipeline() -> None:

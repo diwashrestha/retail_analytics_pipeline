@@ -170,3 +170,5 @@ def test_store_customer_types_are_distinct_baskets(spark, monkeypatch):
     assert row.walk_in_baskets == 1
     assert row.identified_non_member_baskets == 0
     captured["df"].unpersist()
+
+

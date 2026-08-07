@@ -45,9 +45,13 @@ from random import Random
 from typing import Optional
 
 # Reuse infrastructure from the main generator.
-from generator import (
-    PRODUCTS, VAT_BY_CATEGORY, product_id_for,
+from data_generator.product_catalogue import PRODUCTS
+
+from data_generator.generator import (
+    VAT_BY_CATEGORY,
+    product_id_for,
 )
+
 
 
 # ═══════════════════════════════════════════════════════════════════════════

@@ -46,27 +46,65 @@ from pathlib import Path
 from random import Random
 from typing import Iterable, Iterator
 
-from generator import (
+
+# Make data_generator importable in both environments:
+#
+# Local:
+#   cwd = <repo root>
+#
+# Databricks Python task:
+#   cwd = <repo root>/data_generator
+
+CURRENT_DIR = Path.cwd()
+
+if (CURRENT_DIR / "data_generator").is_dir():
+    # Running locally from repository root.
+    PACKAGE_ROOT = CURRENT_DIR
+
+elif CURRENT_DIR.name == "data_generator":
+    # Running as a Databricks Python script task.
+    PACKAGE_ROOT = CURRENT_DIR.parent
+
+else:
+    raise RuntimeError(
+        f"Cannot determine project root from working directory: {CURRENT_DIR}"
+    )
+
+if str(PACKAGE_ROOT) not in sys.path:
+    sys.path.insert(0, str(PACKAGE_ROOT))
+
+# ---------------------------------------------------------------------------
+# Imports compatible with both:
+#   1. package execution/tests: import data_generator.incremental
+#   2. Databricks Python script task: incremental.py executed directly
+# ---------------------------------------------------------------------------
+
+from data_generator.generator import (
     DOW_WEIGHTS,
     MONTH_WEIGHTS,
     GENERATOR_VERSION,
     DUPLICATE_BASKET_RATE,
-    _DIM_DROP,
-    _FACT_RETURNS_COLS,
     build_customers,
     generate_basket,
     is_promo_period,
+    mark_duplicate_basket,
     load_stores,
     load_terminals,
     make_return_rows,
-    mark_duplicate_basket,
-    write_dim_customers,
-    write_dim_products,
     write_dim_stores,
+    write_dim_products,
+    write_dim_customers,
+    _DIM_DROP,
+    _FACT_RETURNS_COLS,
 )
-from price_history import PriceIndex, validate as validate_scd2, write_scd2
-from progress import ProgressBar
 
+from data_generator.price_history import (
+    PriceIndex,
+    write_scd2,
+    validate as validate_scd2,
+)
+
+from data_generator.progress import ProgressBar
 
 # ---------------------------------------------------------------------------
 # Constants
@@ -621,7 +659,18 @@ def generate_batch(
         args.records,
         volume_rng,
     )
+    
     sorted_days = sorted(daily_volumes)
+
+    if not sorted_days:
+        raise ValueError(
+            f"No trading days available between "
+            f"{context.start:%Y-%m-%d} and {context.end:%Y-%m-%d}."
+        )
+
+# Use the first valid trading day to create a representative basket
+# for deriving the transaction CSV header.
+    header_date = sorted_days[0]
 
     sample_rng = get_rng(args.seed, f"header:{context.batch_id}")
     sample = generate_basket(
@@ -632,13 +681,24 @@ def generate_batch(
         customer_ids,
         customer_weights,
         terminals,
-        context.start,
-        context.start,
+        header_date,
+        header_date,
         context.batch_id,
-        context.start.strftime("%Y-%m-%d"),
+        header_date.strftime("%Y-%m-%d"),
         args.walkin_rate,
         price_index,
     )
+
+    if not sample:
+        raise RuntimeError(
+            "Could not create a sample basket for the CSV header."
+        )
+
+    fact_header = [
+        key
+        for key in sample[0]
+        if key not in _DIM_DROP
+    ]
     if not sample:
         raise RuntimeError("Could not create a sample basket for the CSV header.")
     fact_header = [key for key in sample[0] if key not in _DIM_DROP]
@@ -1063,8 +1123,8 @@ def main() -> int:
 
         return run_generation(args, root)
     except (ValueError, RuntimeError, FileExistsError, OSError, KeyError) as exc:
-        print(f"ERROR: {exc}", file=sys.stderr)
-        return 1
+        print(f"ERROR: {exc}", file=sys.stderr, flush=True)
+        raise
 
 
 if __name__ == "__main__":

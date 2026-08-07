@@ -37,7 +37,9 @@ from typing import Callable, Iterator, Optional
 #     (category, subcategory, name, brand, pl_eligible,
 #      p_min, p_max, qty_min, qty_max, unit, seasonal_months)
 #   get_available_products(month: int) -> (products_list, weights_list)
-from product_catalogue import PRODUCTS, get_available_products  # noqa: E402
+
+
+from data_generator.product_catalogue import PRODUCTS, get_available_products  # noqa: E402
 
 
 # ─────────────────────────────────────────────────────────────────────────

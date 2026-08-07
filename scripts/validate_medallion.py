@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import argparse
 import re
-import sys
 from datetime import date, timedelta
 from typing import Any
 
@@ -88,24 +87,37 @@ def print_quality_failures(
     )
 
     if not failures:
-        print(f"\nNo failed checks in {quality_table}")
+        print(
+            f"\nNo failed checks in {quality_table}",
+            flush=True,
+        )
         return
 
-    print(f"\nFailed checks in {quality_table}:")
+    print(
+        f"\nFailed checks in {quality_table}:",
+        flush=True,
+    )
 
     for row in failures:
         print(
             f"  [{row['severity']}] {row['check_name']}: "
             f"expected={row['expected_value']}, "
-            f"actual={row['actual_value']}"
+            f"actual={row['actual_value']}",
+            flush=True,
         )
-        print(f"      {row['description']}")
+        print(
+            f"      {row['description']}",
+            flush=True,
+        )
 
 
 def main() -> int:
     args = parse_args()
 
-    catalog = validate_identifier(args.catalog, "catalog")
+    catalog = validate_identifier(
+        args.catalog,
+        "catalog",
+    )
     silver_schema = validate_identifier(
         args.silver_schema,
         "silver schema",
@@ -115,34 +127,46 @@ def main() -> int:
         "gold schema",
     )
 
-    expected_end_date = date.fromisoformat(args.expected_end_date)
-    expected_latest_order_date = previous_trading_date(expected_end_date)
+    expected_end_date = date.fromisoformat(
+        args.expected_end_date
+    )
+    expected_latest_order_date = previous_trading_date(
+        expected_end_date
+    )
 
     spark = SparkSession.getActiveSession()
 
     if spark is None:
         spark = SparkSession.builder.getOrCreate()
 
+    # ------------------------------------------------------------------
+    # Table names
+    # ------------------------------------------------------------------
+
     silver_gate_table = table_name(
         catalog,
         silver_schema,
         "silver_quality_gate",
     )
+
     silver_checks_table = table_name(
         catalog,
         silver_schema,
         "silver_quality_checks",
     )
+
     silver_transaction_reconciliation_table = table_name(
         catalog,
         silver_schema,
         "silver_transaction_reconciliation",
     )
+
     silver_return_reconciliation_table = table_name(
         catalog,
         silver_schema,
         "silver_return_reconciliation",
     )
+
     fact_sales_table = table_name(
         catalog,
         silver_schema,
@@ -154,6 +178,7 @@ def main() -> int:
         gold_schema,
         "gold_quality_gate",
     )
+
     gold_checks_table = table_name(
         catalog,
         gold_schema,
@@ -162,12 +187,19 @@ def main() -> int:
 
     results: list[tuple[str, bool, str]] = []
 
-    # Silver quality gate.
-    silver_gate = read_single_row(spark, silver_gate_table)
+    # ------------------------------------------------------------------
+    # 1. Silver quality gate
+    # ------------------------------------------------------------------
+
+    silver_gate = read_single_row(
+        spark,
+        silver_gate_table,
+    )
 
     silver_failed_critical = int(
         silver_gate["failed_critical_checks"]
     )
+
     silver_failed_warnings = int(
         silver_gate["failed_warning_checks"]
     )
@@ -182,12 +214,19 @@ def main() -> int:
         ),
     )
 
-    # Gold quality gate.
-    gold_gate = read_single_row(spark, gold_gate_table)
+    # ------------------------------------------------------------------
+    # 2. Gold quality gate
+    # ------------------------------------------------------------------
+
+    gold_gate = read_single_row(
+        spark,
+        gold_gate_table,
+    )
 
     gold_failed_critical = int(
         gold_gate["failed_critical_checks"]
     )
+
     gold_failed_warnings = int(
         gold_gate["failed_warning_checks"]
     )
@@ -202,14 +241,19 @@ def main() -> int:
         ),
     )
 
-    # Silver transaction reconciliation.
+    # ------------------------------------------------------------------
+    # 3. Silver transaction reconciliation
+    # ------------------------------------------------------------------
+
     transaction_reconciliation = read_single_row(
         spark,
         silver_transaction_reconciliation_table,
     )
 
     transaction_difference = int(
-        transaction_reconciliation["reconciliation_difference"]
+        transaction_reconciliation[
+            "reconciliation_difference"
+        ]
     )
 
     add_check(
@@ -219,14 +263,19 @@ def main() -> int:
         f"reconciliation_difference={transaction_difference}",
     )
 
-    # Silver return reconciliation.
+    # ------------------------------------------------------------------
+    # 4. Silver return reconciliation
+    # ------------------------------------------------------------------
+
     return_reconciliation = read_single_row(
         spark,
         silver_return_reconciliation_table,
     )
 
     return_difference = int(
-        return_reconciliation["reconciliation_difference"]
+        return_reconciliation[
+            "reconciliation_difference"
+        ]
     )
 
     add_check(
@@ -236,28 +285,48 @@ def main() -> int:
         f"reconciliation_difference={return_difference}",
     )
 
-    # Basic trusted-sales checks.
+    # ------------------------------------------------------------------
+    # 5. Basic trusted-sales checks
+    # ------------------------------------------------------------------
+
     sales_metrics = spark.sql(
         f"""
         SELECT
-          count(*) AS sales_rows,
-          count(DISTINCT basket_id) AS basket_count,
-          round(coalesce(sum(net_sales_eur), 0), 2) AS net_sales_eur,
-          min(order_date) AS earliest_order_date,
-          max(order_date) AS latest_order_date
+            count(*) AS sales_rows,
+            count(DISTINCT basket_id) AS basket_count,
+            round(coalesce(sum(net_sales_eur), 0), 2)
+                AS net_sales_eur,
+            min(order_date) AS earliest_order_date,
+            max(order_date) AS latest_order_date
         FROM {fact_sales_table}
         """
     ).first()
 
     if sales_metrics is None:
         raise RuntimeError(
-            f"Unable to query trusted sales table {fact_sales_table}."
+            f"Unable to query trusted sales table "
+            f"{fact_sales_table}."
         )
 
-    sales_rows = int(sales_metrics["sales_rows"])
-    basket_count = int(sales_metrics["basket_count"])
-    net_sales_eur = float(sales_metrics["net_sales_eur"])
-    latest_order_date: Any = sales_metrics["latest_order_date"]
+    sales_rows = int(
+        sales_metrics["sales_rows"]
+    )
+
+    basket_count = int(
+        sales_metrics["basket_count"]
+    )
+
+    net_sales_eur = float(
+        sales_metrics["net_sales_eur"]
+    )
+
+    earliest_order_date: Any = sales_metrics[
+        "earliest_order_date"
+    ]
+
+    latest_order_date: Any = sales_metrics[
+        "latest_order_date"
+    ]
 
     add_check(
         results,
@@ -266,9 +335,15 @@ def main() -> int:
         (
             f"sales_rows={sales_rows}, "
             f"basket_count={basket_count}, "
-            f"net_sales_eur={net_sales_eur:.2f}"
+            f"net_sales_eur={net_sales_eur:.2f}, "
+            f"earliest_order_date={earliest_order_date}, "
+            f"latest_order_date={latest_order_date}"
         ),
     )
+
+    # ------------------------------------------------------------------
+    # 6. Expected latest business date
+    # ------------------------------------------------------------------
 
     latest_date_passed = (
         latest_order_date is not None
@@ -285,34 +360,77 @@ def main() -> int:
         ),
     )
 
-    print("\nEinkaufpark medallion validation")
-    print("=" * 72)
+    # ------------------------------------------------------------------
+    # Validation report
+    # ------------------------------------------------------------------
+
+    print(
+        "\nEinkaufpark medallion validation",
+        flush=True,
+    )
+    print(
+        "=" * 72,
+        flush=True,
+    )
 
     failed_checks: list[str] = []
 
     for name, passed, details in results:
         status = "PASS" if passed else "FAIL"
-        print(f"[{status}] {name}")
-        print(f"       {details}")
+
+        print(
+            f"[{status}] {name}",
+            flush=True,
+        )
+        print(
+            f"       {details}",
+            flush=True,
+        )
 
         if not passed:
             failed_checks.append(name)
 
-    print_quality_failures(spark, silver_checks_table)
-    print_quality_failures(spark, gold_checks_table)
+    # Print the individual SQL quality checks that failed.
+    print_quality_failures(
+        spark,
+        silver_checks_table,
+    )
 
-    print("\n" + "=" * 72)
+    print_quality_failures(
+        spark,
+        gold_checks_table,
+    )
+
+    print(
+        "\n" + "=" * 72,
+        flush=True,
+    )
 
     if failed_checks:
-        print(
-            "Validation failed: "
-            + ", ".join(failed_checks)
-        )
-        return 1
+        failed_details = [
+            f"{name}: {details}"
+            for name, passed, details in results
+            if not passed
+        ]
 
-    print("All critical medallion validation checks passed.")
+        raise RuntimeError(
+            "Medallion validation failed:\n  - "
+            + "\n  - ".join(failed_details)
+        )
+
+    print(
+        "All critical medallion validation checks passed.",
+        flush=True,
+    )
+
     return 0
 
 
 if __name__ == "__main__":
-    sys.exit(main())
+    exit_code = main()
+
+    if exit_code != 0:
+        raise RuntimeError(
+            "Medallion validation failed. "
+            "See the [FAIL] checks above for details."
+        )
