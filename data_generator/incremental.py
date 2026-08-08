@@ -448,59 +448,151 @@ def compute_daily_volumes(
     rng: Random,
 ) -> dict[datetime, int]:
     """Distribute requested line volume across non-Sunday business dates."""
+
     days: list[datetime] = []
     weights: list[float] = []
 
     current = start
+
     while current <= end:
         if current.weekday() != 6:
-            weight = DOW_WEIGHTS[current.weekday()] * MONTH_WEIGHTS[current.month - 1]
+            weight = (
+                DOW_WEIGHTS[current.weekday()]
+                * MONTH_WEIGHTS[current.month - 1]
+            )
+
             if is_promo_period(current):
                 weight *= 1.4
+
             days.append(current)
             weights.append(weight)
+
         current += timedelta(days=1)
 
     if not days:
-        raise ValueError("The requested period contains no trading days.")
+        raise ValueError(
+            "The requested period contains no trading days."
+        )
+
+    # When there are enough requested rows, preserve at least one
+    # transaction line on every trading day.
+    minimum_per_day = 1 if n_total >= len(days) else 0
 
     total_weight = sum(weights)
-    raw_targets = [n_total * weight / total_weight for weight in weights]
-    volumes = {day: max(0, int(value)) for day, value in zip(days, raw_targets)}
 
-    # Allocate rounding remainder to the dates with the largest fractional parts.
-    assigned = sum(volumes.values())
-    remainder = n_total - assigned
-    ranked = sorted(
-        zip(days, raw_targets),
-        key=lambda pair: pair[1] - int(pair[1]),
-        reverse=True,
-    )
-    for day, _ in ranked[:remainder]:
-        volumes[day] += 1
+    raw_targets = [
+        n_total * weight / total_weight
+        for weight in weights
+    ]
 
-    # Apply realistic noise, then correct back to the requested total.
-    for day in days:
-        base = volumes[day]
-        if base <= 0:
-            continue
-        jitter_limit = max(1, int(base * DAILY_VOLUME_NOISE))
-        volumes[day] = max(0, base + rng.randint(-jitter_limit, jitter_limit))
+    volumes = {
+        day: max(minimum_per_day, int(value))
+        for day, value in zip(days, raw_targets)
+    }
 
+    # Correct the initial rounding while spreading adjustments
+    # across the full period rather than concentrating them at
+    # the end of the date range.
     difference = n_total - sum(volumes.values())
+
     if difference > 0:
-        volumes[days[-1]] += difference
+        ranked = sorted(
+            zip(days, raw_targets),
+            key=lambda pair: (
+                pair[1] - int(pair[1])
+            ),
+            reverse=True,
+        )
+
+        for index in range(difference):
+            day = ranked[index % len(ranked)][0]
+            volumes[day] += 1
+
     elif difference < 0:
         to_remove = -difference
-        for day in reversed(days):
-            removable = min(volumes[day], to_remove)
-            volumes[day] -= removable
-            to_remove -= removable
-            if to_remove == 0:
-                break
 
-    return {day: count for day, count in volumes.items() if count > 0}
+        while to_remove > 0:
+            removed_this_pass = 0
 
+            for day in days:
+                if to_remove == 0:
+                    break
+
+                if volumes[day] > minimum_per_day:
+                    volumes[day] -= 1
+                    to_remove -= 1
+                    removed_this_pass += 1
+
+            if removed_this_pass == 0:
+                raise RuntimeError(
+                    "Unable to reconcile daily volumes "
+                    "without violating the minimum-per-day constraint."
+                )
+
+    # Apply realistic daily noise.
+    for day in days:
+        base = volumes[day]
+
+        if base <= 0:
+            continue
+
+        jitter_limit = max(
+            1,
+            int(base * DAILY_VOLUME_NOISE),
+        )
+
+        volumes[day] = max(
+            minimum_per_day,
+            base
+            + rng.randint(
+                -jitter_limit,
+                jitter_limit,
+            ),
+        )
+
+    # Restore the requested total after jitter without erasing
+    # the final business dates.
+    difference = n_total - sum(volumes.values())
+
+    if difference > 0:
+        for index in range(difference):
+            day = days[index % len(days)]
+            volumes[day] += 1
+
+    elif difference < 0:
+        to_remove = -difference
+
+        while to_remove > 0:
+            removed_this_pass = 0
+
+            for day in days:
+                if to_remove == 0:
+                    break
+
+                if volumes[day] > minimum_per_day:
+                    volumes[day] -= 1
+                    to_remove -= 1
+                    removed_this_pass += 1
+
+            if removed_this_pass == 0:
+                raise RuntimeError(
+                    "Unable to reconcile jittered daily volumes "
+                    "without violating the minimum-per-day constraint."
+                )
+
+    final_total = sum(volumes.values())
+
+    if final_total != n_total:
+        raise RuntimeError(
+            "Daily volume reconciliation failed: "
+            f"expected {n_total}, got {final_total}."
+        )
+
+    return {
+        day: count
+        for day, count in volumes.items()
+        if count > 0
+    }
 
 def schedule_late_arrival(
     basket: list[dict],

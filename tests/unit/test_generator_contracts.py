@@ -72,3 +72,32 @@ def test_demo_starting_on_sunday_uses_next_trading_day() -> None:
 
     assert datetime(2023, 1, 1) not in dates
     assert dates[0] == datetime(2023, 1, 2)
+    
+
+def test_daily_volume_correction_preserves_final_trading_day() -> None:
+    from datetime import datetime
+
+    from data_generator.incremental import (
+        compute_daily_volumes,
+        get_rng,
+    )
+
+    rng = get_rng(
+        42,
+        "volumes:demo:2023-01-01:2026-03-31:100000",
+    )
+
+    volumes = compute_daily_volumes(
+        datetime(2023, 1, 1),
+        datetime(2026, 3, 31),
+        100_000,
+        rng,
+    )
+
+    assert sum(volumes.values()) == 100_000
+
+    assert datetime(2026, 3, 31) in volumes
+
+    assert volumes[
+        datetime(2026, 3, 31)
+    ] > 0

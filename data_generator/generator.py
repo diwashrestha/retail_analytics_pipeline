@@ -39,7 +39,7 @@ from typing import Callable, Iterator, Optional
 #   get_available_products(month: int) -> (products_list, weights_list)
 
 
-from data_generator.product_catalogue import PRODUCTS, get_available_products  # noqa: E402
+from data_generator.product_catalogue import PRODUCTS, get_available_products
 
 
 # ─────────────────────────────────────────────────────────────────────────
