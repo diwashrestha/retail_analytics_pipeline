@@ -8,21 +8,7 @@ The data flows through a **Bronze → Silver → Gold** architecture, where raw 
 
 <!-- Add pipeline architecture image here -->
 
-```text
-Python Data Generator
-        ↓
-Unity Catalog Volume
-        ↓
-Bronze
-        ↓
-Silver
-        ↓
-Gold
-        ↓
-Reporting Layer
-        ↓
-Power BI
-```
+![Einkaufpark Retail Analytics Platform Architecture](pipeline_image.png)
 
 ## Tech Stack
 
