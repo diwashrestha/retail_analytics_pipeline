@@ -143,6 +143,69 @@ resources:
 
           environment_key: default
           timeout_seconds: 1800
+          
+        - task_key: create_reporting_views
+
+          description: >
+            Creates the stable Power BI reporting contract over trusted
+            Silver and Gold datasets.
+
+          depends_on:
+            - task_key: validate_medallion
+
+          spark_python_task:
+            python_file: ../scripts/create_reporting_views.py
+
+            parameters:
+              - "--catalog"
+              - "${var.catalog}"
+
+              - "--silver-schema"
+              - "${resources.schemas.retail_silver_schema.name}"
+
+              - "--gold-schema"
+              - "${resources.schemas.retail_gold_schema.name}"
+
+              - "--reporting-schema"
+              - "${resources.schemas.retail_reporting_schema.name}"
+
+              - "--sql-file"
+              - "${workspace.file_path}/sql/reporting_views.sql"
+
+          environment_key: default
+          timeout_seconds: 1800
+
+
+        - task_key: validate_reporting
+
+          description: >
+            Validates reporting-layer grains, reconciliations, schemas,
+            data types, and BI-facing contracts.
+
+          depends_on:
+            - task_key: create_reporting_views
+
+          spark_python_task:
+            python_file: ../scripts/validate_reporting.py
+
+            parameters:
+              - "--catalog"
+              - "${var.catalog}"
+
+              - "--silver-schema"
+              - "${resources.schemas.retail_silver_schema.name}"
+
+              - "--gold-schema"
+              - "${resources.schemas.retail_gold_schema.name}"
+
+              - "--reporting-schema"
+              - "${resources.schemas.retail_reporting_schema.name}"
+
+              - "--revenue-tolerance-eur"
+              - "${var.revenue_tolerance_eur}"
+
+          environment_key: default
+          timeout_seconds: 1800
 
       environments:
         - environment_key: default
