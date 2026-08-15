@@ -1,0 +1,57 @@
+relationship c3bc33eb-8c47-40e8-9ae3-cb5579111677
+	joinOnDateBehavior: datePartOnly
+	fromColumn: FactSales.order_timestamp
+	toColumn: LocalDateTable_7771b938-49cc-473d-b8fb-d25b715c95ce.Date
+
+relationship 31bc7258-5727-4153-97a1-e306217568c2
+	joinOnDateBehavior: datePartOnly
+	fromColumn: FactReturns.original_order_date
+	toColumn: LocalDateTable_5d07f438-e38c-4548-b16c-06fb067557a7.Date
+
+relationship ae6c7ff7-e19a-44ec-aeef-3b34efcaa7f5
+	joinOnDateBehavior: datePartOnly
+	fromColumn: CustomerLTV.first_purchase_date
+	toColumn: LocalDateTable_c0accc09-fdee-4027-9f09-7a50e91634fe.Date
+
+relationship 30269590-096f-466c-b69c-ecabcd95e9e7
+	joinOnDateBehavior: datePartOnly
+	fromColumn: CustomerLTV.last_purchase_date
+	toColumn: LocalDateTable_4a2bb49f-b85d-43ae-b6d5-0c5c383ed1a5.Date
+
+relationship f57cd1d5-241b-4e40-94c6-b4c3f14bddaf
+	joinOnDateBehavior: datePartOnly
+	fromColumn: DataQuality.checked_at
+	toColumn: LocalDateTable_b4c226c4-ecbe-4341-8382-3f0cb0c865ce.Date
+
+relationship ce950a6a-c801-1e14-51e9-756e665c5c27
+	fromColumn: FactSales.order_date
+	toColumn: DimDate.calendar_date
+
+relationship 9cf97747-9dd3-a51b-ea4c-2dcb1ebce0ad
+	fromColumn: FactReturns.return_date
+	toColumn: DimDate.calendar_date
+
+relationship 3d955bdf-d653-9416-16b8-479b871d00ec
+	fromColumn: FactSales.store_key
+	toColumn: DimStore.store_key
+
+relationship bac49c8b-7986-5e1b-232f-2b9d55c4f75e
+	fromColumn: FactSales.product_key
+	toColumn: DimProduct.product_key
+
+relationship 6b5f9e47-bfd8-ebf4-34c1-f0334f063700
+	fromColumn: FactReturns.store_key
+	toColumn: DimStore.store_key
+
+relationship 1a0c3a19-cea6-8c5e-e00b-28f8b19e3fcc
+	fromColumn: FactReturns.product_key
+	toColumn: DimProduct.product_key
+
+relationship b16e7734-b623-0485-7c58-253a1508aa3d
+	fromColumn: FactSales.customer_key
+	toColumn: DimCustomer.customer_key
+
+relationship e6557150-c634-8e8f-4eb2-bf216ba533df
+	fromColumn: FactReturns.customer_key
+	toColumn: DimCustomer.customer_key
+

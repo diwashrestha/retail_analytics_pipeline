@@ -7,7 +7,6 @@ from typing import Any
 
 from pyspark.sql import Row, SparkSession
 
-
 IDENTIFIER_PATTERN = re.compile(r"^[A-Za-z_][A-Za-z0-9_]*$")
 
 
@@ -42,9 +41,7 @@ def read_single_row(spark: SparkSession, table: str) -> Row:
     rows = spark.table(table).limit(2).collect()
 
     if len(rows) != 1:
-        raise RuntimeError(
-            f"Expected exactly one row in {table}, found {len(rows)}."
-        )
+        raise RuntimeError(f"Expected exactly one row in {table}, found {len(rows)}.")
 
     return rows[0]
 
@@ -127,12 +124,8 @@ def main() -> int:
         "gold schema",
     )
 
-    expected_end_date = date.fromisoformat(
-        args.expected_end_date
-    )
-    expected_latest_order_date = previous_trading_date(
-        expected_end_date
-    )
+    expected_end_date = date.fromisoformat(args.expected_end_date)
+    expected_latest_order_date = previous_trading_date(expected_end_date)
 
     spark = SparkSession.getActiveSession()
 
@@ -196,13 +189,9 @@ def main() -> int:
         silver_gate_table,
     )
 
-    silver_failed_critical = int(
-        silver_gate["failed_critical_checks"]
-    )
+    silver_failed_critical = int(silver_gate["failed_critical_checks"])
 
-    silver_failed_warnings = int(
-        silver_gate["failed_warning_checks"]
-    )
+    silver_failed_warnings = int(silver_gate["failed_warning_checks"])
 
     add_check(
         results,
@@ -223,13 +212,9 @@ def main() -> int:
         gold_gate_table,
     )
 
-    gold_failed_critical = int(
-        gold_gate["failed_critical_checks"]
-    )
+    gold_failed_critical = int(gold_gate["failed_critical_checks"])
 
-    gold_failed_warnings = int(
-        gold_gate["failed_warning_checks"]
-    )
+    gold_failed_warnings = int(gold_gate["failed_warning_checks"])
 
     add_check(
         results,
@@ -251,9 +236,7 @@ def main() -> int:
     )
 
     transaction_difference = int(
-        transaction_reconciliation[
-            "reconciliation_difference"
-        ]
+        transaction_reconciliation["reconciliation_difference"]
     )
 
     add_check(
@@ -272,11 +255,7 @@ def main() -> int:
         silver_return_reconciliation_table,
     )
 
-    return_difference = int(
-        return_reconciliation[
-            "reconciliation_difference"
-        ]
-    )
+    return_difference = int(return_reconciliation["reconciliation_difference"])
 
     add_check(
         results,
@@ -303,30 +282,17 @@ def main() -> int:
     ).first()
 
     if sales_metrics is None:
-        raise RuntimeError(
-            f"Unable to query trusted sales table "
-            f"{fact_sales_table}."
-        )
+        raise RuntimeError(f"Unable to query trusted sales table {fact_sales_table}.")
 
-    sales_rows = int(
-        sales_metrics["sales_rows"]
-    )
+    sales_rows = int(sales_metrics["sales_rows"])
 
-    basket_count = int(
-        sales_metrics["basket_count"]
-    )
+    basket_count = int(sales_metrics["basket_count"])
 
-    net_sales_eur = float(
-        sales_metrics["net_sales_eur"]
-    )
+    net_sales_eur = float(sales_metrics["net_sales_eur"])
 
-    earliest_order_date: Any = sales_metrics[
-        "earliest_order_date"
-    ]
+    earliest_order_date: Any = sales_metrics["earliest_order_date"]
 
-    latest_order_date: Any = sales_metrics[
-        "latest_order_date"
-    ]
+    latest_order_date: Any = sales_metrics["latest_order_date"]
 
     add_check(
         results,
@@ -408,14 +374,11 @@ def main() -> int:
 
     if failed_checks:
         failed_details = [
-            f"{name}: {details}"
-            for name, passed, details in results
-            if not passed
+            f"{name}: {details}" for name, passed, details in results if not passed
         ]
 
         raise RuntimeError(
-            "Medallion validation failed:\n  - "
-            + "\n  - ".join(failed_details)
+            "Medallion validation failed:\n  - " + "\n  - ".join(failed_details)
         )
 
     print(
@@ -431,6 +394,5 @@ if __name__ == "__main__":
 
     if exit_code != 0:
         raise RuntimeError(
-            "Medallion validation failed. "
-            "See the [FAIL] checks above for details."
+            "Medallion validation failed. See the [FAIL] checks above for details."
         )

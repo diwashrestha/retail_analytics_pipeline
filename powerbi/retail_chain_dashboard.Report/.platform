@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "Report",
+    "displayName": "retail_chain_dashboard"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "96c2d79a-1854-4b9a-bcde-812c9c864fa4"
+  }
+}

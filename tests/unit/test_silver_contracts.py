@@ -3,10 +3,11 @@
 These tests do not replace a Databricks pipeline update. They catch accidental
 renames, missing source files, and deployment drift before bundle deployment.
 """
+
 from __future__ import annotations
 
-from pathlib import Path
 import re
+from pathlib import Path
 
 import yaml
 
@@ -62,6 +63,7 @@ def test_all_expected_source_files_exist() -> None:
 #         assert "USE CATALOG IDENTIFIER(:silver_catalog);" in sql
 #         assert "USE SCHEMA IDENTIFIER(:silver_schema);" in sql
 
+
 def test_silver_files_publish_to_dev_schema() -> None:
     for path in SILVER_FILES:
         sql = path.read_text(encoding="utf-8")
@@ -99,7 +101,9 @@ def test_quality_gate_fails_critical_contract_violations() -> None:
 
 def test_bundle_defines_one_combined_pipeline() -> None:
     resource_files = sorted(RESOURCES.glob("*.yml"))
-    documents = [yaml.safe_load(path.read_text(encoding="utf-8")) for path in resource_files]
+    documents = [
+        yaml.safe_load(path.read_text(encoding="utf-8")) for path in resource_files
+    ]
     pipelines: dict = {}
     for document in documents:
         pipelines.update((document or {}).get("resources", {}).get("pipelines", {}))
@@ -117,7 +121,7 @@ def test_bundle_defines_one_combined_pipeline() -> None:
         "../pipelines/22_gold_products.sql",
         "../pipelines/23_gold_customers_returns_traffic.sql",
         "../pipelines/24_gold_quality.sql",
-        }
+    }
 
 
 def test_bundle_uses_advanced_serverless_triggered_pipeline() -> None:

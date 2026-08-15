@@ -1,0 +1,149 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/report/3.3.0/schema.json",
+  "themeCollection": {
+    "baseTheme": {
+      "name": "CY26SU05",
+      "reportVersionAtImport": {
+        "visual": "2.9.0",
+        "report": "3.3.0",
+        "page": "2.3.1"
+      },
+      "type": "SharedResources"
+    }
+  },
+  "objects": {
+    "section": [
+      {
+        "properties": {
+          "verticalAlignment": {
+            "expr": {
+              "Literal": {
+                "Value": "'Top'"
+              }
+            }
+          }
+        }
+      }
+    ],
+    "outspacePane": [
+      {
+        "properties": {
+          "expanded": {
+            "expr": {
+              "Literal": {
+                "Value": "true"
+              }
+            }
+          }
+        }
+      }
+    ]
+  },
+  "resourcePackages": [
+    {
+      "name": "SharedResources",
+      "type": "SharedResources",
+      "items": [
+        {
+          "name": "CY26SU05",
+          "path": "BaseThemes/CY26SU05.json",
+          "type": "BaseTheme"
+        }
+      ]
+    },
+    {
+      "name": "RegisteredResources",
+      "type": "RegisteredResources",
+      "items": [
+        {
+          "name": "customer-insight-selected5423875287826732.png",
+          "path": "customer-insight-selected5423875287826732.png",
+          "type": "Image"
+        },
+        {
+          "name": "customer-insight-selected6037335915969201.png",
+          "path": "customer-insight-selected6037335915969201.png",
+          "type": "Image"
+        },
+        {
+          "name": "icons8-customer-insight-100003585640834674386.png",
+          "path": "icons8-customer-insight-100003585640834674386.png",
+          "type": "Image"
+        },
+        {
+          "name": "icons8-overview-100_(1)19171950998291132.png",
+          "path": "icons8-overview-100_(1)19171950998291132.png",
+          "type": "Image"
+        },
+        {
+          "name": "icons8-overview-100_(1)5015832448530682.png",
+          "path": "icons8-overview-100_(1)5015832448530682.png",
+          "type": "Image"
+        },
+        {
+          "name": "icons8-overview-100774030195075895.png",
+          "path": "icons8-overview-100774030195075895.png",
+          "type": "Image"
+        },
+        {
+          "name": "icons8-products-100817478529558609.png",
+          "path": "icons8-products-100817478529558609.png",
+          "type": "Image"
+        },
+        {
+          "name": "icons8-sales-649898987837846265.png",
+          "path": "icons8-sales-649898987837846265.png",
+          "type": "Image"
+        },
+        {
+          "name": "icons8-store-1005463172868054387.png",
+          "path": "icons8-store-1005463172868054387.png",
+          "type": "Image"
+        },
+        {
+          "name": "log-grocery-store21400314043278934.png",
+          "path": "log-grocery-store21400314043278934.png",
+          "type": "Image"
+        },
+        {
+          "name": "products-selected5736675238913937.png",
+          "path": "products-selected5736675238913937.png",
+          "type": "Image"
+        },
+        {
+          "name": "products-selected8253300780793895.png",
+          "path": "products-selected8253300780793895.png",
+          "type": "Image"
+        },
+        {
+          "name": "sales-selected6632361354886388.png",
+          "path": "sales-selected6632361354886388.png",
+          "type": "Image"
+        },
+        {
+          "name": "sales-selected9238326173141526.png",
+          "path": "sales-selected9238326173141526.png",
+          "type": "Image"
+        },
+        {
+          "name": "store-selected8183780266006239.png",
+          "path": "store-selected8183780266006239.png",
+          "type": "Image"
+        },
+        {
+          "name": "store-selected8605689488171189.png",
+          "path": "store-selected8605689488171189.png",
+          "type": "Image"
+        }
+      ]
+    }
+  ],
+  "settings": {
+    "useStylableVisualContainerHeader": true,
+    "exportDataMode": "AllowSummarized",
+    "defaultDrillFilterOtherVisuals": true,
+    "allowChangeFilterTypes": true,
+    "useEnhancedTooltips": true,
+    "useDefaultAggregateDisplayName": true
+  }
+}

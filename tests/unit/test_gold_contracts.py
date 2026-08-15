@@ -22,13 +22,16 @@ def test_expected_gold_files_exist() -> None:
 
 
 def test_expected_gold_datasets_are_defined_once() -> None:
-    sql = "\n".join(read(name) for name in [
-        "20_gold_baskets.sql",
-        "21_gold_sales_stores.sql",
-        "22_gold_products.sql",
-        "23_gold_customers_returns_traffic.sql",
-        "24_gold_quality.sql",
-    ])
+    sql = "\n".join(
+        read(name)
+        for name in [
+            "20_gold_baskets.sql",
+            "21_gold_sales_stores.sql",
+            "22_gold_products.sql",
+            "23_gold_customers_returns_traffic.sql",
+            "24_gold_quality.sql",
+        ]
+    )
     for dataset in [
         "basket_analysis",
         "daily_sales",
@@ -47,9 +50,14 @@ def test_product_performance_has_product_grain_and_independent_return_join() -> 
     sql = read("22_gold_products.sql")
     assert "GROUP BY product_sk, product_id" in sql
     assert "LEFT JOIN gold_product_return_metrics" in sql
-    assert "price_band" not in sql.split(
-        "CREATE OR REFRESH PRIVATE MATERIALIZED VIEW gold_product_sales_metrics", 1
-    )[1].split("CREATE OR REFRESH PRIVATE MATERIALIZED VIEW gold_product_return_metrics", 1)[0]
+    assert (
+        "price_band"
+        not in sql.split(
+            "CREATE OR REFRESH PRIVATE MATERIALIZED VIEW gold_product_sales_metrics", 1
+        )[1].split(
+            "CREATE OR REFRESH PRIVATE MATERIALIZED VIEW gold_product_return_metrics", 1
+        )[0]
+    )
 
 
 def test_return_analysis_does_not_repeat_sales_denominators() -> None:

@@ -6,13 +6,13 @@ from pathlib import Path
 
 from pyspark.sql import SparkSession
 
-
 IDENTIFIER_PATTERN = re.compile(r"^[A-Za-z_][A-Za-z0-9_]*$")
 
 
 # ---------------------------------------------------------------------------
 # CLI
 # ---------------------------------------------------------------------------
+
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
@@ -40,6 +40,7 @@ def parse_args() -> argparse.Namespace:
 # Validation / identifiers
 # ---------------------------------------------------------------------------
 
+
 def validate_identifier(value: str, argument_name: str) -> str:
     if not IDENTIFIER_PATTERN.fullmatch(value):
         raise ValueError(
@@ -60,6 +61,7 @@ def quote_identifier(value: str) -> str:
 # SQL file discovery
 # ---------------------------------------------------------------------------
 
+
 def resolve_sql_file(raw_path: str) -> Path:
     requested = Path(raw_path)
 
@@ -67,9 +69,7 @@ def resolve_sql_file(raw_path: str) -> Path:
         if requested.is_file():
             return requested
 
-        raise FileNotFoundError(
-            f"Reporting SQL file does not exist: {requested}"
-        )
+        raise FileNotFoundError(f"Reporting SQL file does not exist: {requested}")
 
     cwd = Path.cwd()
 
@@ -89,14 +89,14 @@ def resolve_sql_file(raw_path: str) -> Path:
     checked = "\n  - ".join(str(path) for path in candidates)
 
     raise FileNotFoundError(
-        "Could not locate reporting SQL file.\n"
-        f"Checked:\n  - {checked}"
+        f"Could not locate reporting SQL file.\nChecked:\n  - {checked}"
     )
 
 
 # ---------------------------------------------------------------------------
 # Lightweight SQL splitter
 # ---------------------------------------------------------------------------
+
 
 def split_sql_statements(sql_text: str) -> list[str]:
     """
@@ -152,11 +152,7 @@ def split_sql_statements(sql_text: str) -> list[str]:
         # ---------------------------------------------------------------
         # Comment starts
         # ---------------------------------------------------------------
-        if (
-            not in_single_quote
-            and not in_double_quote
-            and not in_backtick
-        ):
+        if not in_single_quote and not in_double_quote and not in_backtick:
             if char == "-" and next_char == "-":
                 buffer.extend([char, next_char])
                 in_line_comment = True
@@ -229,6 +225,7 @@ def split_sql_statements(sql_text: str) -> list[str]:
 # Template rendering
 # ---------------------------------------------------------------------------
 
+
 def render_sql(
     sql_text: str,
     catalog: str,
@@ -263,6 +260,7 @@ def render_sql(
 # ---------------------------------------------------------------------------
 # Main
 # ---------------------------------------------------------------------------
+
 
 def main() -> None:
     args = parse_args()
@@ -300,9 +298,7 @@ def main() -> None:
     # Fail early if the bundle-managed reporting schema is missing.
     schemas = {
         row["databaseName"]
-        for row in spark.sql(
-            f"SHOW SCHEMAS IN {quote_identifier(catalog)}"
-        ).collect()
+        for row in spark.sql(f"SHOW SCHEMAS IN {quote_identifier(catalog)}").collect()
     }
 
     if reporting_schema not in schemas:
@@ -325,9 +321,7 @@ def main() -> None:
     statements = split_sql_statements(rendered_sql)
 
     if not statements:
-        raise RuntimeError(
-            f"No SQL statements found in {sql_file}"
-        )
+        raise RuntimeError(f"No SQL statements found in {sql_file}")
 
     print(
         f"\nExecuting {len(statements)} reporting SQL statements...",

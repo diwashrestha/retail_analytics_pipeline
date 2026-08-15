@@ -37,36 +37,42 @@ from __future__ import annotations
 import argparse
 import bisect
 import csv
-import json
 import sys
 from datetime import datetime, timedelta
 from pathlib import Path
 from random import Random
-from typing import Optional
 
 # Reuse infrastructure from the main generator.
 from generator import (
-    PRODUCTS, VAT_BY_CATEGORY, product_id_for,
+    PRODUCTS,
+    VAT_BY_CATEGORY,
+    product_id_for,
 )
-
 
 # ═══════════════════════════════════════════════════════════════════════════
 # Constants
 # ═══════════════════════════════════════════════════════════════════════════
 
-PROMO_PROB         = 0.30   # fraction of events that are promos
-PROMO_DURATION     = 7      # days
-PROMO_DISCOUNT     = (0.70, 0.85)  # multiplier range (15-30% off)
-PERMANENT_CHANGE   = (-0.06, 0.10) # multiplier range (slight upward bias)
+PROMO_PROB = 0.30  # fraction of events that are promos
+PROMO_DURATION = 7  # days
+PROMO_DISCOUNT = (0.70, 0.85)  # multiplier range (15-30% off)
+PERMANENT_CHANGE = (-0.06, 0.10)  # multiplier range (slight upward bias)
 MIN_EVENT_GAP_DAYS = 8
-EVENTS_PER_YEAR    = (2, 8)        # range
+EVENTS_PER_YEAR = (2, 8)  # range
 
 
 SCD2_COLUMNS = [
-    "product_id", "product_name", "category", "subcategory",
-    "default_brand", "effective_price_eur",
-    "effective_from", "effective_to", "is_promo_price",
-    "unit", "vat_rate",
+    "product_id",
+    "product_name",
+    "category",
+    "subcategory",
+    "default_brand",
+    "effective_price_eur",
+    "effective_from",
+    "effective_to",
+    "is_promo_price",
+    "unit",
+    "vat_rate",
 ]
 
 
@@ -74,8 +80,10 @@ SCD2_COLUMNS = [
 # Core: build intervals for one product
 # ═══════════════════════════════════════════════════════════════════════════
 
-def pick_change_dates(rng: Random, start: datetime, end: datetime,
-                      n_target: int) -> list[datetime]:
+
+def pick_change_dates(
+    rng: Random, start: datetime, end: datetime, n_target: int
+) -> list[datetime]:
     """Sample change dates within [start+8, end-1] with min 8-day spacing.
 
     Returns dates sorted ascending. May return fewer than n_target if the
@@ -89,9 +97,9 @@ def pick_change_dates(rng: Random, start: datetime, end: datetime,
     max_candidates = min(n_target * 3, (total_days - MIN_EVENT_GAP_DAYS - 1))
     if max_candidates < 1:
         return []
-    candidates = sorted(rng.sample(
-        range(MIN_EVENT_GAP_DAYS, total_days - 1), k=max_candidates
-    ))
+    candidates = sorted(
+        rng.sample(range(MIN_EVENT_GAP_DAYS, total_days - 1), k=max_candidates)
+    )
 
     accepted: list[int] = []
     last = -MIN_EVENT_GAP_DAYS - 1
@@ -105,18 +113,18 @@ def pick_change_dates(rng: Random, start: datetime, end: datetime,
     return [start + timedelta(days=d) for d in accepted]
 
 
-def build_intervals(rng: Random, p_min: float, p_max: float,
-                    start: datetime, end: datetime
-                    ) -> list[tuple[datetime, datetime, float, bool]]:
+def build_intervals(
+    rng: Random, p_min: float, p_max: float, start: datetime, end: datetime
+) -> list[tuple[datetime, datetime, float, bool]]:
     """Build SCD2 intervals for one product.
 
     Returns list of (interval_start, interval_end, price, is_promo) tuples,
     contiguous and covering [start, end] inclusive.
     """
     current_price = round(rng.uniform(p_min, p_max), 2)
-    total_days    = (end - start).days
-    n_years       = max(total_days / 365.25, 0.5)
-    n_events      = max(0, int(rng.uniform(*EVENTS_PER_YEAR) * n_years))
+    total_days = (end - start).days
+    n_years = max(total_days / 365.25, 0.5)
+    n_events = max(0, int(rng.uniform(*EVENTS_PER_YEAR) * n_years))
 
     change_dates = pick_change_dates(rng, start, end, n_events)
     if not change_dates:
@@ -130,12 +138,17 @@ def build_intervals(rng: Random, p_min: float, p_max: float,
 
         if is_promo:
             promo_price = round(current_price * rng.uniform(*PROMO_DISCOUNT), 2)
-            promo_end   = min(change_date + timedelta(days=PROMO_DURATION - 1), end)
+            promo_end = min(change_date + timedelta(days=PROMO_DURATION - 1), end)
 
             # Close current non-promo period (if it has any days in it).
             if period_start < change_date:
                 intervals.append(
-                    (period_start, change_date - timedelta(days=1), current_price, False)
+                    (
+                        period_start,
+                        change_date - timedelta(days=1),
+                        current_price,
+                        False,
+                    )
                 )
             # Promo period.
             intervals.append((change_date, promo_end, promo_price, True))
@@ -145,12 +158,17 @@ def build_intervals(rng: Random, p_min: float, p_max: float,
             # Permanent inflation/rebalance.
             if period_start < change_date:
                 intervals.append(
-                    (period_start, change_date - timedelta(days=1), current_price, False)
+                    (
+                        period_start,
+                        change_date - timedelta(days=1),
+                        current_price,
+                        False,
+                    )
                 )
             new_price = round(current_price * (1 + rng.uniform(*PERMANENT_CHANGE)), 2)
             # Clamp to a wide multiple of catalogue range — prevents runaway drift.
             current_price = max(p_min * 0.5, min(new_price, p_max * 1.5))
-            period_start  = change_date
+            period_start = change_date
 
     # Close the final period.
     if period_start <= end:
@@ -162,6 +180,7 @@ def build_intervals(rng: Random, p_min: float, p_max: float,
 # ═══════════════════════════════════════════════════════════════════════════
 # Write
 # ═══════════════════════════════════════════════════════════════════════════
+
 
 def write_scd2(rng: Random, start: datetime, end: datetime, output_dir: Path) -> int:
     """Generate dim_products_scd2.csv. Returns total row count."""
@@ -175,53 +194,58 @@ def write_scd2(rng: Random, start: datetime, end: datetime, output_dir: Path) ->
             cat, subcat, name, brand = p[0], p[1], p[2], p[3]
             p_min, p_max = p[5], p[6]
             unit = p[9]
-            pid  = product_id_for(name)
-            vat  = VAT_BY_CATEGORY.get(cat, 0.19)
+            pid = product_id_for(name)
+            vat = VAT_BY_CATEGORY.get(cat, 0.19)
 
-            for (s, e, price, is_promo) in build_intervals(rng, p_min, p_max, start, end):
-                w.writerow({
-                    "product_id":          pid,
-                    "product_name":        name,
-                    "category":            cat,
-                    "subcategory":         subcat,
-                    "default_brand":       brand,
-                    "effective_price_eur": price,
-                    "effective_from":      s.strftime("%Y-%m-%d"),
-                    "effective_to":        e.strftime("%Y-%m-%d"),
-                    "is_promo_price":      is_promo,
-                    "unit":                unit,
-                    "vat_rate":            vat,
-                })
+            for s, e, price, is_promo in build_intervals(rng, p_min, p_max, start, end):
+                w.writerow(
+                    {
+                        "product_id": pid,
+                        "product_name": name,
+                        "category": cat,
+                        "subcategory": subcat,
+                        "default_brand": brand,
+                        "effective_price_eur": price,
+                        "effective_from": s.strftime("%Y-%m-%d"),
+                        "effective_to": e.strftime("%Y-%m-%d"),
+                        "is_promo_price": is_promo,
+                        "unit": unit,
+                        "vat_rate": vat,
+                    }
+                )
                 n_rows += 1
 
-    print(f"  dim_products_scd2.csv  : {n_rows:,} rows "
-          f"({n_rows / len(PRODUCTS):.1f} intervals/product on average)")
+    print(
+        f"  dim_products_scd2.csv  : {n_rows:,} rows "
+        f"({n_rows / len(PRODUCTS):.1f} intervals/product on average)"
+    )
     return n_rows
-
-
 
 
 class PriceIndex:
     """In-memory product/date lookup for generated SCD2 prices."""
 
-    def __init__(self, rows_by_product: dict[str, list[tuple[datetime, datetime, float]]]):
+    def __init__(
+        self, rows_by_product: dict[str, list[tuple[datetime, datetime, float]]]
+    ):
         self._rows = rows_by_product
         self._starts = {
-            pid: [row[0] for row in rows]
-            for pid, rows in rows_by_product.items()
+            pid: [row[0] for row in rows] for pid, rows in rows_by_product.items()
         }
 
     @classmethod
-    def from_csv(cls, path: Path) -> "PriceIndex":
+    def from_csv(cls, path: Path) -> PriceIndex:
         rows: dict[str, list[tuple[datetime, datetime, float]]] = {}
         with open(path, encoding="utf-8") as f:
             for row in csv.DictReader(f):
                 pid = row["product_id"]
-                rows.setdefault(pid, []).append((
-                    datetime.strptime(row["effective_from"], "%Y-%m-%d"),
-                    datetime.strptime(row["effective_to"], "%Y-%m-%d"),
-                    float(row["effective_price_eur"]),
-                ))
+                rows.setdefault(pid, []).append(
+                    (
+                        datetime.strptime(row["effective_from"], "%Y-%m-%d"),
+                        datetime.strptime(row["effective_to"], "%Y-%m-%d"),
+                        float(row["effective_price_eur"]),
+                    )
+                )
         for pid in rows:
             rows[pid].sort(key=lambda value: value[0])
         return cls(rows)
@@ -236,7 +260,9 @@ class PriceIndex:
             raise KeyError(f"No price for {product_id} on {order_date:%Y-%m-%d}")
         effective_from, effective_to, price = intervals[idx]
         if not effective_from <= order_date <= effective_to:
-            raise KeyError(f"SCD2 coverage gap for {product_id} on {order_date:%Y-%m-%d}")
+            raise KeyError(
+                f"SCD2 coverage gap for {product_id} on {order_date:%Y-%m-%d}"
+            )
         return price
 
     def __call__(self, product_id: str, order_date: datetime) -> float:
@@ -246,6 +272,7 @@ class PriceIndex:
 # ═══════════════════════════════════════════════════════════════════════════
 # Validation — success criteria from the docstring, enforced
 # ═══════════════════════════════════════════════════════════════════════════
+
 
 def _load_scd2(path: Path) -> dict[str, list[dict]]:
     """Group SCD2 rows by product_id, sorted by effective_from."""
@@ -261,8 +288,8 @@ def _load_scd2(path: Path) -> dict[str, list[dict]]:
 def check_coverage(by_product: dict[str, list[dict]]) -> tuple[bool, str]:
     """S1: every product in PRODUCTS appears in SCD2 table."""
     expected = {product_id_for(p[2]) for p in PRODUCTS}
-    found    = set(by_product.keys())
-    missing  = expected - found
+    found = set(by_product.keys())
+    missing = expected - found
     if missing:
         return False, f"FAIL: {len(missing)} products missing from SCD2"
     return True, f"{len(found)}/{len(expected)} products covered"
@@ -273,7 +300,7 @@ def check_continuity(by_product: dict[str, list[dict]]) -> tuple[bool, str]:
     n_gaps = n_overlaps = 0
     for pid, rows in by_product.items():
         for prev, curr in zip(rows, rows[1:]):
-            prev_to = datetime.strptime(prev["effective_to"],   "%Y-%m-%d")
+            prev_to = datetime.strptime(prev["effective_to"], "%Y-%m-%d")
             curr_fr = datetime.strptime(curr["effective_from"], "%Y-%m-%d")
             gap = (curr_fr - prev_to).days
             if gap > 1:
@@ -285,14 +312,17 @@ def check_continuity(by_product: dict[str, list[dict]]) -> tuple[bool, str]:
     return True, "all intervals contiguous"
 
 
-def check_bounded(by_product: dict[str, list[dict]],
-                  start: datetime, end: datetime) -> tuple[bool, str]:
+def check_bounded(
+    by_product: dict[str, list[dict]], start: datetime, end: datetime
+) -> tuple[bool, str]:
     """S3: first row starts at start_date, last row ends at end_date."""
     s_str, e_str = start.strftime("%Y-%m-%d"), end.strftime("%Y-%m-%d")
     bad_start = bad_end = 0
     for rows in by_product.values():
-        if rows[0]["effective_from"]  != s_str: bad_start += 1
-        if rows[-1]["effective_to"]   != e_str: bad_end   += 1
+        if rows[0]["effective_from"] != s_str:
+            bad_start += 1
+        if rows[-1]["effective_to"] != e_str:
+            bad_end += 1
     if bad_start or bad_end:
         return False, f"FAIL: {bad_start} bad starts, {bad_end} bad ends"
     return True, f"all products span {s_str} → {e_str}"
@@ -306,7 +336,7 @@ def check_promo_duration(by_product: dict[str, list[dict]]) -> tuple[bool, str]:
             if r["is_promo_price"] != "True":
                 continue
             fr = datetime.strptime(r["effective_from"], "%Y-%m-%d")
-            to = datetime.strptime(r["effective_to"],   "%Y-%m-%d")
+            to = datetime.strptime(r["effective_to"], "%Y-%m-%d")
             if (to - fr).days >= PROMO_DURATION:
                 n_bad += 1
     if n_bad:
@@ -316,11 +346,11 @@ def check_promo_duration(by_product: dict[str, list[dict]]) -> tuple[bool, str]:
 
 def validate(path: Path, start: datetime, end: datetime) -> bool:
     by_product = _load_scd2(path)
-    print(f"\n  Validation {chr(9472)*52}")
+    print(f"\n  Validation {chr(9472) * 52}")
     checks = [
-        ("S1 coverage",       lambda: check_coverage(by_product)),
-        ("S2 continuity",     lambda: check_continuity(by_product)),
-        ("S3 bounded",        lambda: check_bounded(by_product, start, end)),
+        ("S1 coverage", lambda: check_coverage(by_product)),
+        ("S2 continuity", lambda: check_continuity(by_product)),
+        ("S3 bounded", lambda: check_bounded(by_product, start, end)),
         ("S4 promo duration", lambda: check_promo_duration(by_product)),
     ]
     all_pass = True
@@ -329,7 +359,7 @@ def validate(path: Path, start: datetime, end: datetime) -> bool:
         print(f"    [{'PASS' if ok else 'FAIL'}] {name:<22} {msg}")
         if not ok:
             all_pass = False
-    print(f"  {chr(9472)*60}")
+    print(f"  {chr(9472) * 60}")
     return all_pass
 
 
@@ -337,28 +367,30 @@ def validate(path: Path, start: datetime, end: datetime) -> bool:
 # CLI
 # ═══════════════════════════════════════════════════════════════════════════
 
+
 def parse_args() -> argparse.Namespace:
     p = argparse.ArgumentParser(description="Generate dim_products_scd2.csv")
-    p.add_argument("--start-date",  type=str, default="2023-01-01")
-    p.add_argument("--end-date",    type=str, default="2026-03-31")
-    p.add_argument("--seed",        type=int, default=10)
-    p.add_argument("--output-dir",  type=str, default="data/raw")
+    p.add_argument("--start-date", type=str, default="2023-01-01")
+    p.add_argument("--end-date", type=str, default="2026-03-31")
+    p.add_argument("--seed", type=int, default=10)
+    p.add_argument("--output-dir", type=str, default="data/raw")
     return p.parse_args()
 
 
 def main() -> int:
     args = parse_args()
-    out_dir = Path(args.output_dir); out_dir.mkdir(parents=True, exist_ok=True)
+    out_dir = Path(args.output_dir)
+    out_dir.mkdir(parents=True, exist_ok=True)
     start = datetime.strptime(args.start_date, "%Y-%m-%d")
-    end   = datetime.strptime(args.end_date,   "%Y-%m-%d")
-    rng   = Random(args.seed)
+    end = datetime.strptime(args.end_date, "%Y-%m-%d")
+    rng = Random(args.seed)
 
-    print(f"\n  Einkaufpark DE — SCD2 Price History")
-    print(f"  {chr(9472)*60}")
+    print("\n  Einkaufpark DE — SCD2 Price History")
+    print(f"  {chr(9472) * 60}")
     print(f"  date range : {args.start_date} → {args.end_date}")
     print(f"  seed       : {args.seed}")
     print(f"  output     : {out_dir}/")
-    print(f"  {chr(9472)*60}")
+    print(f"  {chr(9472) * 60}")
 
     write_scd2(rng, start, end, out_dir)
     ok = validate(out_dir / "dim_products_scd2.csv", start, end)

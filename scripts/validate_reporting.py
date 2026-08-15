@@ -7,7 +7,6 @@ from typing import Any
 
 from pyspark.sql import SparkSession
 
-
 IDENTIFIER_PATTERN = re.compile(r"^[A-Za-z_][A-Za-z0-9_]*$")
 
 
@@ -30,9 +29,7 @@ REQUIRED_VIEWS = (
 
 
 BUSINESS_VIEWS = tuple(
-    view
-    for view in REQUIRED_VIEWS
-    if view != "v_data_quality_summary"
+    view for view in REQUIRED_VIEWS if view != "v_data_quality_summary"
 )
 
 
@@ -56,11 +53,10 @@ FORBIDDEN_TECHNICAL_COLUMNS = {
 # CLI
 # ---------------------------------------------------------------------------
 
+
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
-        description=(
-            "Validate the Einkaufpark Power BI reporting contract."
-        )
+        description=("Validate the Einkaufpark Power BI reporting contract.")
     )
 
     parser.add_argument("--catalog", required=True)
@@ -80,6 +76,7 @@ def parse_args() -> argparse.Namespace:
 # ---------------------------------------------------------------------------
 # Helpers
 # ---------------------------------------------------------------------------
+
 
 def validate_identifier(value: str, parameter_name: str) -> str:
     if not IDENTIFIER_PATTERN.fullmatch(value):
@@ -113,9 +110,7 @@ def scalar(
     row = spark.sql(sql_text).first()
 
     if row is None:
-        raise RuntimeError(
-            "Expected query to return exactly one scalar row."
-        )
+        raise RuntimeError("Expected query to return exactly one scalar row.")
 
     return row[0]
 
@@ -134,7 +129,7 @@ def table_count(
 
 def decimal_value(value: Any) -> Decimal:
     if value is None:
-        return Decimal("0")
+        return Decimal(0)
 
     return Decimal(str(value))
 
@@ -175,10 +170,7 @@ def check_count_match(
         results,
         name,
         reporting_rows == source_rows,
-        (
-            f"reporting_rows={reporting_rows}, "
-            f"source_rows={source_rows}"
-        ),
+        (f"reporting_rows={reporting_rows}, source_rows={source_rows}"),
     )
 
 
@@ -202,34 +194,26 @@ def check_unique_key(
     ).first()
 
     if row is None:
-        raise RuntimeError(
-            f"Could not validate unique key for {table}"
-        )
+        raise RuntimeError(f"Could not validate unique key for {table}")
 
     row_count = int(row["row_count"])
     distinct_count = int(row["distinct_key_count"])
     null_count = int(row["null_key_count"])
 
-    passed = (
-        row_count == distinct_count
-        and null_count == 0
-    )
+    passed = row_count == distinct_count and null_count == 0
 
     add_check(
         results,
         name,
         passed,
-        (
-            f"rows={row_count}, "
-            f"distinct_keys={distinct_count}, "
-            f"null_keys={null_count}"
-        ),
+        (f"rows={row_count}, distinct_keys={distinct_count}, null_keys={null_count}"),
     )
 
 
 # ---------------------------------------------------------------------------
 # Main validation
 # ---------------------------------------------------------------------------
+
 
 def main() -> None:
     args = parse_args()
@@ -384,9 +368,7 @@ def main() -> None:
         if name:
             existing_views.add(str(name))
 
-    missing_views = sorted(
-        set(REQUIRED_VIEWS) - existing_views
-    )
+    missing_views = sorted(set(REQUIRED_VIEWS) - existing_views)
 
     add_check(
         results,
@@ -567,21 +549,15 @@ def main() -> None:
     ).first()
 
     if source_date_row is None or reporting_date_row is None:
-        raise RuntimeError(
-            "Unable to validate reporting date dimension."
-        )
+        raise RuntimeError("Unable to validate reporting date dimension.")
 
     expected_min = source_date_row["min_date"]
     expected_max = source_date_row["max_date"]
-    expected_days = int(
-        source_date_row["expected_days"] or 0
-    )
+    expected_days = int(source_date_row["expected_days"] or 0)
 
     actual_min = reporting_date_row["min_date"]
     actual_max = reporting_date_row["max_date"]
-    actual_days = int(
-        reporting_date_row["actual_days"] or 0
-    )
+    actual_days = int(reporting_date_row["actual_days"] or 0)
 
     add_check(
         results,
@@ -638,9 +614,7 @@ def main() -> None:
         )
     )
 
-    revenue_difference = abs(
-        silver_revenue - executive_revenue
-    )
+    revenue_difference = abs(silver_revenue - executive_revenue)
 
     add_check(
         results,
@@ -672,9 +646,7 @@ def main() -> None:
         )
     )
 
-    daily_difference = abs(
-        silver_revenue - reporting_daily_revenue
-    )
+    daily_difference = abs(silver_revenue - reporting_daily_revenue)
 
     add_check(
         results,
@@ -692,15 +664,12 @@ def main() -> None:
     # 7. Quality summary reconciliation
     # -----------------------------------------------------------------------
 
-    expected_quality_rows = (
-        table_count(
-            spark,
-            silver_quality_checks,
-        )
-        + table_count(
-            spark,
-            gold_quality_checks,
-        )
+    expected_quality_rows = table_count(
+        spark,
+        silver_quality_checks,
+    ) + table_count(
+        spark,
+        gold_quality_checks,
     )
 
     actual_quality_rows = table_count(
@@ -712,10 +681,7 @@ def main() -> None:
         results,
         "Quality summary row reconciliation",
         actual_quality_rows == expected_quality_rows,
-        (
-            f"expected={expected_quality_rows}, "
-            f"actual={actual_quality_rows}"
-        ),
+        (f"expected={expected_quality_rows}, actual={actual_quality_rows}"),
     )
 
     failed_critical_checks = int(
@@ -746,28 +712,19 @@ def main() -> None:
 
         schema = spark.table(table).schema
 
-        column_names = {
-            field.name
-            for field in schema.fields
-        }
+        column_names = {field.name for field in schema.fields}
 
-        technical_columns = sorted(
-            column_names
-            & FORBIDDEN_TECHNICAL_COLUMNS
-        )
+        technical_columns = sorted(column_names & FORBIDDEN_TECHNICAL_COLUMNS)
 
         technical_columns.extend(
             sorted(
                 name
                 for name in column_names
-                if name.startswith("_source_")
-                or name.startswith("_bronze_")
+                if name.startswith("_source_") or name.startswith("_bronze_")
             )
         )
 
-        technical_columns = sorted(
-            set(technical_columns)
-        )
+        technical_columns = sorted(set(technical_columns))
 
         add_check(
             results,
@@ -776,8 +733,7 @@ def main() -> None:
             (
                 "none"
                 if not technical_columns
-                else "found="
-                + ", ".join(technical_columns)
+                else "found=" + ", ".join(technical_columns)
             ),
         )
 
@@ -792,9 +748,7 @@ def main() -> None:
                 data_type = field.dataType.simpleString()
 
                 if not data_type.startswith("decimal("):
-                    currency_type_errors.append(
-                        f"{field.name}:{data_type}"
-                    )
+                    currency_type_errors.append(f"{field.name}:{data_type}")
 
         add_check(
             results,
@@ -803,8 +757,7 @@ def main() -> None:
             (
                 "all *_eur columns are DECIMAL"
                 if not currency_type_errors
-                else "invalid="
-                + ", ".join(currency_type_errors)
+                else "invalid=" + ", ".join(currency_type_errors)
             ),
         )
 
@@ -823,9 +776,7 @@ def main() -> None:
                 data_type = field.dataType.simpleString()
 
                 if data_type != "date":
-                    date_type_errors.append(
-                        f"{field.name}:{data_type}"
-                    )
+                    date_type_errors.append(f"{field.name}:{data_type}")
 
         add_check(
             results,
@@ -834,8 +785,7 @@ def main() -> None:
             (
                 "all business dates use DATE"
                 if not date_type_errors
-                else "invalid="
-                + ", ".join(date_type_errors)
+                else "invalid=" + ", ".join(date_type_errors)
             ),
         )
 
@@ -847,13 +797,8 @@ def main() -> None:
 
         for field in schema.fields:
             if field.dataType.simpleString() == "boolean":
-                if not (
-                    field.name.startswith("is_")
-                    or field.name.startswith("has_")
-                ):
-                    boolean_name_errors.append(
-                        field.name
-                    )
+                if not (field.name.startswith("is_") or field.name.startswith("has_")):
+                    boolean_name_errors.append(field.name)
 
         add_check(
             results,
@@ -862,8 +807,7 @@ def main() -> None:
             (
                 "all booleans use is_/has_ prefixes"
                 if not boolean_name_errors
-                else "invalid="
-                + ", ".join(boolean_name_errors)
+                else "invalid=" + ", ".join(boolean_name_errors)
             ),
         )
 
@@ -877,6 +821,7 @@ def main() -> None:
 # ---------------------------------------------------------------------------
 # Output
 # ---------------------------------------------------------------------------
+
 
 def print_results_and_fail(
     results: list[tuple[str, bool, str]],
@@ -907,15 +852,9 @@ def print_results_and_fail(
     print("=" * 72, flush=True)
 
     if failed:
-        details = "\n  - ".join(
-            f"{name}: {message}"
-            for name, message in failed
-        )
+        details = "\n  - ".join(f"{name}: {message}" for name, message in failed)
 
-        raise RuntimeError(
-            "Reporting validation failed:\n  - "
-            + details
-        )
+        raise RuntimeError("Reporting validation failed:\n  - " + details)
 
     print(
         "All reporting-layer validation checks passed.",

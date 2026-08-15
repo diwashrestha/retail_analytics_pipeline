@@ -1,0 +1,82 @@
+table DimCustomer
+	lineageTag: e8e1f0ec-d6e0-40cb-b6fd-4f66414c0cdc
+
+	column customer_key
+		dataType: string
+		lineageTag: 9e6680b9-0481-4071-9cfe-f94007616b3b
+		summarizeBy: none
+		sourceColumn: customer_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column customer_id
+		dataType: string
+		lineageTag: 21091f0d-0206-444d-bdf9-ad4a6f280c2a
+		summarizeBy: none
+		sourceColumn: customer_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column age
+		dataType: int64
+		formatString: 0
+		lineageTag: 3c2eed6e-0236-45b3-b717-abfd188894b6
+		summarizeBy: sum
+		sourceColumn: age
+
+		annotation SummarizationSetBy = Automatic
+
+	column age_group
+		dataType: string
+		lineageTag: 9ae0de75-fcfc-4cb8-8f71-64ad791fac75
+		summarizeBy: none
+		sourceColumn: age_group
+
+		annotation SummarizationSetBy = Automatic
+
+	column gender
+		dataType: string
+		lineageTag: e88de387-b1f5-458b-b4fa-de4aef0f8340
+		summarizeBy: none
+		sourceColumn: gender
+
+		annotation SummarizationSetBy = Automatic
+
+	column is_loyalty_member
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: aa41e6b9-76f0-4456-a729-e2657cf37558
+		summarizeBy: none
+		sourceColumn: is_loyalty_member
+
+		annotation SummarizationSetBy = Automatic
+
+	column loyalty_card_id
+		dataType: string
+		lineageTag: 1a990e3a-cf8f-4b80-9ec1-28451171096b
+		summarizeBy: none
+		sourceColumn: loyalty_card_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column age_quality_status
+		dataType: string
+		lineageTag: d5205a6e-12aa-4039-9e34-23fe6de53cca
+		summarizeBy: none
+		sourceColumn: age_quality_status
+
+		annotation SummarizationSetBy = Automatic
+
+	partition DimCustomer = m
+		mode: import
+		source =
+				let
+				    Source = DatabricksMultiCloud.Catalogs("dbc-b0d04978-208c.cloud.databricks.com", "/sql/1.0/warehouses/7ee0f62b3cdad99c", [Catalog=null, Database=null, QueryTags=null, EnableAutomaticProxyDiscovery=null, Implementation="2.0", Protocol=null]),
+				    workspace_Database = Source{[Name="workspace",Kind="Database"]}[Data],
+				    retail_dev_reporting_Schema = workspace_Database{[Name="retail_dev_reporting",Kind="Schema"]}[Data],
+				    v_dim_customer_View = retail_dev_reporting_Schema{[Name="v_dim_customer",Kind="View"]}[Data]
+				in
+				    v_dim_customer_View
+
+	changedProperty = Name
+

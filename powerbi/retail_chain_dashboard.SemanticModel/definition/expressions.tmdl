@@ -1,0 +1,41 @@
+expression Parameter1 = #"Sample File" meta [IsParameterQuery=true, BinaryIdentifier=#"Sample File", Type="Binary", IsParameterQueryRequired=true]
+	lineageTag: 7fd94155-e509-4181-83fe-7caa036c52e2
+	queryGroup: 'Transform File from gold_data\Helper Queries'
+
+	annotation PBI_ResultType = Binary
+
+expression 'Transform Sample File' =
+		let
+		    Source = Parquet.Document(Parameter1, [Compression=null, LegacyColumnNameEncoding=false, MaxDepth=null])
+		in
+		    Source
+	lineageTag: 35b994d2-f45f-40f3-9834-daf0e9911d9a
+	queryGroup: 'Transform File from gold_data'
+
+	annotation PBI_ResultType = Table
+
+expression 'Sample File' =
+		let
+		    Source = Folder.Files("C:\Users\diwas\Downloads\gold_data"),
+		    Navigation1 = Source{0}[Content]
+		in
+		    Navigation1
+	lineageTag: 7cba50e3-df27-42f0-8b3a-f85b595d8ab3
+	queryGroup: 'Transform File from gold_data\Helper Queries'
+
+	annotation PBI_ResultType = Binary
+
+expression 'Transform File' =
+		let
+		    Source = (Parameter1 as binary) => let
+		    Source = Parquet.Document(Parameter1, [Compression=null, LegacyColumnNameEncoding=false, MaxDepth=null])
+		in
+		    Source
+		in
+		    Source
+	mAttributes: [ FunctionQueryBinding = "{""exemplarFormulaName"":""Transform Sample File""}" ]
+	lineageTag: ab9eeff2-e7be-43ee-b3f5-b21942258873
+	queryGroup: 'Transform File from gold_data\Helper Queries'
+
+	annotation PBI_ResultType = Function
+

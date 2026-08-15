@@ -1,0 +1,427 @@
+table CustomerLTV
+	lineageTag: 54e09d79-921d-400d-8cba-fc304d98759a
+
+	column customer_key
+		dataType: string
+		lineageTag: 72dada3c-e26d-4540-8128-d7e4540ad9ca
+		summarizeBy: none
+		sourceColumn: customer_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column customer_id
+		dataType: string
+		lineageTag: 72a81ee4-ca0a-4f10-95f9-bd5d76c89a3f
+		summarizeBy: none
+		sourceColumn: customer_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column age
+		dataType: int64
+		formatString: 0
+		lineageTag: 9aabaf77-b40c-44bc-868f-dfaf775be5db
+		summarizeBy: sum
+		sourceColumn: age
+
+		annotation SummarizationSetBy = Automatic
+
+	column age_group
+		dataType: string
+		lineageTag: 05559fe6-44db-4f7f-b65b-0b90aaa13880
+		summarizeBy: none
+		sourceColumn: age_group
+
+		annotation SummarizationSetBy = Automatic
+
+	column gender
+		dataType: string
+		lineageTag: d45f7e4c-62ac-47ff-baf8-cb57588d8fdb
+		summarizeBy: none
+		sourceColumn: gender
+
+		annotation SummarizationSetBy = Automatic
+
+	column is_loyalty_member
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: 2df8a723-eb38-4d3f-9faf-33d1fbfd0585
+		summarizeBy: none
+		sourceColumn: is_loyalty_member
+
+		annotation SummarizationSetBy = Automatic
+
+	column loyalty_card_id
+		dataType: string
+		lineageTag: 22a6a82d-998c-45c7-bc46-a89d45e28b19
+		summarizeBy: none
+		sourceColumn: loyalty_card_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column age_quality_status
+		dataType: string
+		lineageTag: 8b36565c-7a7d-400e-89cc-62311825df92
+		summarizeBy: none
+		sourceColumn: age_quality_status
+
+		annotation SummarizationSetBy = Automatic
+
+	column first_purchase_date
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 0ad1cc6f-c8af-4f0a-9feb-22adae03dd3e
+		summarizeBy: none
+		sourceColumn: first_purchase_date
+
+		variation Variation
+			isDefault
+			relationship: ae6c7ff7-e19a-44ec-aeef-3b34efcaa7f5
+			defaultHierarchy: LocalDateTable_c0accc09-fdee-4027-9f09-7a50e91634fe.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column last_purchase_date
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 54c18cdc-3728-4710-8285-96604f012a76
+		summarizeBy: none
+		sourceColumn: last_purchase_date
+
+		variation Variation
+			isDefault
+			relationship: 30269590-096f-466c-b69c-ecabcd95e9e7
+			defaultHierarchy: LocalDateTable_4a2bb49f-b85d-43ae-b6d5-0c5c383ed1a5.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column lifetime_baskets
+		dataType: int64
+		formatString: 0
+		lineageTag: d47d2416-0c67-4586-8943-6c2624651abb
+		summarizeBy: sum
+		sourceColumn: lifetime_baskets
+
+		annotation SummarizationSetBy = Automatic
+
+	column active_purchase_days
+		dataType: int64
+		formatString: 0
+		lineageTag: 29dfe9b9-0410-4f3a-aeb6-9209ad311284
+		summarizeBy: sum
+		sourceColumn: active_purchase_days
+
+		annotation SummarizationSetBy = Automatic
+
+	column lifetime_units
+		dataType: int64
+		formatString: 0
+		lineageTag: 83fb5f61-5d4b-4ba2-9ed4-22af00f7c0d8
+		summarizeBy: sum
+		sourceColumn: lifetime_units
+
+		annotation SummarizationSetBy = Automatic
+
+	column lifetime_gross_sales_eur
+		dataType: double
+		lineageTag: bc864984-ac9f-4e5e-a486-ccb48a0faf85
+		summarizeBy: sum
+		sourceColumn: lifetime_gross_sales_eur
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column lifetime_discount_amount_eur
+		dataType: double
+		lineageTag: 53918f38-755f-468c-9d54-7c25bf72be7a
+		summarizeBy: sum
+		sourceColumn: lifetime_discount_amount_eur
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column lifetime_sales_eur
+		dataType: double
+		lineageTag: fde249c2-17d3-4e0f-9f75-4f343d04d15a
+		summarizeBy: sum
+		sourceColumn: lifetime_sales_eur
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column lifetime_private_label_sales_eur
+		dataType: double
+		lineageTag: 9f3b57b0-2de9-477b-a955-7cb7829eae00
+		summarizeBy: sum
+		sourceColumn: lifetime_private_label_sales_eur
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column promo_baskets
+		dataType: int64
+		formatString: 0
+		lineageTag: 0889e765-2b35-4c13-b36b-fdc758be07aa
+		summarizeBy: sum
+		sourceColumn: promo_baskets
+
+		annotation SummarizationSetBy = Automatic
+
+	column coupon_baskets
+		dataType: int64
+		formatString: 0
+		lineageTag: 5fc9b5d4-2e8e-45fc-bcc1-0121f3289dd2
+		summarizeBy: sum
+		sourceColumn: coupon_baskets
+
+		annotation SummarizationSetBy = Automatic
+
+	column self_checkout_baskets
+		dataType: int64
+		formatString: 0
+		lineageTag: a4e49078-9342-48a3-8915-1949074ebd25
+		summarizeBy: sum
+		sourceColumn: self_checkout_baskets
+
+		annotation SummarizationSetBy = Automatic
+
+	column average_basket_value_eur
+		dataType: double
+		lineageTag: 946eb4c3-d172-47c4-bc4d-33fca95fe717
+		summarizeBy: sum
+		sourceColumn: average_basket_value_eur
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column median_basket_value_eur
+		dataType: double
+		lineageTag: 52e675e9-9a98-48e1-b058-7d9fa0880694
+		summarizeBy: sum
+		sourceColumn: median_basket_value_eur
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column average_units_per_basket
+		dataType: double
+		lineageTag: 4dffb17a-d5a9-4988-9e5a-ac4e9a3f448b
+		summarizeBy: sum
+		sourceColumn: average_units_per_basket
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column return_event_count
+		dataType: int64
+		formatString: 0
+		lineageTag: f832b432-45f6-40c2-9e97-bb7af3fee81a
+		summarizeBy: sum
+		sourceColumn: return_event_count
+
+		annotation SummarizationSetBy = Automatic
+
+	column returned_basket_count
+		dataType: int64
+		formatString: 0
+		lineageTag: da6c2fea-9b70-49ea-9881-40a2c09a1327
+		summarizeBy: sum
+		sourceColumn: returned_basket_count
+
+		annotation SummarizationSetBy = Automatic
+
+	column returned_units
+		dataType: int64
+		formatString: 0
+		lineageTag: 1ea7b708-8d0c-407e-b4ed-a1610e31cd39
+		summarizeBy: sum
+		sourceColumn: returned_units
+
+		annotation SummarizationSetBy = Automatic
+
+	column refund_amount_eur
+		dataType: double
+		lineageTag: d27e7af0-f0b9-40de-868f-8316acda3171
+		summarizeBy: sum
+		sourceColumn: refund_amount_eur
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column average_days_to_return
+		dataType: double
+		lineageTag: e2feac75-70e3-45f6-8fc8-e3a2d4a7b31e
+		summarizeBy: sum
+		sourceColumn: average_days_to_return
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column observed_customer_lifetime_days
+		dataType: int64
+		formatString: 0
+		lineageTag: 9720eaa3-0992-4de2-a6b9-f8e9a19ab86e
+		summarizeBy: sum
+		sourceColumn: observed_customer_lifetime_days
+
+		annotation SummarizationSetBy = Automatic
+
+	column recency_days
+		dataType: int64
+		formatString: 0
+		lineageTag: b5ab3fe2-ed4d-41ec-a790-1670138a8351
+		summarizeBy: sum
+		sourceColumn: recency_days
+
+		annotation SummarizationSetBy = Automatic
+
+	column retained_lifetime_value_eur
+		dataType: double
+		lineageTag: 9bc2f14f-4c0f-43b7-9035-daddb472cdb7
+		summarizeBy: sum
+		sourceColumn: retained_lifetime_value_eur
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column lifetime_discount_rate_pct
+		dataType: double
+		lineageTag: 9595c18a-77ac-4bcc-84df-c04657ce2c45
+		summarizeBy: sum
+		sourceColumn: lifetime_discount_rate_pct
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column private_label_sales_share_pct
+		dataType: double
+		lineageTag: 03195343-af02-4c64-93a2-ad07ae5532ab
+		summarizeBy: sum
+		sourceColumn: private_label_sales_share_pct
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column promotion_basket_share_pct
+		dataType: double
+		lineageTag: d0aac285-f691-456a-a7af-6d9acf91e678
+		summarizeBy: sum
+		sourceColumn: promotion_basket_share_pct
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column coupon_basket_share_pct
+		dataType: double
+		lineageTag: b746b3b0-403d-44ff-b00f-7391c82da319
+		summarizeBy: sum
+		sourceColumn: coupon_basket_share_pct
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column self_checkout_basket_share_pct
+		dataType: double
+		lineageTag: e923c96e-5d6b-40fa-8e9c-3872faccff18
+		summarizeBy: sum
+		sourceColumn: self_checkout_basket_share_pct
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column refund_rate_pct
+		dataType: double
+		lineageTag: 7e56f556-ee9d-47f3-bd3f-e0dbdf6ea86a
+		summarizeBy: sum
+		sourceColumn: refund_rate_pct
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column baskets_per_30_days
+		dataType: double
+		lineageTag: ea36ca4b-468e-45b7-8d09-98eed2709a55
+		summarizeBy: sum
+		sourceColumn: baskets_per_30_days
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column overall_ltv_rank
+		dataType: int64
+		formatString: 0
+		lineageTag: 0bd72518-4a68-414f-9108-3005afe33a3a
+		summarizeBy: sum
+		sourceColumn: overall_ltv_rank
+
+		annotation SummarizationSetBy = Automatic
+
+	column ltv_rank_top_1000
+		dataType: int64
+		formatString: 0
+		lineageTag: 740e4045-1c40-481c-8243-517dc57394a9
+		summarizeBy: sum
+		sourceColumn: ltv_rank_top_1000
+
+		annotation SummarizationSetBy = Automatic
+
+	column ltv_percentile
+		dataType: double
+		lineageTag: 4f52e13e-706f-4790-ab3c-6648348767e8
+		summarizeBy: sum
+		sourceColumn: ltv_percentile
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column customer_segment
+		dataType: string
+		lineageTag: 924d35bd-9853-4e2a-8075-89ba5840cbde
+		summarizeBy: none
+		sourceColumn: customer_segment
+
+		annotation SummarizationSetBy = Automatic
+
+	column recency_segment
+		dataType: string
+		lineageTag: 6ce9f71a-a7a2-4ab9-b239-5f417a8843f0
+		summarizeBy: none
+		sourceColumn: recency_segment
+
+		annotation SummarizationSetBy = Automatic
+
+	partition CustomerLTV = m
+		mode: import
+		source =
+				let
+				    Source = DatabricksMultiCloud.Catalogs("dbc-b0d04978-208c.cloud.databricks.com", "/sql/1.0/warehouses/7ee0f62b3cdad99c", [Catalog=null, Database=null, QueryTags=null, EnableAutomaticProxyDiscovery=null, Implementation="2.0", Protocol=null]),
+				    workspace_Database = Source{[Name="workspace",Kind="Database"]}[Data],
+				    retail_dev_reporting_Schema = workspace_Database{[Name="retail_dev_reporting",Kind="Schema"]}[Data],
+				    v_customer_ltv_View = retail_dev_reporting_Schema{[Name="v_customer_ltv",Kind="View"]}[Data]
+				in
+				    v_customer_ltv_View
+
+	changedProperty = Name
+

@@ -1,5 +1,5 @@
-from pathlib import Path
 from datetime import datetime
+from pathlib import Path
 from random import Random
 
 import pytest
@@ -52,13 +52,8 @@ def test_reset_accepts_project_raw_directory():
 
 
 def test_reset_accepts_volume():
-    validate_reset_path(
-        Path(
-            "/Volumes/workspace/"
-            "retail_dev_raw/"
-            "retail_input"
-        )
-    )
+    validate_reset_path(Path("/Volumes/workspace/retail_dev_raw/retail_input"))
+
 
 def test_demo_starting_on_sunday_uses_next_trading_day() -> None:
     volumes = compute_daily_volumes(
@@ -72,7 +67,7 @@ def test_demo_starting_on_sunday_uses_next_trading_day() -> None:
 
     assert datetime(2023, 1, 1) not in dates
     assert dates[0] == datetime(2023, 1, 2)
-    
+
 
 def test_daily_volume_correction_preserves_final_trading_day() -> None:
     from datetime import datetime
@@ -98,6 +93,4 @@ def test_daily_volume_correction_preserves_final_trading_day() -> None:
 
     assert datetime(2026, 3, 31) in volumes
 
-    assert volumes[
-        datetime(2026, 3, 31)
-    ] > 0
+    assert volumes[datetime(2026, 3, 31)] > 0

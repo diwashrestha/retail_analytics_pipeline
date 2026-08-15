@@ -1,0 +1,322 @@
+table FactSales
+	lineageTag: 7d727c3b-f445-4572-aa7c-206397ec4653
+
+	column sales_line_key
+		dataType: string
+		lineageTag: 525517fc-4b24-4a22-89d1-af55c7581c85
+		summarizeBy: none
+		sourceColumn: sales_line_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column transaction_id
+		dataType: string
+		lineageTag: 3d6481be-520e-4455-a489-a79afcc32f8f
+		summarizeBy: none
+		sourceColumn: transaction_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column basket_id
+		dataType: string
+		lineageTag: 20c7d215-8cd3-40f3-99eb-6dc1b68206df
+		summarizeBy: none
+		sourceColumn: basket_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column order_date
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 38da1af0-a97f-40e8-a862-c03fa2876a9e
+		summarizeBy: none
+		sourceColumn: order_date
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column order_time
+		dataType: string
+		lineageTag: b3a2680f-1135-4ccb-a5b5-305818988a33
+		summarizeBy: none
+		sourceColumn: order_time
+
+		annotation SummarizationSetBy = Automatic
+
+	column order_timestamp
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 78bf73fd-51ef-433e-94ae-8e5689a53537
+		summarizeBy: none
+		sourceColumn: order_timestamp
+
+		variation Variation
+			isDefault
+			relationship: c3bc33eb-8c47-40e8-9ae3-cb5579111677
+			defaultHierarchy: LocalDateTable_7771b938-49cc-473d-b8fb-d25b715c95ce.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	column store_key
+		dataType: string
+		lineageTag: 9853d540-d84c-4c5a-b377-20aa0fbf90f8
+		summarizeBy: none
+		sourceColumn: store_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column store_id
+		dataType: string
+		lineageTag: 6bd93a2e-e771-4bdd-b0ef-fc829a3a35d3
+		summarizeBy: none
+		sourceColumn: store_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column customer_key
+		dataType: string
+		lineageTag: dac63b51-bb91-4be9-888c-2d6de3f9b1fd
+		summarizeBy: none
+		sourceColumn: customer_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column customer_id
+		dataType: string
+		lineageTag: bf17998c-d09d-43d4-95f5-a381d1b6445c
+		summarizeBy: none
+		sourceColumn: customer_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column customer_type
+		dataType: string
+		lineageTag: 5db44e03-8d8b-4a8e-9ead-859f36827aa6
+		summarizeBy: none
+		sourceColumn: customer_type
+
+		annotation SummarizationSetBy = Automatic
+
+	column product_key
+		dataType: string
+		lineageTag: 60f08a44-1392-44bd-a77a-981577087608
+		summarizeBy: none
+		sourceColumn: product_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column product_id
+		dataType: string
+		lineageTag: da41ac11-fe60-4256-a81b-acbe93177102
+		summarizeBy: none
+		sourceColumn: product_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column quantity
+		dataType: int64
+		formatString: 0
+		lineageTag: 36b3db99-b544-4e34-9974-043d16a22aec
+		summarizeBy: sum
+		sourceColumn: quantity
+
+		annotation SummarizationSetBy = Automatic
+
+	column list_price_eur
+		dataType: double
+		lineageTag: f873f27d-48c9-45a2-9c53-bec543504367
+		summarizeBy: sum
+		sourceColumn: list_price_eur
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column unit_price_eur
+		dataType: double
+		lineageTag: aff4502b-73be-410d-ba6c-a2b1f06d017d
+		summarizeBy: sum
+		sourceColumn: unit_price_eur
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column discount_pct
+		dataType: double
+		lineageTag: 05df5b9c-39c0-4b40-8fa6-7fa3f59333b1
+		summarizeBy: sum
+		sourceColumn: discount_pct
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column gross_sales_eur
+		dataType: double
+		lineageTag: 6720216d-2228-4909-8791-7146bc269fcc
+		summarizeBy: sum
+		sourceColumn: gross_sales_eur
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column discount_amount_eur
+		dataType: double
+		lineageTag: 7e3f2505-4704-442d-8b7c-728ef5e0d4df
+		summarizeBy: sum
+		sourceColumn: discount_amount_eur
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column net_sales_eur
+		dataType: double
+		lineageTag: ddf0f7c4-2c68-4a5a-8f37-68c14c584921
+		summarizeBy: sum
+		sourceColumn: net_sales_eur
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column net_sales_ex_vat_eur
+		dataType: double
+		lineageTag: 7604622d-aed6-4b00-aa11-055d03f2c9ff
+		summarizeBy: sum
+		sourceColumn: net_sales_ex_vat_eur
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column vat_amount_eur
+		dataType: double
+		lineageTag: e46b04f7-3e10-48b1-80eb-ace364dfa279
+		summarizeBy: sum
+		sourceColumn: vat_amount_eur
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column vat_rate
+		dataType: double
+		lineageTag: 88acf470-acc0-454a-a522-8661e205225b
+		summarizeBy: sum
+		sourceColumn: vat_rate
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column payment_type
+		dataType: string
+		lineageTag: f421250d-000f-4fa4-8cf1-316eb1dcdc88
+		summarizeBy: none
+		sourceColumn: payment_type
+
+		annotation SummarizationSetBy = Automatic
+
+	column sales_channel
+		dataType: string
+		lineageTag: 93fffb39-4ea6-4ec0-b3e3-781fb1eb9995
+		summarizeBy: none
+		sourceColumn: sales_channel
+
+		annotation SummarizationSetBy = Automatic
+
+	column is_loyalty_member
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: 0cf6ef54-ed05-4820-8acb-601026adbff1
+		summarizeBy: none
+		sourceColumn: is_loyalty_member
+
+		annotation SummarizationSetBy = Automatic
+
+	column is_coupon_applied
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: e0908be3-f887-4fc7-a334-c0e98995cd48
+		summarizeBy: none
+		sourceColumn: is_coupon_applied
+
+		annotation SummarizationSetBy = Automatic
+
+	column is_private_label
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: 928a3358-f1d8-49ce-a726-c4adf2920c79
+		summarizeBy: none
+		sourceColumn: is_private_label
+
+		annotation SummarizationSetBy = Automatic
+
+	column is_self_checkout
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: a7574d5d-fb0b-4b25-a81f-ff58747c267f
+		summarizeBy: none
+		sourceColumn: is_self_checkout
+
+		annotation SummarizationSetBy = Automatic
+
+	column is_promo_period
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: 28976ab5-a50e-4811-bbc0-e8396a56d756
+		summarizeBy: none
+		sourceColumn: is_promo_period
+
+		annotation SummarizationSetBy = Automatic
+
+	column is_promo_price
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: d5209717-9462-4d6d-8c89-9272e515e3fc
+		summarizeBy: none
+		sourceColumn: is_promo_price
+
+		annotation SummarizationSetBy = Automatic
+
+	column brand
+		dataType: string
+		lineageTag: 24ce4b60-4c42-4e7f-8028-ce19b79385f9
+		summarizeBy: none
+		sourceColumn: brand
+
+		annotation SummarizationSetBy = Automatic
+
+	column loyalty_points_earned
+		dataType: int64
+		formatString: 0
+		lineageTag: 77ac17e1-d6b4-4227-8758-e4294bfebaab
+		summarizeBy: sum
+		sourceColumn: loyalty_points_earned
+
+		annotation SummarizationSetBy = Automatic
+
+	column order_hour
+		dataType: int64
+		formatString: 0
+		lineageTag: d7d9d49b-c65c-44ef-a73b-17dc7743c0dd
+		summarizeBy: sum
+		sourceColumn: order_hour
+
+		annotation SummarizationSetBy = Automatic
+
+	partition FactSales = m
+		mode: import
+		source =
+				let
+				    Source = DatabricksMultiCloud.Catalogs("dbc-b0d04978-208c.cloud.databricks.com", "/sql/1.0/warehouses/7ee0f62b3cdad99c", [Catalog=null, Database=null, QueryTags=null, EnableAutomaticProxyDiscovery=null, Implementation="2.0", Protocol=null]),
+				    workspace_Database = Source{[Name="workspace",Kind="Database"]}[Data],
+				    retail_dev_reporting_Schema = workspace_Database{[Name="retail_dev_reporting",Kind="Schema"]}[Data],
+				    v_fact_sales_View = retail_dev_reporting_Schema{[Name="v_fact_sales",Kind="View"]}[Data]
+				in
+				    v_fact_sales_View
+

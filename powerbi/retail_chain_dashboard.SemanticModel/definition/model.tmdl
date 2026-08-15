@@ -1,0 +1,40 @@
+model Model
+	culture: en-US
+	defaultPowerBIDataSourceVersion: powerBI_V3
+	sourceQueryCulture: en-DE
+	dataAccessOptions
+		legacyRedirects
+		returnErrorValuesAsNull
+
+queryGroup 'Transform File from gold_data'
+
+	annotation PBI_QueryGroupOrder = 0
+
+queryGroup 'Transform File from gold_data\Helper Queries'
+
+	annotation PBI_QueryGroupOrder = 0
+
+annotation __PBI_TimeIntelligenceEnabled = 1
+
+annotation PBI_QueryOrder = ["Sample File","Parameter1","Transform Sample File","Transform File","DimDate","FactSales","FactReturns","DimStore","DimProduct","DimCustomer","CustomerLTV","DataQuality","_Measures"]
+
+annotation PBI_ProTooling = ["DevMode"]
+
+ref table DateTableTemplate_c47fd9eb-f525-41bd-8e1e-e63fcc512919
+ref table DimDate
+ref table FactSales
+ref table LocalDateTable_7771b938-49cc-473d-b8fb-d25b715c95ce
+ref table FactReturns
+ref table LocalDateTable_5d07f438-e38c-4548-b16c-06fb067557a7
+ref table DimStore
+ref table DimProduct
+ref table DimCustomer
+ref table CustomerLTV
+ref table LocalDateTable_c0accc09-fdee-4027-9f09-7a50e91634fe
+ref table LocalDateTable_4a2bb49f-b85d-43ae-b6d5-0c5c383ed1a5
+ref table DataQuality
+ref table LocalDateTable_b4c226c4-ecbe-4341-8382-3f0cb0c865ce
+ref table _Measures
+
+ref cultureInfo en-US
+

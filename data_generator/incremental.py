@@ -40,12 +40,11 @@ import json
 import shutil
 import sys
 from collections import defaultdict
+from collections.abc import Iterable, Iterator
 from dataclasses import dataclass
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from random import Random
-from typing import Iterable, Iterator
-
 
 # Make data_generator importable in both environments:
 #
@@ -80,30 +79,30 @@ if str(PACKAGE_ROOT) not in sys.path:
 # ---------------------------------------------------------------------------
 
 from data_generator.generator import (
+    _DIM_DROP,
+    _FACT_RETURNS_COLS,
     DOW_WEIGHTS,
-    MONTH_WEIGHTS,
-    GENERATOR_VERSION,
     DUPLICATE_BASKET_RATE,
+    GENERATOR_VERSION,
+    MONTH_WEIGHTS,
     build_customers,
     generate_basket,
     is_promo_period,
-    mark_duplicate_basket,
     load_stores,
     load_terminals,
     make_return_rows,
-    write_dim_stores,
-    write_dim_products,
+    mark_duplicate_basket,
     write_dim_customers,
-    _DIM_DROP,
-    _FACT_RETURNS_COLS,
+    write_dim_products,
+    write_dim_stores,
 )
-
 from data_generator.price_history import (
     PriceIndex,
     write_scd2,
+)
+from data_generator.price_history import (
     validate as validate_scd2,
 )
-
 from data_generator.progress import ProgressBar
 
 # ---------------------------------------------------------------------------
@@ -134,6 +133,7 @@ OWNED_DIRECTORIES = (
 # ---------------------------------------------------------------------------
 # Paths and run metadata
 # ---------------------------------------------------------------------------
+
 
 @dataclass(frozen=True)
 class LandingPaths:
@@ -240,16 +240,16 @@ def make_batch_id(args: argparse.Namespace) -> str:
         "duplicate_rate": args.duplicate_rate,
         "generation_date": args.generation_date or args.end_date,
     }
-    digest = hashlib.sha256(
-        json.dumps(config, sort_keys=True).encode("utf-8")
-    ).hexdigest()[:16].upper()
+    digest = (
+        hashlib.sha256(json.dumps(config, sort_keys=True).encode("utf-8"))
+        .hexdigest()[:16]
+        .upper()
+    )
     return f"BATCH_{digest}"
 
 
 def stable_seed(base_seed: int, namespace: str) -> int:
-    digest = hashlib.sha256(
-        f"{base_seed}:{namespace}".encode("utf-8")
-    ).digest()
+    digest = hashlib.sha256(f"{base_seed}:{namespace}".encode()).digest()
     return int.from_bytes(digest[:8], byteorder="big", signed=False)
 
 
@@ -260,6 +260,7 @@ def get_rng(base_seed: int, namespace: str) -> Random:
 # ---------------------------------------------------------------------------
 # Reset safety
 # ---------------------------------------------------------------------------
+
 
 def validate_reset_path(root: Path) -> None:
     text = root.as_posix().rstrip("/")
@@ -291,6 +292,7 @@ def reset_generated_data(root: Path) -> None:
 # ---------------------------------------------------------------------------
 # Manifest and overlap handling
 # ---------------------------------------------------------------------------
+
 
 def manifest_path(paths: LandingPaths, batch_id: str) -> Path:
     return paths.manifests / f"{batch_id}.json"
@@ -441,6 +443,7 @@ def write_manifest(
 # Daily planning and row generation
 # ---------------------------------------------------------------------------
 
+
 def compute_daily_volumes(
     start: datetime,
     end: datetime,
@@ -456,10 +459,7 @@ def compute_daily_volumes(
 
     while current <= end:
         if current.weekday() != 6:
-            weight = (
-                DOW_WEIGHTS[current.weekday()]
-                * MONTH_WEIGHTS[current.month - 1]
-            )
+            weight = DOW_WEIGHTS[current.weekday()] * MONTH_WEIGHTS[current.month - 1]
 
             if is_promo_period(current):
                 weight *= 1.4
@@ -470,9 +470,7 @@ def compute_daily_volumes(
         current += timedelta(days=1)
 
     if not days:
-        raise ValueError(
-            "The requested period contains no trading days."
-        )
+        raise ValueError("The requested period contains no trading days.")
 
     # When there are enough requested rows, preserve at least one
     # transaction line on every trading day.
@@ -480,14 +478,10 @@ def compute_daily_volumes(
 
     total_weight = sum(weights)
 
-    raw_targets = [
-        n_total * weight / total_weight
-        for weight in weights
-    ]
+    raw_targets = [n_total * weight / total_weight for weight in weights]
 
     volumes = {
-        day: max(minimum_per_day, int(value))
-        for day, value in zip(days, raw_targets)
+        day: max(minimum_per_day, int(value)) for day, value in zip(days, raw_targets)
     }
 
     # Correct the initial rounding while spreading adjustments
@@ -498,9 +492,7 @@ def compute_daily_volumes(
     if difference > 0:
         ranked = sorted(
             zip(days, raw_targets),
-            key=lambda pair: (
-                pair[1] - int(pair[1])
-            ),
+            key=lambda pair: pair[1] - int(pair[1]),
             reverse=True,
         )
 
@@ -588,11 +580,8 @@ def compute_daily_volumes(
             f"expected {n_total}, got {final_total}."
         )
 
-    return {
-        day: count
-        for day, count in volumes.items()
-        if count > 0
-    }
+    return {day: count for day, count in volumes.items() if count > 0}
+
 
 def schedule_late_arrival(
     basket: list[dict],
@@ -613,9 +602,7 @@ def schedule_late_arrival(
         row["ingestion_date"] = delivery_text
         existing = row.get("data_quality_flag") or "OK"
         row["data_quality_flag"] = (
-            LATE_ARRIVAL_FLAG
-            if existing == "OK"
-            else f"{existing}|{LATE_ARRIVAL_FLAG}"
+            LATE_ARRIVAL_FLAG if existing == "OK" else f"{existing}|{LATE_ARRIVAL_FLAG}"
         )
     return delivery_date
 
@@ -751,7 +738,7 @@ def generate_batch(
         args.records,
         volume_rng,
     )
-    
+
     sorted_days = sorted(daily_volumes)
 
     if not sorted_days:
@@ -760,8 +747,8 @@ def generate_batch(
             f"{context.start:%Y-%m-%d} and {context.end:%Y-%m-%d}."
         )
 
-# Use the first valid trading day to create a representative basket
-# for deriving the transaction CSV header.
+    # Use the first valid trading day to create a representative basket
+    # for deriving the transaction CSV header.
     header_date = sorted_days[0]
 
     sample_rng = get_rng(args.seed, f"header:{context.batch_id}")
@@ -782,15 +769,9 @@ def generate_batch(
     )
 
     if not sample:
-        raise RuntimeError(
-            "Could not create a sample basket for the CSV header."
-        )
+        raise RuntimeError("Could not create a sample basket for the CSV header.")
 
-    fact_header = [
-        key
-        for key in sample[0]
-        if key not in _DIM_DROP
-    ]
+    fact_header = [key for key in sample[0] if key not in _DIM_DROP]
     if not sample:
         raise RuntimeError("Could not create a sample basket for the CSV header.")
     fact_header = [key for key in sample[0] if key not in _DIM_DROP]
@@ -826,13 +807,10 @@ def generate_batch(
 
         while emitted_today < target_rows:
             is_duplicate = (
-                bool(recent_day_baskets)
-                and day_rng.random() < args.duplicate_rate
+                bool(recent_day_baskets) and day_rng.random() < args.duplicate_rate
             )
             if is_duplicate:
-                basket = mark_duplicate_basket(
-                    day_rng.choice(recent_day_baskets)
-                )
+                basket = mark_duplicate_basket(day_rng.choice(recent_day_baskets))
             else:
                 basket = generate_basket(
                     day_rng,
@@ -903,8 +881,7 @@ def generate_batch(
         bar.update(
             1,
             extra=(
-                f"{current_date:%Y-%m-%d}  "
-                f"{total_rows:,} rows  {total_late:,} late"
+                f"{current_date:%Y-%m-%d}  {total_rows:,} rows  {total_late:,} late"
             ),
         )
 
@@ -921,16 +898,14 @@ def generate_batch(
         total_rows += len(rows)
 
     returns_path = context.stage.returns / (
-        f"returns_{context.start:%Y%m%d}_{context.end:%Y%m%d}_"
-        f"{context.batch_id}.csv"
+        f"returns_{context.start:%Y%m%d}_{context.end:%Y%m%d}_{context.batch_id}.csv"
     )
     write_csv_exclusive(returns_path, list(_FACT_RETURNS_COLS), return_buffer)
     generated_files.append(returns_path)
 
     if context.mode == "demo":
         generated_files.extend(
-            context.stage.dimensions / filename
-            for filename in REQUIRED_DIMENSION_FILES
+            context.stage.dimensions / filename for filename in REQUIRED_DIMENSION_FILES
         )
 
     stats = {
@@ -941,16 +916,16 @@ def generate_batch(
         "scd2_start": (
             context.start
             if context.mode == "demo"
-            else get_scd2_bounds(
-                context.landing.dimensions / "dim_products_scd2.csv"
-            )[0]
+            else get_scd2_bounds(context.landing.dimensions / "dim_products_scd2.csv")[
+                0
+            ]
         ),
         "scd2_end": (
             context.price_history_end
             if context.mode == "demo"
-            else get_scd2_bounds(
-                context.landing.dimensions / "dim_products_scd2.csv"
-            )[1]
+            else get_scd2_bounds(context.landing.dimensions / "dim_products_scd2.csv")[
+                1
+            ]
         ),
     }
     return stats, generated_files
@@ -959,6 +934,7 @@ def generate_batch(
 # ---------------------------------------------------------------------------
 # Validation of the current staged batch
 # ---------------------------------------------------------------------------
+
 
 def transaction_file_date(filename: str) -> datetime:
     parts = Path(filename).stem.split("_")
@@ -1073,6 +1049,7 @@ def validate_current_batch(
 # Atomic publication
 # ---------------------------------------------------------------------------
 
+
 def destination_for_staged_file(
     context: GenerationContext,
     staged_path: Path,
@@ -1085,10 +1062,7 @@ def publish_batch(
     context: GenerationContext,
     staged_files: list[Path],
 ) -> list[Path]:
-    destinations = [
-        destination_for_staged_file(context, path)
-        for path in staged_files
-    ]
+    destinations = [destination_for_staged_file(context, path) for path in staged_files]
     conflicts = [path for path in destinations if path.exists()]
     if conflicts:
         raise FileExistsError(
@@ -1113,6 +1087,7 @@ def cleanup_stage(context: GenerationContext) -> None:
 # Orchestration
 # ---------------------------------------------------------------------------
 
+
 def run_generation(args: argparse.Namespace, root: Path) -> int:
     landing = get_landing_paths(root)
     create_landing_directories(landing)
@@ -1121,8 +1096,7 @@ def run_generation(args: argparse.Namespace, root: Path) -> int:
     committed_manifest = manifest_path(landing, batch_id)
     if committed_manifest.exists():
         print(
-            f"Batch {batch_id} is already published; generation is an "
-            "idempotent no-op."
+            f"Batch {batch_id} is already published; generation is an idempotent no-op."
         )
         return 0
 
@@ -1144,7 +1118,9 @@ def run_generation(args: argparse.Namespace, root: Path) -> int:
         stats, staged_files = generate_batch(context, args)
         print("\n  Validating staged batch")
         if not validate_current_batch(context, args, stats):
-            raise RuntimeError("Generated batch failed validation and was not published.")
+            raise RuntimeError(
+                "Generated batch failed validation and was not published."
+            )
 
         published_files = publish_batch(context, staged_files)
         write_manifest(context, args, stats, published_files)
@@ -1223,6 +1199,4 @@ if __name__ == "__main__":
     exit_code = main()
 
     if exit_code != 0:
-        raise RuntimeError(
-            f"Retail data generator failed with exit code {exit_code}."
-        )
+        raise RuntimeError(f"Retail data generator failed with exit code {exit_code}.")

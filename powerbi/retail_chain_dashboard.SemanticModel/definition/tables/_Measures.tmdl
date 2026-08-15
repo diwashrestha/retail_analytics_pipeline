@@ -1,0 +1,323 @@
+table _Measures
+	lineageTag: 038e38b9-d9ad-4a06-8c29-496df42371eb
+
+	measure 'Total Revenue' =
+			
+			SUM ( FactSales[net_sales_eur] )
+		formatString: "€"\ #,0.000;-"€"\ #,0.000;"€"\ #,0.000
+		lineageTag: d176ad32-601a-44d2-b36d-14d205470341
+
+	measure 'Gross Revenue' =
+			
+			SUM ( FactSales[gross_sales_eur] )
+		formatString: "€"\ #,0.00;-"€"\ #,0.00;"€"\ #,0.00
+		lineageTag: 0a29570e-20a4-4bc5-a1a0-a84a686b566d
+
+	measure 'Total Discounts' =
+			
+			SUM ( FactSales[discount_amount_eur] )
+		formatString: "€"\ #,0.00;-"€"\ #,0.00;"€"\ #,0.00
+		lineageTag: 647be989-1030-4e7c-9845-c5c0b6196a49
+
+	measure 'Total Transactions' =
+			
+			DISTINCTCOUNT ( FactSales[transaction_id] )
+		formatString: #,0.000
+		lineageTag: 58d2dc82-bf40-4218-b796-b6270c945aaf
+
+	measure 'Total Baskets' =
+			
+			DISTINCTCOUNT ( FactSales[basket_id] )
+		formatString: #,0
+		lineageTag: bb4c1ac6-f9d8-4c76-909e-29abe4e4edd8
+
+	measure 'Units Sold' =
+			
+			SUM ( FactSales[quantity] )
+		formatString: 0
+		lineageTag: 336ebf29-bbbf-4c7b-81e2-3ba6c2798944
+
+	measure 'Average Basket Value' =
+			
+			DIVIDE (
+			    [Total Revenue],
+			    [Total Baskets]
+			)
+		formatString: "€"\ #,0.00;-"€"\ #,0.00;"€"\ #,0.00
+		lineageTag: b829b978-fceb-46da-8a9c-ea46b0cf4fa1
+
+	measure 'Average Selling Price' =
+			
+			DIVIDE (
+			    [Total Revenue],
+			    [Units Sold]
+			)
+		formatString: "€"\ #,0.00;-"€"\ #,0.00;"€"\ #,0.00
+		lineageTag: 76bfa952-f9f6-409d-8992-99ff290eb4c4
+
+	measure 'Total Refunds' =
+			
+			SUM ( FactReturns[refund_amount_eur] )
+		formatString: "€"\ #,0.00;-"€"\ #,0.00;"€"\ #,0.00
+		lineageTag: 9c937dbd-cd06-4764-bd64-aad7062f5eec
+
+	measure 'Returned Units' =
+			
+			SUM ( FactReturns[return_quantity] )
+		formatString: 0
+		lineageTag: 18a27757-a234-4339-9a01-48547b8026e6
+
+	measure 'Total Return Events' =
+			
+			DISTINCTCOUNT ( FactReturns[return_id] )
+		formatString: 0.000
+		lineageTag: 6dc0215e-31fa-4d2f-a278-0241a7eb3b9f
+
+	measure 'Unit Return Rate' =
+			
+			DIVIDE (
+			    [Returned Units],
+			    [Units Sold]
+			)
+		formatString: 0.00\ %;-0.00\ %;0.00\ %
+		lineageTag: 1cd8d240-a842-42e6-8d0c-fbf8f778fab2
+
+	measure 'Registered Customer Revenue' =
+			
+			CALCULATE (
+			    [Total Revenue],
+			    FactSales[customer_type] <> "Walk-in"
+			)
+		formatString: "€"\ #,0.00;-"€"\ #,0.00;"€"\ #,0.00
+		lineageTag: 815f3305-a913-4ec3-a1b0-3abaa4186486
+
+	measure 'Walk-in Revenue' =
+			
+			CALCULATE (
+			    [Total Revenue],
+			    FactSales[customer_type] = "Walk-in"
+			)
+		formatString: "€"\ #,0.00;-"€"\ #,0.00;"€"\ #,0.00
+		lineageTag: f9f6bf61-af83-48fe-a799-7c7bfdc833a7
+
+	measure 'Promotion Revenue' =
+			
+			CALCULATE (
+			    [Total Revenue],
+			    FactSales[is_promo_period] = TRUE ()
+			)
+		formatString: "€"\ #,0.00;-"€"\ #,0.00;"€"\ #,0.00
+		lineageTag: 857c6d0e-8dab-4b25-a8bb-928896820aab
+
+	measure 'Self-Checkout Revenue' =
+			
+			CALCULATE (
+			    [Total Revenue],
+			    FactSales[is_self_checkout] = TRUE ()
+			)
+		formatString: "€"\ #,0.00;-"€"\ #,0.00;"€"\ #,0.00
+		lineageTag: bebc7b5a-2fda-453f-9536-7970b5f4238d
+
+	measure 'Revenue Previous Month' =
+			
+			CALCULATE (
+			    [Total Revenue],
+			    DATEADD (
+			        DimDate[calendar_date],
+			        -1,
+			        MONTH
+			    )
+			)
+		formatString: "€"\ #,0.00;-"€"\ #,0.00;"€"\ #,0.00
+		lineageTag: e67590f8-43db-46cf-b2f8-38d92ac3603d
+
+	measure 'Revenue Month-over-Month' =
+			
+			VAR PreviousRevenue =
+			    [Revenue Previous Month]
+			RETURN
+			    DIVIDE (
+			        [Total Revenue] - PreviousRevenue,
+			        PreviousRevenue
+			    )
+		formatString: 0.00\ %;-0.00\ %;0.00\ %
+		lineageTag: 78cdeb86-4728-4c08-a568-b2f0c937037b
+
+	measure 'Revenue Year-to-Date' =
+			
+			TOTALYTD (
+			    [Total Revenue],
+			    DimDate[calendar_date]
+			)
+		formatString: "€"\ #,0.00;-"€"\ #,0.00;"€"\ #,0.00
+		lineageTag: fc42cb4f-f476-491e-88d3-50b2072f2245
+
+	measure 'Discount Rate' =
+			
+			DIVIDE (
+			    [Total Discounts],
+			    [Gross Revenue]
+			)
+		formatString: 0.00\ %;-0.00\ %;0.00\ %
+		lineageTag: 45093caf-8adf-447c-8fcb-ac0df39e7012
+
+	measure 'Non-Promotion Revenue' =
+			
+			[Total Revenue] - [Promotion Revenue]
+		lineageTag: 9e55f743-91f6-499f-8993-c032aa18569c
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Promotion Revenue Share' =
+			
+			DIVIDE (
+			    [Promotion Revenue],
+			    [Total Revenue]
+			)
+		formatString: 0.00\ %;-0.00\ %;0.00\ %
+		lineageTag: c94b2a2f-afa6-40cb-ac06-5f41007dab07
+
+	measure 'Self-Checkout Baskets' =
+			
+			CALCULATE (
+			    [Total Baskets],
+			    FactSales[is_self_checkout] = TRUE ()
+			)
+		formatString: 0
+		lineageTag: 332d540c-c7cf-43d8-a954-42f57f762aa5
+
+	measure 'Self-Checkout Basket Share' =
+			
+			DIVIDE (
+			    [Self-Checkout Baskets],
+			    [Total Baskets]
+			)
+		formatString: 0.00\ %;-0.00\ %;0.00\ %
+		lineageTag: 53deb4c2-8933-474c-9231-16b1c38ddd51
+
+	measure 'Store Revenue Rank' =
+			
+			RANKX (
+			    ALLSELECTED ( DimStore[store_id] ),
+			    [Total Revenue],
+			    ,
+			    DESC,
+			    DENSE
+			)
+		formatString: 0
+		lineageTag: 802ff3ae-68f0-47bf-b8f1-13912c11a169
+
+	measure 'Product Revenue Rank' =
+			
+			RANKX (
+			    ALLSELECTED ( DimProduct[product_id] ),
+			    [Total Revenue],
+			    ,
+			    DESC,
+			    DENSE
+			)
+		formatString: 0
+		lineageTag: 1a5dc421-0608-4727-a233-0ade19e35253
+
+	measure 'Lifetime Revenue' =
+			
+			SUM ( CustomerLTV[lifetime_sales_eur] )
+		formatString: "€"\ #,0.00;-"€"\ #,0.00;"€"\ #,0.00
+		lineageTag: bf5bfc88-0262-4a8b-a3cd-15227b3a4359
+
+	measure 'Retained Lifetime Value' =
+			
+			SUM ( CustomerLTV[retained_lifetime_value_eur] )
+		formatString: "€"\ #,0.00;-"€"\ #,0.00;"€"\ #,0.00
+		lineageTag: 9bcba6d1-073b-48e8-9720-89c9212f5353
+
+	measure 'Customers With Purchases' =
+			
+			CALCULATE (
+			    COUNTROWS ( CustomerLTV ),
+			    CustomerLTV[lifetime_baskets] > 0
+			)
+		formatString: 0
+		lineageTag: da34ca53-9584-43a9-8ac4-e37007c08654
+
+	measure 'One-Time Customers' =
+			
+			CALCULATE (
+			    COUNTROWS ( CustomerLTV ),
+			    CustomerLTV[lifetime_baskets] = 1
+			)
+		formatString: 0
+		lineageTag: 43756641-57c8-4866-8b60-fea9dc1ff154
+
+	measure 'Repeat Customers' =
+			
+			CALCULATE (
+			    COUNTROWS ( CustomerLTV ),
+			    CustomerLTV[lifetime_baskets] >= 2
+			)
+		formatString: 0
+		lineageTag: 14630146-c6c7-410a-b85d-06f1fee5544f
+
+	measure 'Repeat Customer Rate' =
+			
+			DIVIDE (
+			    [Repeat Customers],
+			    [Customers With Purchases]
+			)
+		formatString: 0.00\ %;-0.00\ %;0.00\ %
+		lineageTag: e3842aea-afb9-4387-a2a4-0b9d8279c2cb
+
+	measure 'Average Retained LTV' =
+			
+			AVERAGEX (
+			    FILTER (
+			        CustomerLTV,
+			        CustomerLTV[lifetime_baskets] > 0
+			    ),
+			    CustomerLTV[retained_lifetime_value_eur]
+			)
+		formatString: "€"\ #,0.00;-"€"\ #,0.00;"€"\ #,0.00
+		lineageTag: 9bc6d69e-231b-4ebd-bd6a-7e1138600b36
+
+	measure 'Average Customer Basket' =
+			
+			DIVIDE (
+			    SUM ( CustomerLTV[lifetime_sales_eur] ),
+			    SUM ( CustomerLTV[lifetime_baskets] )
+			)
+		formatString: "€"\ #,0.00;-"€"\ #,0.00;"€"\ #,0.00
+		lineageTag: 10048395-6134-4aa1-a136-4b6024b93d45
+
+	measure 'Average Baskets per 30 Days' =
+			
+			AVERAGEX (
+			    FILTER (
+			        CustomerLTV,
+			        CustomerLTV[lifetime_baskets] > 0
+			    ),
+			    CustomerLTV[baskets_per_30_days]
+			)
+		lineageTag: 003bef93-ef51-4276-b5c9-98d7c8c678ae
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Customer Count' =
+			
+			DISTINCTCOUNT ( CustomerLTV[customer_id] )
+		formatString: 0
+		lineageTag: c9386aab-5f22-4dac-9d4c-938d1e3e16ad
+
+	partition _Measures = m
+		mode: import
+		source =
+				let
+				    Source = Table.FromRows(Json.Document(Binary.Decompress(Binary.FromText("i45WMlSKjQUA", BinaryEncoding.Base64), Compression.Deflate)), let _t = ((type nullable text) meta [Serialized.Text = true]) in type table [Column1 = _t]),
+				    #"Changed Type" = Table.TransformColumnTypes(Source,{{"Column1", Int64.Type}}),
+				    #"Removed Columns" = Table.RemoveColumns(#"Changed Type",{"Column1"})
+				in
+				    #"Removed Columns"
+
+	annotation PBI_ResultType = Table
+
+	annotation PBI_NavigationStepName = Navigation
+

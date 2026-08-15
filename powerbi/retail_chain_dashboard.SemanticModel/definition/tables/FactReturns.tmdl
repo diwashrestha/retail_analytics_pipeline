@@ -1,0 +1,206 @@
+table FactReturns
+	lineageTag: fe326a12-7306-4cdc-9306-ed935199c257
+
+	column return_key
+		dataType: string
+		lineageTag: 5c9d313a-2402-4ec7-92c3-086d5699682b
+		summarizeBy: none
+		sourceColumn: return_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column return_id
+		dataType: string
+		lineageTag: 52c31e22-44d4-4101-a8ac-da5cae40d4b2
+		summarizeBy: none
+		sourceColumn: return_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column original_transaction_id
+		dataType: string
+		lineageTag: 072feb82-bd22-471e-aa4e-be053ad64da7
+		summarizeBy: none
+		sourceColumn: original_transaction_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column original_basket_id
+		dataType: string
+		lineageTag: 87124fff-0515-48b7-965a-e912ef3a1bf4
+		summarizeBy: none
+		sourceColumn: original_basket_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column product_key
+		dataType: string
+		lineageTag: 784ea676-17b5-4113-a205-bf074681271a
+		summarizeBy: none
+		sourceColumn: product_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column product_id
+		dataType: string
+		lineageTag: 12f8cecd-ac8d-46e4-bbb2-35cf312bb94d
+		summarizeBy: none
+		sourceColumn: product_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column store_key
+		dataType: string
+		lineageTag: 69529e02-e16f-4100-969e-b1a9af029ce7
+		summarizeBy: none
+		sourceColumn: store_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column store_id
+		dataType: string
+		lineageTag: 9e56d855-3e58-4abe-962b-7bcf8c907133
+		summarizeBy: none
+		sourceColumn: store_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column customer_key
+		dataType: string
+		lineageTag: 87e3ca7d-cd24-428d-bfc3-5ab402f4e60c
+		summarizeBy: none
+		sourceColumn: customer_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column customer_id
+		dataType: string
+		lineageTag: 2312a1d8-fd4f-4fce-b391-1caf2d26ab22
+		summarizeBy: none
+		sourceColumn: customer_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column original_order_date
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: db0f7930-deaa-4b3f-9721-cad97e22a9b0
+		summarizeBy: none
+		sourceColumn: original_order_date
+
+		variation Variation
+			isDefault
+			relationship: 31bc7258-5727-4153-97a1-e306217568c2
+			defaultHierarchy: LocalDateTable_5d07f438-e38c-4548-b16c-06fb067557a7.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column return_date
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: cb4834ce-33c1-4829-9ae2-f2de618b18c3
+		summarizeBy: none
+		sourceColumn: return_date
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column days_to_return
+		dataType: int64
+		formatString: 0
+		lineageTag: 464556e6-b82d-4c3b-9058-7bc0a9f4dcc7
+		summarizeBy: sum
+		sourceColumn: days_to_return
+
+		annotation SummarizationSetBy = Automatic
+
+	column sold_quantity
+		dataType: int64
+		formatString: 0
+		lineageTag: 4f857de1-6ede-4d89-8fd4-5bf930c8b192
+		summarizeBy: sum
+		sourceColumn: sold_quantity
+
+		annotation SummarizationSetBy = Automatic
+
+	column original_quantity
+		dataType: int64
+		formatString: 0
+		lineageTag: c3c80482-6b40-4ddc-9a99-55385f5235d6
+		summarizeBy: sum
+		sourceColumn: original_quantity
+
+		annotation SummarizationSetBy = Automatic
+
+	column return_quantity
+		dataType: int64
+		formatString: 0
+		lineageTag: ad22eeae-c4d7-4d84-97a8-33024c389c6b
+		summarizeBy: sum
+		sourceColumn: return_quantity
+
+		annotation SummarizationSetBy = Automatic
+
+	column original_unit_price_eur
+		dataType: double
+		lineageTag: 2fc0d39d-120c-4589-a944-62cd2a59d809
+		summarizeBy: sum
+		sourceColumn: original_unit_price_eur
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column original_discount_pct
+		dataType: double
+		lineageTag: 0ddbbfe3-7d1f-431c-9ec4-e8673ed2360e
+		summarizeBy: sum
+		sourceColumn: original_discount_pct
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column net_unit_price_eur
+		dataType: double
+		lineageTag: df696047-fc8c-4cc4-bd89-59999c962f5c
+		summarizeBy: sum
+		sourceColumn: net_unit_price_eur
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column refund_amount_eur
+		dataType: double
+		formatString: "€"\ #,0.00;-"€"\ #,0.00;"€"\ #,0.00
+		lineageTag: b15552d8-f4d8-4414-bfbf-6c6c730053f0
+		summarizeBy: sum
+		sourceColumn: refund_amount_eur
+
+		annotation SummarizationSetBy = Automatic
+
+	column reason_code
+		dataType: string
+		lineageTag: b25f05b4-b7da-4100-8e23-644fe8386c3a
+		summarizeBy: none
+		sourceColumn: reason_code
+
+		annotation SummarizationSetBy = Automatic
+
+	partition FactReturns = m
+		mode: import
+		source =
+				let
+				    Source = DatabricksMultiCloud.Catalogs("dbc-b0d04978-208c.cloud.databricks.com", "/sql/1.0/warehouses/7ee0f62b3cdad99c", [Catalog=null, Database=null, QueryTags=null, EnableAutomaticProxyDiscovery=null, Implementation="2.0", Protocol=null]),
+				    workspace_Database = Source{[Name="workspace",Kind="Database"]}[Data],
+				    retail_dev_reporting_Schema = workspace_Database{[Name="retail_dev_reporting",Kind="Schema"]}[Data],
+				    v_fact_returns_View = retail_dev_reporting_Schema{[Name="v_fact_returns",Kind="View"]}[Data]
+				in
+				    v_fact_returns_View
+
+	changedProperty = Name
+

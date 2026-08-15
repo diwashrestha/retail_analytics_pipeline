@@ -1,0 +1,90 @@
+table DataQuality
+	lineageTag: 9b48e5fd-5a96-454b-83b4-b13e25d0ece5
+
+	column layer
+		dataType: string
+		lineageTag: 0374fbdc-ef69-42d4-8a27-843905a705bc
+		summarizeBy: none
+		sourceColumn: layer
+
+		annotation SummarizationSetBy = Automatic
+
+	column check_name
+		dataType: string
+		lineageTag: 97c3cd82-b6ec-4496-8fdf-58c161ec2943
+		summarizeBy: none
+		sourceColumn: check_name
+
+		annotation SummarizationSetBy = Automatic
+
+	column severity
+		dataType: string
+		lineageTag: f8bcbedb-0c50-4bfe-8628-f507a0a85ca4
+		summarizeBy: none
+		sourceColumn: severity
+
+		annotation SummarizationSetBy = Automatic
+
+	column expected_value
+		dataType: double
+		lineageTag: 20cf486e-17d2-4e2e-922d-d966f819ef15
+		summarizeBy: sum
+		sourceColumn: expected_value
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column actual_value
+		dataType: double
+		lineageTag: ac01dfca-7daa-42fc-a90e-1864bdbaa9fd
+		summarizeBy: sum
+		sourceColumn: actual_value
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column status
+		dataType: string
+		lineageTag: 88be1360-c97c-4422-bc3b-3d66e8c523c1
+		summarizeBy: none
+		sourceColumn: status
+
+		annotation SummarizationSetBy = Automatic
+
+	column description
+		dataType: string
+		lineageTag: f5ff81ca-7082-4a91-8884-632a2d5cb936
+		summarizeBy: none
+		sourceColumn: description
+
+		annotation SummarizationSetBy = Automatic
+
+	column checked_at
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: c3f00e62-25d8-4828-a98c-c66476d5bca3
+		summarizeBy: none
+		sourceColumn: checked_at
+
+		variation Variation
+			isDefault
+			relationship: f57cd1d5-241b-4e40-94c6-b4c3f14bddaf
+			defaultHierarchy: LocalDateTable_b4c226c4-ecbe-4341-8382-3f0cb0c865ce.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	partition DataQuality = m
+		mode: import
+		source =
+				let
+				    Source = DatabricksMultiCloud.Catalogs("dbc-b0d04978-208c.cloud.databricks.com", "/sql/1.0/warehouses/7ee0f62b3cdad99c", [Catalog=null, Database=null, QueryTags=null, EnableAutomaticProxyDiscovery=null, Implementation="2.0", Protocol=null]),
+				    workspace_Database = Source{[Name="workspace",Kind="Database"]}[Data],
+				    retail_dev_reporting_Schema = workspace_Database{[Name="retail_dev_reporting",Kind="Schema"]}[Data],
+				    v_data_quality_summary_View = retail_dev_reporting_Schema{[Name="v_data_quality_summary",Kind="View"]}[Data]
+				in
+				    v_data_quality_summary_View
+
+	changedProperty = Name
+

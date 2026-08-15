@@ -1,0 +1,126 @@
+table DimStore
+	lineageTag: 673c27aa-0ba0-49d6-b31f-729edb1711e0
+
+	column store_key
+		dataType: string
+		lineageTag: d2365cff-2a2f-44eb-a6dc-82d4fe288c67
+		summarizeBy: none
+		sourceColumn: store_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column store_id
+		dataType: string
+		lineageTag: 4fda47e4-5960-44ec-9590-de9e69a2a00f
+		summarizeBy: none
+		sourceColumn: store_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column city
+		dataType: string
+		lineageTag: f752ab54-bcb3-4311-b52c-1a2b3e5674a3
+		dataCategory: City
+		summarizeBy: none
+		sourceColumn: city
+
+		annotation SummarizationSetBy = Automatic
+
+	column district
+		dataType: string
+		lineageTag: 2520f300-8dce-431e-92f6-8564a5d95cd4
+		summarizeBy: none
+		sourceColumn: district
+
+		annotation SummarizationSetBy = Automatic
+
+	column postal_code
+		dataType: string
+		lineageTag: 67ecd1f7-0b54-4f7b-a55e-a26eaafff2d2
+		dataCategory: PostalCode
+		summarizeBy: none
+		sourceColumn: postal_code
+
+		annotation SummarizationSetBy = Automatic
+
+	column street
+		dataType: string
+		lineageTag: e98f48f0-57cf-41b7-b81c-9a270fc1791c
+		dataCategory: Address
+		summarizeBy: none
+		sourceColumn: street
+
+		annotation SummarizationSetBy = Automatic
+
+	column region
+		dataType: string
+		lineageTag: 12233ee6-aebe-4ffa-920d-c2e983773f62
+		dataCategory: StateOrProvince
+		summarizeBy: none
+		sourceColumn: region
+
+		annotation SummarizationSetBy = Automatic
+
+	column country_code
+		dataType: string
+		lineageTag: c60255ef-6eb0-4034-820d-9f20168ccab1
+		summarizeBy: none
+		sourceColumn: country_code
+
+		annotation SummarizationSetBy = Automatic
+
+	column country_name
+		dataType: string
+		lineageTag: dcc5dfcc-23ad-4295-908e-da629c6f7f0c
+		dataCategory: Country
+		summarizeBy: none
+		sourceColumn: country_name
+
+		annotation SummarizationSetBy = Automatic
+
+	column store_size_class
+		dataType: string
+		lineageTag: 44920d07-1b89-47e5-bd0d-58ded4ff1c34
+		summarizeBy: none
+		sourceColumn: store_size_class
+
+		annotation SummarizationSetBy = Automatic
+
+	column terminal_count
+		dataType: int64
+		formatString: 0
+		lineageTag: f0fda909-1862-4454-8b89-04017f11ffca
+		summarizeBy: sum
+		sourceColumn: terminal_count
+
+		annotation SummarizationSetBy = Automatic
+
+	column opening_hours
+		dataType: string
+		lineageTag: d00131d9-b252-414e-865d-314eddb7ee3c
+		summarizeBy: none
+		sourceColumn: opening_hours
+
+		annotation SummarizationSetBy = Automatic
+
+	column currency
+		dataType: string
+		lineageTag: 441c1fdd-dc25-4d5f-b165-bf31766ace91
+		summarizeBy: none
+		sourceColumn: currency
+
+		annotation SummarizationSetBy = Automatic
+
+	partition DimStore = m
+		mode: import
+		source =
+				let
+				    Source = DatabricksMultiCloud.Catalogs("dbc-b0d04978-208c.cloud.databricks.com", "/sql/1.0/warehouses/7ee0f62b3cdad99c", [Catalog=null, Database=null, QueryTags=null, EnableAutomaticProxyDiscovery=null, Implementation="2.0", Protocol=null]),
+				    workspace_Database = Source{[Name="workspace",Kind="Database"]}[Data],
+				    retail_dev_reporting_Schema = workspace_Database{[Name="retail_dev_reporting",Kind="Schema"]}[Data],
+				    v_dim_store_View = retail_dev_reporting_Schema{[Name="v_dim_store",Kind="View"]}[Data]
+				in
+				    v_dim_store_View
+
+	changedProperty = Name
+

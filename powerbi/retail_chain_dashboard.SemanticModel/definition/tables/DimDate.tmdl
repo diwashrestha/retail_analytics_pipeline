@@ -1,0 +1,169 @@
+table DimDate
+	lineageTag: ead3dd5a-84f1-446a-9b4f-9bfbd78f94f3
+	dataCategory: Time
+
+	column date_key
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: a5f8e31f-9a55-4a59-9a4a-5a58961b483b
+		summarizeBy: none
+		sourceColumn: date_key
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column calendar_date
+		dataType: dateTime
+		isKey
+		formatString: Long Date
+		lineageTag: 2764c139-6a74-4969-9d1b-32a784a1bd09
+		summarizeBy: none
+		sourceColumn: calendar_date
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column year
+		dataType: int64
+		formatString: 0
+		lineageTag: e81a4cfa-82a1-455b-b03a-3e4ed0a50950
+		summarizeBy: sum
+		sourceColumn: year
+
+		annotation SummarizationSetBy = Automatic
+
+	column quarter_number
+		dataType: int64
+		formatString: 0
+		lineageTag: 8e08ab68-80ac-46c1-8c65-be2e68f11c6a
+		summarizeBy: sum
+		sourceColumn: quarter_number
+
+		annotation SummarizationSetBy = Automatic
+
+	column quarter
+		dataType: string
+		lineageTag: 964e75e9-d616-4674-8e6c-8804b929059f
+		summarizeBy: none
+		sourceColumn: quarter
+
+		annotation SummarizationSetBy = Automatic
+
+	column month_number
+		dataType: int64
+		formatString: 0
+		lineageTag: f6aa8a16-dcce-4471-abc3-59ebf4e756ed
+		summarizeBy: sum
+		sourceColumn: month_number
+
+		annotation SummarizationSetBy = Automatic
+
+	column month_name
+		dataType: string
+		lineageTag: e8aa8186-68ac-4487-bf26-ba4151dd20f2
+		summarizeBy: none
+		sourceColumn: month_name
+		sortByColumn: month_number
+
+		changedProperty = SortByColumn
+
+		annotation SummarizationSetBy = Automatic
+
+	column year_month
+		dataType: string
+		lineageTag: 5d9a5ee1-917f-4a52-ae94-f1682c155aaa
+		summarizeBy: none
+		sourceColumn: year_month
+
+		annotation SummarizationSetBy = Automatic
+
+	column week_of_year
+		dataType: int64
+		formatString: 0
+		lineageTag: e9f09eaa-215f-47cd-97f5-ce53c225d335
+		summarizeBy: sum
+		sourceColumn: week_of_year
+
+		annotation SummarizationSetBy = Automatic
+
+	column day_of_month
+		dataType: int64
+		formatString: 0
+		lineageTag: b54babe4-840b-4f31-a2f6-6dcb852671e1
+		summarizeBy: sum
+		sourceColumn: day_of_month
+
+		annotation SummarizationSetBy = Automatic
+
+	column day_of_week_number
+		dataType: int64
+		formatString: 0
+		lineageTag: 5e86df4e-732e-4e93-ad7b-ac2c30b626c3
+		summarizeBy: sum
+		sourceColumn: day_of_week_number
+
+		annotation SummarizationSetBy = Automatic
+
+	column day_of_week
+		dataType: string
+		lineageTag: 505ca342-b423-4a78-83f5-08c133bee39b
+		summarizeBy: none
+		sourceColumn: day_of_week
+		sortByColumn: day_of_week_number
+
+		changedProperty = SortByColumn
+
+		annotation SummarizationSetBy = Automatic
+
+	column is_weekend
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: 7f15ee28-56b5-4de9-b677-9d4a8afbb85d
+		summarizeBy: none
+		sourceColumn: is_weekend
+
+		annotation SummarizationSetBy = Automatic
+
+	column is_sunday
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: d0654be5-5247-4dcf-b265-80d0a8852027
+		summarizeBy: none
+		sourceColumn: is_sunday
+
+		annotation SummarizationSetBy = Automatic
+
+	hierarchy 'Date Hierarchy'
+		lineageTag: 66b3af99-0f8b-4271-9af7-5abbb81dc28c
+
+		level year
+			lineageTag: 248d4924-6661-4185-a66b-eb650c1ca811
+			column: year
+
+		level quarter
+			lineageTag: 390bcb60-d115-4618-8943-8ea8e35c71e5
+			column: quarter
+
+		level month_name
+			lineageTag: f47dbd06-e4dd-4352-b9e5-69a6956afd89
+			column: month_name
+
+		level calendar_date
+			lineageTag: f9416770-6f8f-4b6a-92f9-12faf49fa72a
+			column: calendar_date
+
+	partition DimDate = m
+		mode: import
+		source =
+				let
+				    Source = DatabricksMultiCloud.Catalogs("dbc-b0d04978-208c.cloud.databricks.com", "/sql/1.0/warehouses/7ee0f62b3cdad99c", [Catalog=null, Database=null, QueryTags=null, EnableAutomaticProxyDiscovery=null, Implementation="2.0", Protocol=null]),
+				    workspace_Database = Source{[Name="workspace",Kind="Database"]}[Data],
+				    retail_dev_reporting_Schema = workspace_Database{[Name="retail_dev_reporting",Kind="Schema"]}[Data],
+				    v_dim_date_View = retail_dev_reporting_Schema{[Name="v_dim_date",Kind="View"]}[Data]
+				in
+				    v_dim_date_View
+
+	changedProperty = Name
+

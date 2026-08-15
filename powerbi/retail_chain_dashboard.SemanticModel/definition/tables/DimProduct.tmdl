@@ -1,0 +1,137 @@
+table DimProduct
+	lineageTag: 552cc297-3ffe-4901-8372-6a156a478cd7
+
+	column product_key
+		dataType: string
+		lineageTag: 657bf39e-6737-4903-b602-a0b39770da5d
+		summarizeBy: none
+		sourceColumn: product_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column product_id
+		dataType: string
+		lineageTag: 06a487dc-f837-41b5-ba4c-6fb39c412a26
+		summarizeBy: none
+		sourceColumn: product_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column product_name
+		dataType: string
+		lineageTag: 94a6ea89-2ab1-4e9c-8561-52a7eb8eedf0
+		summarizeBy: none
+		sourceColumn: product_name
+
+		annotation SummarizationSetBy = Automatic
+
+	column category
+		dataType: string
+		lineageTag: 96141151-4371-4603-ada5-76edda563733
+		summarizeBy: none
+		sourceColumn: category
+
+		annotation SummarizationSetBy = Automatic
+
+	column subcategory
+		dataType: string
+		lineageTag: 17d600e6-d144-44bc-ad6e-bc7bda31e896
+		summarizeBy: none
+		sourceColumn: subcategory
+
+		annotation SummarizationSetBy = Automatic
+
+	column brand
+		dataType: string
+		lineageTag: 3cc911af-cf7f-4db0-8272-0c111a9525ed
+		summarizeBy: none
+		sourceColumn: brand
+
+		annotation SummarizationSetBy = Automatic
+
+	column is_private_label_eligible
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: 98ce1b95-98cb-40c6-8d0f-e4918dd02b38
+		summarizeBy: none
+		sourceColumn: is_private_label_eligible
+
+		annotation SummarizationSetBy = Automatic
+
+	column minimum_price_eur
+		dataType: double
+		lineageTag: 8de511ef-0ce8-47e4-8c72-acc11ea287a6
+		summarizeBy: sum
+		sourceColumn: minimum_price_eur
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column maximum_price_eur
+		dataType: double
+		lineageTag: dfefdab7-e26e-47e7-a2f8-252f25f8da60
+		summarizeBy: sum
+		sourceColumn: maximum_price_eur
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column catalogue_mid_price_eur
+		dataType: double
+		lineageTag: a0e3f489-e6cf-4ec5-885b-5ab8e65145ea
+		summarizeBy: sum
+		sourceColumn: catalogue_mid_price_eur
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column price_band
+		dataType: string
+		lineageTag: 0f9efcee-eb9c-4be5-9e2f-7910b3da89e0
+		summarizeBy: none
+		sourceColumn: price_band
+
+		annotation SummarizationSetBy = Automatic
+
+	column unit
+		dataType: string
+		lineageTag: 52771e40-6193-4ce5-bfcc-d474e95c562f
+		summarizeBy: none
+		sourceColumn: unit
+
+		annotation SummarizationSetBy = Automatic
+
+	column seasonal_months
+		dataType: string
+		lineageTag: d1a98ce1-9d6f-4524-bec9-7f6f1608055e
+		summarizeBy: none
+		sourceColumn: seasonal_months
+
+		annotation SummarizationSetBy = Automatic
+
+	column vat_rate
+		dataType: double
+		lineageTag: 455e1dc5-3232-4655-8dbd-7d7c4ea89131
+		summarizeBy: sum
+		sourceColumn: vat_rate
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	partition DimProduct = m
+		mode: import
+		source =
+				let
+				    Source = DatabricksMultiCloud.Catalogs("dbc-b0d04978-208c.cloud.databricks.com", "/sql/1.0/warehouses/7ee0f62b3cdad99c", [Catalog=null, Database=null, QueryTags=null, EnableAutomaticProxyDiscovery=null, Implementation="2.0", Protocol=null]),
+				    workspace_Database = Source{[Name="workspace",Kind="Database"]}[Data],
+				    retail_dev_reporting_Schema = workspace_Database{[Name="retail_dev_reporting",Kind="Schema"]}[Data],
+				    v_dim_product_View = retail_dev_reporting_Schema{[Name="v_dim_product",Kind="View"]}[Data]
+				in
+				    v_dim_product_View
+
+	changedProperty = Name
+

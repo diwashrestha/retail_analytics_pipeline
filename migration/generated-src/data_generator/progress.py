@@ -26,6 +26,7 @@ import time
 # Optional acceleration — used only if already present, never installed.
 try:
     from tqdm import tqdm as _tqdm
+
     _HAS_TQDM = True
 except ImportError:
     _HAS_TQDM = False
@@ -45,12 +46,12 @@ class _BuiltinBar:
     """Fallback progress bar — pure stdlib, writes \\r lines to stderr."""
 
     def __init__(self, total: int, unit: str, label: str, width: int = 28):
-        self.total   = max(total, 1)
-        self.unit    = unit
-        self.label   = label
-        self.width   = width
-        self.done    = 0
-        self.start   = time.monotonic()
+        self.total = max(total, 1)
+        self.unit = unit
+        self.label = label
+        self.width = width
+        self.done = 0
+        self.start = time.monotonic()
         self._last_render = 0.0
 
     def update(self, n: int = 1, extra: str = "") -> None:
@@ -63,17 +64,17 @@ class _BuiltinBar:
         self._render(extra)
 
     def _render(self, extra: str) -> None:
-        frac    = min(self.done / self.total, 1.0)
-        filled  = int(self.width * frac)
-        bar     = "█" * filled + "░" * (self.width - filled)
+        frac = min(self.done / self.total, 1.0)
+        filled = int(self.width * frac)
+        bar = "█" * filled + "░" * (self.width - filled)
         elapsed = time.monotonic() - self.start
-        rate    = self.done / elapsed if elapsed > 0 else 0
-        eta     = (self.total - self.done) / rate if rate > 0 else 0
+        rate = self.done / elapsed if elapsed > 0 else 0
+        eta = (self.total - self.done) / rate if rate > 0 else 0
 
         line = (
             f"\r  {self.label}: |{bar}| "
             f"{self.done:,}/{self.total:,} {self.unit} "
-            f"({frac*100:5.1f}%) "
+            f"({frac * 100:5.1f}%) "
             f"elapsed {_fmt_duration(elapsed)} "
             f"eta {_fmt_duration(eta)}"
         )
@@ -93,8 +94,13 @@ class _TqdmBar:
     """Thin wrapper so tqdm and the builtin bar share one interface."""
 
     def __init__(self, total: int, unit: str, label: str):
-        self._bar = _tqdm(total=total, unit=f" {unit}", desc=f"  {label}",
-                          dynamic_ncols=True, file=sys.stderr)
+        self._bar = _tqdm(
+            total=total,
+            unit=f" {unit}",
+            desc=f"  {label}",
+            dynamic_ncols=True,
+            file=sys.stderr,
+        )
 
     def update(self, n: int = 1, extra: str = "") -> None:
         if extra:
