@@ -4,7 +4,7 @@ table _Measures
 	measure 'Total Revenue' =
 			
 			SUM ( FactSales[net_sales_eur] )
-		formatString: "€"\ #,0.000;-"€"\ #,0.000;"€"\ #,0.000
+		formatString: "€"\ #,0.00;-"€"\ #,0.00;"€"\ #,0.00
 		lineageTag: d176ad32-601a-44d2-b36d-14d205470341
 
 	measure 'Gross Revenue' =

@@ -5,40 +5,36 @@ on:
     branches:
       - main
 
-  
   push:
     branches:
       - main
-
 
 jobs:
   test:
     name: Validate project
     runs-on: ubuntu-latest
 
-
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v1
-      
+        uses: actions/checkout@v7
+
       - name: Set up Python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v7
         with:
           python-version: "3.11"
           cache: "pip"
-      
+          cache-dependency-path: requirements-dev.txt
 
       - name: Install test dependencies
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements-dev.txt
-      
 
       - name: Check Python syntax
         run: |
           python -m compileall -q data_generator
           python -m compileall -q scripts
-      
+
       - name: Validate YAML syntax
         run: |
           python - <<'PY'
@@ -48,18 +44,17 @@ jobs:
           files = [
               Path("databricks.yml"),
               *sorted(Path("resources").glob("*.yml")),
-              ]
-          
+          ]
+
           for path in files:
               with path.open("r", encoding="utf-8") as f:
                   yaml.safe_load(f)
-              
+
               print(f"PASS: {path}")
-          
-          print(f"\nValidate {len(files)} YAML files successfully.")
+
+          print(f"\nValidated {len(files)} YAML files successfully.")
           PY
-      
+
       - name: Run unit and contract tests
         run: |
           pytest tests/unit -q
-          

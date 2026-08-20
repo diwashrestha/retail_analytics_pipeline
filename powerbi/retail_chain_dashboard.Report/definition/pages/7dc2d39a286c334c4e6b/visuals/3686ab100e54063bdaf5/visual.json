@@ -85,5 +85,23 @@
       ]
     },
     "drillFilterOtherVisuals": true
+  },
+  "filterConfig": {
+    "filters": [
+      {
+        "name": "c834238495255de9ddce",
+        "field": {
+          "Measure": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "_Measures"
+              }
+            },
+            "Property": "Total Baskets"
+          }
+        },
+        "type": "Advanced"
+      }
+    ]
   }
 }
