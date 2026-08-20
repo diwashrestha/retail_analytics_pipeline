@@ -1,12 +1,12 @@
 {
-  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.11.0/schema.json",
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.12.0/schema.json",
   "name": "311a305d89131a92d225",
   "position": {
-    "x": 696,
-    "y": 464,
+    "x": 680,
+    "y": 456,
     "z": 10000,
     "height": 256,
-    "width": 568,
+    "width": 584,
     "tabOrder": 10000
   },
   "visual": {
@@ -120,6 +120,21 @@
           ]
         }
       }
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Items Sold & Returned'"
+                }
+              }
+            }
+          }
+        }
+      ]
     },
     "drillFilterOtherVisuals": true
   }

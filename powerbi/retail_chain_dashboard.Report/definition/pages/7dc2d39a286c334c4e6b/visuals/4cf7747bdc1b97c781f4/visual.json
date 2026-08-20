@@ -1,9 +1,9 @@
 {
-  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.11.0/schema.json",
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.12.0/schema.json",
   "name": "4cf7747bdc1b97c781f4",
   "position": {
-    "x": 800,
-    "y": 64,
+    "x": 799.99999999999989,
+    "y": 86.666666666666757,
     "z": 10000,
     "height": 112,
     "width": 224,
@@ -50,6 +50,24 @@
         ],
         "isDefaultSort": true
       }
+    },
+    "objects": {
+      "outline": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          },
+          "selector": {
+            "id": "default"
+          }
+        }
+      ]
     },
     "drillFilterOtherVisuals": true
   }

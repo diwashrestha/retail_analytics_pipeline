@@ -307,6 +307,35 @@ table _Measures
 		formatString: 0
 		lineageTag: c9386aab-5f22-4dac-9d4c-938d1e3e16ad
 
+	measure 'Revenue MoM %' =
+			
+			DIVIDE (
+			    [Total Revenue] - [Revenue Previous Month],
+			    [Revenue Previous Month]
+			)
+		lineageTag: 5b8f5489-0530-4ac5-b899-c528b6c0a656
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Revenue MoM Label' =
+			
+			VAR ChangeValue = [Revenue MoM %]
+			RETURN
+			    IF (
+			        ISBLANK ( ChangeValue ),
+			        BLANK (),
+			        IF (
+			            ChangeValue > 0,
+			            "▲ " & FORMAT ( ChangeValue, "0.0%" ) & " MoM",
+			            IF (
+			                ChangeValue < 0,
+			                "▼ " & FORMAT ( ABS ( ChangeValue ), "0.0%" ) & " MoM",
+			                "– 0.0% MoM"
+			            )
+			        )
+			    )
+		lineageTag: c264ae89-0f17-492d-9b60-069b30dc5832
+
 	partition _Measures = m
 		mode: import
 		source =

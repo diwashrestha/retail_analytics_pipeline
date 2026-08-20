@@ -1,12 +1,12 @@
 {
-  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.11.0/schema.json",
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.12.0/schema.json",
   "name": "52b770e7b883dab7c1b9",
   "position": {
     "x": 80,
-    "y": 184,
+    "y": 200,
     "z": 7000,
-    "height": 264,
-    "width": 568,
+    "height": 240,
+    "width": 584,
     "tabOrder": 7000
   },
   "visual": {
@@ -162,6 +162,21 @@
           ]
         }
       }
+    },
+    "objects": {
+      "categoryAxis": [
+        {
+          "properties": {
+            "titleText": {
+              "expr": {
+                "Literal": {
+                  "Value": "''"
+                }
+              }
+            }
+          }
+        }
+      ]
     },
     "visualContainerObjects": {
       "title": [

@@ -1,12 +1,12 @@
 {
-  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.11.0/schema.json",
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.12.0/schema.json",
   "name": "ff6ad5ed2bf2d480c7b8",
   "position": {
-    "x": 80,
-    "y": 184,
+    "x": 88,
+    "y": 200,
     "z": 7000,
-    "height": 264,
-    "width": 568,
+    "height": 256,
+    "width": 576,
     "tabOrder": 7000
   },
   "visual": {
@@ -168,6 +168,28 @@
         "isDefaultSort": true
       }
     },
+    "objects": {
+      "valueAxis": [
+        {
+          "properties": {
+            "titleText": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Store ID'"
+                }
+              }
+            },
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
     "visualContainerObjects": {
       "title": [
         {
@@ -195,7 +217,7 @@
             "transparency": {
               "expr": {
                 "Literal": {
-                  "Value": "91D"
+                  "Value": "0D"
                 }
               }
             },
@@ -204,7 +226,7 @@
                 "color": {
                   "expr": {
                     "ThemeDataColor": {
-                      "ColorId": 9,
+                      "ColorId": 0,
                       "Percent": 0
                     }
                   }
@@ -233,7 +255,7 @@
             "show": {
               "expr": {
                 "Literal": {
-                  "Value": "true"
+                  "Value": "false"
                 }
               }
             }

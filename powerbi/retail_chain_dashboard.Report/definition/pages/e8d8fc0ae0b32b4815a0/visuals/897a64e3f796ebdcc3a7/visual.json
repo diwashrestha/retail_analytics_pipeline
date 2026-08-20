@@ -1,9 +1,9 @@
 {
-  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.11.0/schema.json",
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.12.0/schema.json",
   "name": "897a64e3f796ebdcc3a7",
   "position": {
     "x": 320,
-    "y": 64,
+    "y": 80,
     "z": 12000,
     "height": 112,
     "width": 224,
@@ -51,6 +51,42 @@
         "isDefaultSort": true
       }
     },
+    "objects": {
+      "outline": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          },
+          "selector": {
+            "id": "default"
+          }
+        }
+      ]
+    },
     "drillFilterOtherVisuals": true
+  },
+  "filterConfig": {
+    "filters": [
+      {
+        "name": "7033aa9fd4b2aa85f055",
+        "field": {
+          "Measure": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "_Measures"
+              }
+            },
+            "Property": "Returned Units"
+          }
+        },
+        "type": "Advanced"
+      }
+    ]
   }
 }

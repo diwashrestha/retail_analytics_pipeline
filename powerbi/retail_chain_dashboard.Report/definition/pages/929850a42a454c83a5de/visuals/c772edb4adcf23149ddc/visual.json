@@ -1,11 +1,11 @@
 {
-  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.11.0/schema.json",
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.12.0/schema.json",
   "name": "c772edb4adcf23149ddc",
   "position": {
-    "x": 576,
-    "y": 16,
+    "x": 575.99999999999977,
+    "y": 12.666666666666664,
     "z": 17000,
-    "height": 80,
+    "height": 64,
     "width": 272,
     "tabOrder": 17000
   },
@@ -54,6 +54,19 @@
       "general": [
         {
           "properties": {}
+        }
+      ],
+      "header": [
+        {
+          "properties": {
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Customer Segment'"
+                }
+              }
+            }
+          }
         }
       ]
     },

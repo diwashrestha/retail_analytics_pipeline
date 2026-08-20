@@ -1,9 +1,9 @@
 {
-  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.11.0/schema.json",
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.12.0/schema.json",
   "name": "a3b6af63b5572a4e180f",
   "position": {
-    "x": 1088,
-    "y": 16,
+    "x": 1088.0000000000005,
+    "y": 12.666666666666664,
     "z": 18000,
     "height": 64,
     "width": 176,
@@ -42,6 +42,19 @@
               "expr": {
                 "Literal": {
                   "Value": "'Dropdown'"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "header": [
+        {
+          "properties": {
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "' IS Loyalty Member'"
                 }
               }
             }
