@@ -122,5 +122,23 @@
       ]
     },
     "drillFilterOtherVisuals": true
+  },
+  "filterConfig": {
+    "filters": [
+      {
+        "name": "219894f0033509e3d492",
+        "field": {
+          "Measure": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "_Measures"
+              }
+            },
+            "Property": "Total Refunds"
+          }
+        },
+        "type": "Advanced"
+      }
+    ]
   }
 }

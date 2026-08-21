@@ -143,7 +143,7 @@ resources:
 
           environment_key: default
           timeout_seconds: 1800
-          
+
         - task_key: create_reporting_views
 
           description: >
@@ -175,7 +175,6 @@ resources:
           environment_key: default
           timeout_seconds: 1800
 
-
         - task_key: validate_reporting
 
           description: >
@@ -203,6 +202,40 @@ resources:
 
               - "--revenue-tolerance-eur"
               - "${var.revenue_tolerance_eur}"
+
+          environment_key: default
+          timeout_seconds: 1800
+
+      environments:
+        - environment_key: default
+          spec:
+            environment_version: "2"
+
+    reset_retail_data:
+      name: "${bundle.target} - Einkaufpark Reset Raw Data"
+
+      description: >
+        Removes generator-managed retail landing data from the configured
+        Unity Catalog Volume before rebuilding a fresh demo baseline.
+
+      max_concurrent_runs: 1
+
+      tasks:
+        - task_key: reset_raw_data
+
+          description: >
+            Deletes only generator-owned landing directories including
+            dimensions, transactions, returns, manifests, and staging data.
+
+          spark_python_task:
+            python_file: ../data_generator/incremental.py
+
+            parameters:
+              - "--mode"
+              - "reset"
+
+              - "--output-dir"
+              - "/Volumes/${var.catalog}/${resources.schemas.retail_raw_schema.name}/${resources.volumes.retail_input_volume.name}"
 
           environment_key: default
           timeout_seconds: 1800

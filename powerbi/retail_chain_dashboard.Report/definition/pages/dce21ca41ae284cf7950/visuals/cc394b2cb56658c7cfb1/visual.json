@@ -3,7 +3,7 @@
   "name": "cc394b2cb56658c7cfb1",
   "position": {
     "x": 1088,
-    "y": 10.000000000000002,
+    "y": 8,
     "z": 18000,
     "height": 64,
     "width": 176,
@@ -55,5 +55,23 @@
       "filterChanges": true
     },
     "drillFilterOtherVisuals": true
+  },
+  "filterConfig": {
+    "filters": [
+      {
+        "name": "b69de0b034ecfad02d12",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "DimProduct"
+              }
+            },
+            "Property": "category"
+          }
+        },
+        "type": "Categorical"
+      }
+    ]
   }
 }

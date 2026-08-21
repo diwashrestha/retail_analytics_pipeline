@@ -85,5 +85,23 @@
       ]
     },
     "drillFilterOtherVisuals": true
+  },
+  "filterConfig": {
+    "filters": [
+      {
+        "name": "96e6031631691a8099e1",
+        "field": {
+          "Measure": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "_Measures"
+              }
+            },
+            "Property": "Unit Return Rate"
+          }
+        },
+        "type": "Advanced"
+      }
+    ]
   }
 }

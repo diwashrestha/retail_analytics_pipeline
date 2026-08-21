@@ -1,13 +1,13 @@
 {
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.12.0/schema.json",
-  "name": "2300f0bf9f2032937b43",
+  "name": "a81cb8bb7c923d8a3966",
   "position": {
-    "x": 80.000000000000014,
-    "y": 86.666666666666757,
-    "z": 7000,
+    "x": 80,
+    "y": 88,
+    "z": 18001,
     "height": 112,
     "width": 224,
-    "tabOrder": 7000
+    "tabOrder": 18001
   },
   "visual": {
     "visualType": "cardVisual",
@@ -28,7 +28,7 @@
               },
               "queryRef": "_Measures.Total Revenue",
               "nativeQueryRef": "Total Revenue",
-              "format": "G"
+              "format": "#,0.00 \"€\";-#,0.00 \"€\";#,0.00 \"€\""
             }
           ]
         }
@@ -65,13 +65,6 @@
                       "Percent": 0
                     }
                   }
-                }
-              }
-            },
-            "show": {
-              "expr": {
-                "Literal": {
-                  "Value": "false"
                 }
               }
             }
@@ -129,64 +122,106 @@
           }
         }
       ],
-      "shadowCustom": [
+      "referenceLabel": [
+        {
+          "properties": {},
+          "selector": {
+            "data": [
+              {
+                "dataViewWildcard": {
+                  "matchingOption": 0
+                }
+              }
+            ],
+            "metadata": "_Measures.Total Revenue",
+            "id": "field-6f4c6a7f-a49b-66b7-9ac9-015e1fb06074",
+            "order": 0
+          }
+        },
+        {
+          "properties": {},
+          "selector": {
+            "data": [
+              {
+                "dataViewWildcard": {
+                  "matchingOption": 0
+                }
+              }
+            ],
+            "metadata": "_Measures.Total Revenue",
+            "id": "field-3bcccf7e-6419-4489-8ace-83f2c208acc9",
+            "order": 0
+          }
+        },
+        {
+          "properties": {},
+          "selector": {
+            "data": [
+              {
+                "dataViewWildcard": {
+                  "matchingOption": 0
+                }
+              }
+            ],
+            "metadata": "_Measures.Total Revenue",
+            "id": "field-77711b5f-31e3-a67e-78e4-e8e8dfd43424",
+            "order": 0
+          }
+        },
+        {
+          "properties": {},
+          "selector": {
+            "data": [
+              {
+                "dataViewWildcard": {
+                  "matchingOption": 0
+                }
+              }
+            ],
+            "metadata": "_Measures.Total Revenue",
+            "id": "field-938849ae-7406-c052-c71a-3164c7ab08d1",
+            "order": 0
+          }
+        }
+      ],
+      "referenceLabelTitle": [
         {
           "properties": {
-            "show": {
+            "titleContentType": {
               "expr": {
                 "Literal": {
-                  "Value": "false"
+                  "Value": "'custom'"
+                }
+              }
+            },
+            "titleText": {
+              "expr": {
+                "Literal": {
+                  "Value": "''"
                 }
               }
             }
           },
           "selector": {
-            "id": "default"
+            "metadata": "_Measures.Total Revenue",
+            "id": "field-938849ae-7406-c052-c71a-3164c7ab08d1"
           }
         }
       ],
-      "glowCustom": [
+      "referenceLabelValue": [
         {
           "properties": {
-            "show": {
+            "showBlankAs": {
               "expr": {
                 "Literal": {
-                  "Value": "false"
+                  "Value": "''"
                 }
               }
             }
           },
           "selector": {
-            "id": "default"
-          }
-        }
-      ],
-      "divider": [
-        {
-          "properties": {
-            "show": {
-              "expr": {
-                "Literal": {
-                  "Value": "false"
-                }
-              }
-            }
-          },
-          "selector": {
-            "id": "default"
-          }
-        }
-      ],
-      "fillCustom": [
-        {
-          "properties": {
-            "show": {
-              "expr": {
-                "Literal": {
-                  "Value": "true"
-                }
-              }
-            }
+            "metadata": "_Measures.Total Revenue",
+            "id": "field-938849ae-7406-c052-c71a-3164c7ab08d1"
           }
         }
       ]
@@ -204,6 +239,32 @@
             }
           }
         }
+      ],
+      "dropShadow": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "border": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            }
+          }
+        }
       ]
     },
     "drillFilterOtherVisuals": true
@@ -211,7 +272,7 @@
   "filterConfig": {
     "filters": [
       {
-        "name": "fa45aa3b127867e737d1",
+        "name": "178307961818288636df",
         "field": {
           "Measure": {
             "Expression": {
@@ -223,41 +284,6 @@
           }
         },
         "type": "Advanced"
-      },
-      {
-        "name": "2d0a1e0fbac1a6cad34d",
-        "field": {
-          "Arithmetic": {
-            "Left": {
-              "Measure": {
-                "Expression": {
-                  "SourceRef": {
-                    "Entity": "_Measures"
-                  }
-                },
-                "Property": "Total Revenue"
-              }
-            },
-            "Right": {
-              "ScopedEval": {
-                "Expression": {
-                  "Measure": {
-                    "Expression": {
-                      "SourceRef": {
-                        "Entity": "_Measures"
-                      }
-                    },
-                    "Property": "Total Revenue"
-                  }
-                },
-                "Scope": []
-              }
-            },
-            "Operator": 3
-          }
-        },
-        "type": "Advanced",
-        "howCreated": "User"
       }
     ]
   }

@@ -2,8 +2,8 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.12.0/schema.json",
   "name": "a3b6af63b5572a4e180f",
   "position": {
-    "x": 1088.0000000000005,
-    "y": 12.666666666666664,
+    "x": 1088,
+    "y": 8,
     "z": 18000,
     "height": 64,
     "width": 176,
@@ -63,5 +63,23 @@
       ]
     },
     "drillFilterOtherVisuals": true
+  },
+  "filterConfig": {
+    "filters": [
+      {
+        "name": "ed395e63ccb390738c8b",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "CustomerLTV"
+              }
+            },
+            "Property": "is_loyalty_member"
+          }
+        },
+        "type": "Categorical"
+      }
+    ]
   }
 }

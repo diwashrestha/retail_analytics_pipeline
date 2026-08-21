@@ -71,5 +71,23 @@
       ]
     },
     "drillFilterOtherVisuals": true
+  },
+  "filterConfig": {
+    "filters": [
+      {
+        "name": "26265c9fddc1e572661d",
+        "field": {
+          "Measure": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "_Measures"
+              }
+            },
+            "Property": "Average Basket Value"
+          }
+        },
+        "type": "Advanced"
+      }
+    ]
   }
 }

@@ -56,24 +56,24 @@
       "data": [
         {
           "properties": {
-            "mode": {
-              "expr": {
-                "Literal": {
-                  "Value": "'Between'"
-                }
-              }
-            },
             "startDate": {
               "expr": {
                 "Literal": {
-                  "Value": "datetime'2023-02-01T00:00:00'"
+                  "Value": "datetime'2023-01-02T00:00:00'"
                 }
               }
             },
             "endDate": {
               "expr": {
                 "Literal": {
-                  "Value": "datetime'2023-02-28T00:00:00'"
+                  "Value": "datetime'2026-03-31T00:00:00'"
+                }
+              }
+            },
+            "mode": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Between'"
                 }
               }
             }
@@ -112,7 +112,7 @@
                             },
                             "Right": {
                               "Literal": {
-                                "Value": "datetime'2023-02-01T00:00:00'"
+                                "Value": "datetime'2023-01-02T00:00:00'"
                               }
                             }
                           }
@@ -132,7 +132,7 @@
                             },
                             "Right": {
                               "Literal": {
-                                "Value": "datetime'2023-03-01T00:00:00'"
+                                "Value": "datetime'2026-04-01T00:00:00'"
                               }
                             }
                           }
@@ -153,5 +153,23 @@
       "filterChanges": true
     },
     "drillFilterOtherVisuals": true
+  },
+  "filterConfig": {
+    "filters": [
+      {
+        "name": "193b8190db2dab67b482",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "DimDate"
+              }
+            },
+            "Property": "calendar_date"
+          }
+        },
+        "type": "Categorical"
+      }
+    ]
   }
 }

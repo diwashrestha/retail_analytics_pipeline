@@ -2,7 +2,7 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.12.0/schema.json",
   "name": "2cec3e4f6ef57f7847a5",
   "position": {
-    "x": 888,
+    "x": 880,
     "y": 8,
     "z": 19000,
     "height": 64,
@@ -68,5 +68,23 @@
       ]
     },
     "drillFilterOtherVisuals": true
+  },
+  "filterConfig": {
+    "filters": [
+      {
+        "name": "8ba643799ec91e8c4812",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "DimStore"
+              }
+            },
+            "Property": "store_id"
+          }
+        },
+        "type": "Categorical"
+      }
+    ]
   }
 }
