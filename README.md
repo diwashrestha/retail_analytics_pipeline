@@ -1,45 +1,48 @@
 # Einkaufpark Retail Analytics Platform
 
-Einkaufpark is a data engineering project built around a fictional multi-store retailer. It starts with synthetic retail data — transactions, customers, stores, products, promotions, price changes, and returns — and carries that data all the way through Databricks to a Power BI reporting layer.
+Einkaufpark is a data engineering project for a fictional multi-store retailer called **EinkaufPark**. A Python data generator creates transactions, customers, stores, products, price changes, promotions, and returns. Those files land in a Unity Catalog Volume and move through a Databricks Medallion Architecture.
 
-The pipeline follows a **Bronze → Silver → Gold** architecture. Raw events are ingested first, then cleaned and validated, and finally shaped into datasets that are useful for analysis.
+The data follows a **Bronze → Silver → Gold** flow. Each layer has a different job: Bronze keeps and classifies incoming data, Silver builds trusted business entities, and Gold prepares reusable datasets for analysis.
 
-I built the project around a simple reality: retail data is rarely as clean as the CSV files used in tutorials. Records can arrive late or more than once. Some customers are anonymous. Product prices change. Returns happen after the original purchase. And a row can be technically valid while still being wrong from a business point of view.
+The project deliberately works with imperfect retail data. Records can arrive late or appear more than once. Some customers are anonymous. Product prices change over time, and returns may arrive days after the original purchase. A record can also be technically readable while still breaking a business rule.
 
-Einkaufpark is my way of working through those problems end to end, before the data reaches a dashboard.
+The pipeline is built to catch those cases before the data reaches reporting.
+
+---
 
 ## Architecture
 
-<!-- Add pipeline architecture image here -->
-
 ![Einkaufpark Retail Analytics Platform Architecture](pipeline_image.png)
+
+---
 
 ## Technology
 
-| Area | Technology | What it does here |
+| Area | Technology | Why it is used |
 |---|---|---|
-| Programming | Python | Generates data and runs validation and orchestration helpers |
-| Transformation | PySpark / Spark SQL | Cleans, validates, and models the retail data |
-| Storage | Delta Lake | Stores managed analytical tables |
-| Data platform | Databricks | Runs compute, jobs, SQL, pipelines, and governance |
-| Pipelines | Lakeflow Declarative Pipelines | Executes the Bronze → Silver → Gold flow |
-| Governance | Unity Catalog | Manages schemas and the input Volume |
-| Deployment | Databricks Asset Bundles | Keeps platform resources and environments in source control |
-| Analytics | Power BI | Provides the semantic model and dashboards |
-| Testing | pytest | Checks generator, bundle, Silver, and Gold contracts |
-| CI | GitHub Actions | Runs syntax, configuration, and unit checks |
-| Version control | Git / GitHub | Tracks code, platform configuration, and PBIP source |
+| Programming | Python | Data generation, validation, and orchestration helpers |
+| Transformation | PySpark / Spark SQL | Distributed transformations and analytical logic |
+| Storage | Delta Lake | Managed analytical tables |
+| Data platform | Databricks | Compute, jobs, SQL, pipelines, and governance |
+| Pipelines | Lakeflow Declarative Pipelines | Bronze → Silver → Gold execution |
+| Governance | Unity Catalog | Schemas and managed input Volume |
+| Deployment | Databricks Asset Bundles | Source-controlled resources and environments |
+| Analytics | Power BI | Semantic model and dashboard |
+| Testing | pytest | Generator, bundle, Silver, and Gold contracts |
+| CI | GitHub Actions | Syntax, configuration, and unit checks |
+| Version control | Git / GitHub | Code, platform configuration, and PBIP source |
+
+---
 
 ## What the project covers
 
-The project currently handles:
+The current implementation includes:
 
 - deterministic synthetic retail data generation
 - customers, stores, products, transactions, and returns
 - promotions and product price changes
 - anonymous walk-in customers
-- duplicate records
-- late-arriving records
+- duplicate and late-arriving records
 - Bronze ingestion and quarantine
 - trusted Silver facts and dimensions
 - SCD Type 2 product price history
@@ -55,13 +58,13 @@ The project currently handles:
 - GitHub Actions CI
 - Databricks Asset Bundle deployment
 
-The generator intentionally creates some of the messiness the pipeline is expected to handle: duplicates, late arrivals, promotions, walk-in purchases, returns, and changing product prices. That makes it possible to test the pipeline against realistic failure cases instead of only perfect input.
+The generator intentionally creates cases such as duplicates, late arrivals, promotions, walk-in customers, returns, and product price changes. That gives the pipeline something realistic to deal with instead of testing only against already-clean input.
 
-# How the data moves through the platform
+# How data moves through the platform
 
 ## 1. Synthetic source data
 
-Everything starts with the Python data generator.
+The pipeline starts with a Python retail data generator.
 
 The main files are:
 
@@ -74,9 +77,9 @@ data_generator/
 └── progress.py
 ```
 
-Together they generate stores, terminals, customers, products, transactions, baskets, returns, promotions, and product price history.
+It generates stores, terminals, customers, products, transactions, baskets, returns, promotions, and product price history.
 
-The supporting reference data lives in:
+Reference data lives in:
 
 ```text
 master/
@@ -85,11 +88,11 @@ master/
 └── terminal_master.json
 ```
 
-The generator also creates late arrivals, duplicate rows, walk-in customers, returns, promotions, and price changes on purpose. A fixed random seed keeps the generated dataset reproducible, which is especially useful when debugging or comparing pipeline runs.
+A fixed random seed makes a run reproducible. The generator also introduces the imperfect cases that the rest of the pipeline is expected to handle.
 
 ### Default demo configuration
 
-The current bundle defaults are:
+The bundle currently uses these defaults:
 
 | Parameter | Default |
 |---|---:|
@@ -104,9 +107,9 @@ The current bundle defaults are:
 | Return rate | 4% |
 | Duplicate rate | 0.1% |
 
-These values are defaults rather than fixed limits. You can override them when you start the job.
+These values are defaults rather than fixed limits.
 
-For example, to run a custom demo:
+For example, a 500,000-row demo can be started with:
 
 ```bash
 databricks bundle run retail_medallion_job \
@@ -120,7 +123,7 @@ databricks bundle run retail_medallion_job \
 
 Generated files are written to a managed Unity Catalog Volume.
 
-For the development target, the default location is built from:
+For the development target, the defaults are:
 
 ```text
 catalog: workspace
@@ -128,7 +131,7 @@ schema:  retail_dev_raw
 volume:  retail_input
 ```
 
-The generator owns these folders inside the landing area:
+The generator manages these folders:
 
 ```text
 dimensions/
@@ -138,15 +141,15 @@ _manifests/
 _staging/
 ```
 
-A batch is staged before it is published. Once publishing succeeds, its manifest becomes the record of what was committed. That gives each generated batch a traceable identity and makes exact reruns safe.
+Files are staged before they are published. Each published batch gets a manifest, which acts as its commit record. That makes batches traceable and allows an exact rerun to behave safely.
 
 ---
 
 ## 3. Bronze
 
-Bronze is where source data first enters the medallion pipeline.
+Bronze is the ingestion boundary.
 
-The point of this layer is not to make the data analytically perfect. It is to preserve what arrived, give it usable types, and separate records that are too malformed to move forward safely.
+It keeps the source data close to what arrived, applies the expected types, and separates records that should not move forward.
 
 ```text
 Incoming record
@@ -156,7 +159,7 @@ Incoming record
       └── invalid / malformed ─────► Quarantine
 ```
 
-Bad records are therefore visible and inspectable instead of simply disappearing.
+Bad records therefore have an explicit place to go instead of disappearing silently.
 
 The Bronze implementation starts in `pipelines/00_bronze.sql`.
 
@@ -170,9 +173,9 @@ More detail is available in [`docs/bronze-layer.md`](docs/bronze-layer.md).
 
 ## 4. Silver
 
-Silver is where readable source records become trusted business data.
+Silver turns readable source records into trusted business entities.
 
-The relevant pipeline files are:
+The relevant files are:
 
 ```text
 pipelines/
@@ -182,9 +185,9 @@ pipelines/
 └── 13_silver_quality.sql
 ```
 
-This layer deals with duplicate logic, referential integrity, pricing consistency, revenue checks, return-to-purchase relationships, return-window validation, trusted fact construction, and Silver quality gates.
+This is where the pipeline handles duplicate logic, referential integrity, pricing consistency, revenue checks, return-to-purchase relationships, return-window validation, trusted facts, and Silver quality gates.
 
-Product prices are modeled with SCD Type 2 history. That lets a transaction be checked against the price that was actually valid when the purchase happened, rather than whatever the current product price happens to be.
+Product price history uses SCD Type 2, so a transaction can be checked against the product price that was valid when the sale happened.
 
 More detail is available in [`docs/silver-layer.md`](docs/silver-layer.md).
 
@@ -192,9 +195,7 @@ More detail is available in [`docs/silver-layer.md`](docs/silver-layer.md).
 
 ## 5. Gold
 
-Gold turns trusted Silver data into reusable analytical models.
-
-The current Gold pipeline is split across:
+Gold contains analytical models built from trusted Silver data.
 
 ```text
 pipelines/
@@ -205,19 +206,17 @@ pipelines/
 └── 24_gold_quality.sql
 ```
 
-These models cover basket behavior, daily sales, store performance, product performance, customer lifetime value, returns analysis, hourly traffic, and data-quality reconciliation.
+The models cover basket behaviour, daily sales, store performance, product performance, customer lifetime value, returns analysis, hourly traffic, and data-quality reconciliation.
 
-I keep this business logic in the data platform rather than rebuilding the same calculations independently in Power BI visuals. That way, the analytical definitions have one place to live and can be reused downstream.
+Reusable business logic stays here instead of being recreated separately in Power BI visuals.
 
 ---
 
 ## 6. Validation and reconciliation
 
-A successful Spark run tells me the computation finished. It does not, by itself, tell me the resulting numbers are right.
+A Spark job finishing successfully does not tell us whether the resulting numbers are correct.
 
-That is why validation is part of the pipeline rather than something checked manually at the end.
-
-The main validation scripts are:
+The project checks the outputs with:
 
 ```text
 scripts/
@@ -225,31 +224,15 @@ scripts/
 └── validate_reporting.py
 ```
 
-Silver and Gold contain explicit quality checks, while Gold also reconciles analytical outputs back to trusted source data.
+Silver and Gold contain explicit quality checks. Gold also reconciles analytical outputs with trusted source data.
 
-In other words:
-
-```text
-"the job succeeded"
-```
-
-and
-
-```text
-"the numbers reconcile"
-```
-
-are two different questions.
-
-The project checks both.
+In other words, the project checks both whether the job ran and whether the numbers still agree.
 
 ---
 
 ## 7. Reporting layer
 
-Power BI does not need to know how every internal Silver or Gold table is implemented.
-
-Instead, a reporting layer sits between the analytical models and the semantic model:
+Power BI connects through a reporting layer rather than depending directly on every internal Silver and Gold table.
 
 ```text
 Silver / Gold
@@ -261,7 +244,7 @@ Reporting Views
 Power BI
 ```
 
-The views are defined in `sql/reporting_views.sql` and currently include:
+The views are defined in `sql/reporting_views.sql`:
 
 ```text
 v_fact_sales
@@ -282,15 +265,15 @@ v_hourly_traffic
 v_data_quality_summary
 ```
 
-This gives Power BI a stable contract while leaving the underlying Silver and Gold implementation free to evolve.
+That reporting contract gives the BI model a stable interface while the internal transformation layers can continue to evolve.
 
-The views are created by `scripts/create_reporting_views.py` and checked by `scripts/validate_reporting.py`.
+`scripts/create_reporting_views.py` creates the views, and `scripts/validate_reporting.py` checks them afterwards.
 
 ---
 
 ## 8. Power BI
 
-The BI project is kept in Power BI Project (`.pbip`) format:
+The Power BI project is stored as PBIP:
 
 ```text
 powerbi/
@@ -301,26 +284,22 @@ powerbi/
 └── Theme.json
 ```
 
-Using PBIP means the report definition and semantic model can live in Git with the rest of the project instead of being hidden inside a single binary `.pbix` file.
-
-### Dashboard previews
+Using `.pbip` keeps the report definition and semantic model in source control instead of relying only on a binary `.pbix` file.
 
 ![Power BI Executive Dashboard](docs/images/powerbi-dashboard-executive.png)
-
 ![Power BI Return Dashboard](docs/images/powerbi-dashboard-return.png)
-
 ![Power BI Store Dashboard](docs/images/powerbi-dashboard-store.png)
 
 To open the report:
 
 1. Install Power BI Desktop.
 2. Open `powerbi/retail_chain_dashboard.pbip`.
-3. Make sure your Databricks data-source credentials are valid.
-4. After the Databricks pipeline finishes, use **Home → Refresh** to load the latest reporting data.
+3. Make sure the Databricks data-source credentials are valid.
+4. Use **Home → Refresh** after the Databricks pipeline has completed.
 
 # Databricks architecture
 
-The bundle separates the platform into five logical schemas:
+The bundle creates five logical schemas:
 
 ```text
 Raw
@@ -334,7 +313,7 @@ Gold
 Reporting
 ```
 
-For development, those schemas are:
+The development target uses:
 
 ```text
 workspace.retail_dev_raw
@@ -354,15 +333,15 @@ workspace.retail_gold
 workspace.retail_reporting
 ```
 
-Both targets use the same pipeline code. The environment-specific names live in `databricks.yml`, so there is no second copy of the transformation logic to keep in sync.
+Both targets use the same pipeline code. Environment-specific names live in `databricks.yml`, so there is no separate copy of the transformations for each environment.
 
 ---
 
 # Orchestration
 
-The main Databricks workflow is `retail_medallion_job`.
+The main Databricks job is `retail_medallion_job`.
 
-It runs the platform in this order:
+Its tasks run in this order:
 
 ```text
 generate_retail_data
@@ -380,17 +359,15 @@ create_reporting_views
 validate_reporting
 ```
 
-Each task depends on the one before it. If an upstream step fails, the later steps do not continue against a bad state.
+Each downstream task waits for its dependency to succeed.
 
-The job itself is defined in `resources/retail_job.yml`. The Lakeflow pipeline lives in `resources/medallion_pipeline.yml`, while the Unity Catalog schemas and managed input Volume are defined in `resources/unity_catalog.yml`.
+The job is defined in `resources/retail_job.yml`. The Lakeflow pipeline lives in `resources/medallion_pipeline.yml`, and the Unity Catalog schemas and managed input Volume are defined in `resources/unity_catalog.yml`.
 
 ![Databricks job run](docs/images/databricks-job-run.png)
 
 ---
 
 # Repository structure
-
-The main working parts of the repository are:
 
 ```text
 retail_analytics_pipeline/
@@ -472,7 +449,7 @@ You will need:
 - Unity Catalog support in that workspace
 - Power BI Desktop if you want to open the dashboard
 
-Local development only needs two Python packages:
+The local development dependencies are small:
 
 ```text
 pytest
@@ -506,30 +483,30 @@ python -m venv .venv
 .venv\Scripts\Activate.ps1
 ```
 
-Then install the development dependencies:
+Install the dependencies:
 
 ```bash
 python -m pip install --upgrade pip
 pip install -r requirements-dev.txt
 ```
 
-## 3. Authenticate with Databricks
+## 3. Authenticate Databricks
 
-The project does not use a `.env` file for Databricks credentials. Authentication is handled by the Databricks CLI.
+The project does not use a `.env` file. Databricks authentication goes through the Databricks CLI.
 
-Configure a profile for your workspace, then check that it works:
+Configure a profile for your workspace and check that it works:
 
 ```bash
 databricks current-user me --profile <your-profile>
 ```
 
-`scripts/deploy_dev.sh` uses `einkaufpark-free` as its default profile name. If your profile has a different name, set:
+`scripts/deploy_dev.sh` uses `einkaufpark-free` as its default profile. To use another profile:
 
 ```bash
 export DATABRICKS_PROFILE=<your-profile>
 ```
 
-Keep credentials out of the repository.
+Do not commit credentials to the repository.
 
 ## 4. Run the local tests
 
@@ -537,7 +514,7 @@ Keep credentials out of the repository.
 python -m pytest tests/unit -q
 ```
 
-The current unit suite checks the bundle configuration, generator behavior, Silver contracts, and Gold contracts.
+The current unit suite covers bundle configuration, generator behaviour, Silver contracts, and Gold contracts.
 
 There are additional test assets under `tests/`, including SQL tests and `test_pipeline_contracts.py`. The current GitHub Actions workflow runs `tests/unit`.
 
@@ -548,8 +525,6 @@ databricks bundle validate \
   --target dev \
   --profile <your-profile>
 ```
-
-This is a quick way to catch bundle configuration problems before deploying anything.
 
 ## 6. Deploy the development environment
 
@@ -568,9 +543,9 @@ databricks bundle run \
   --profile <your-profile>
 ```
 
-Without extra parameters, the job uses the defaults defined in `databricks.yml`.
+Without extra parameters, the job uses the defaults from `databricks.yml`.
 
-A normal run goes through:
+A full run follows this sequence:
 
 ```text
 generate the demo data
@@ -584,11 +559,9 @@ create reporting views
 validate the reporting layer
 ```
 
----
-
 # Controlling generated data
 
-The Databricks job exposes these runtime parameters:
+The job accepts these runtime parameters:
 
 ```text
 mode
@@ -612,7 +585,7 @@ databricks bundle run retail_medallion_job \
   --params mode=demo,records=500000,customers=25000,start_date=2023-01-01,end_date=2026-03-31,seed=42
 ```
 
-The behavior parameters are expressed as rates:
+The behaviour parameters use decimal rates:
 
 ```text
 walkin_rate=0.10
@@ -621,34 +594,34 @@ return_rate=0.04
 duplicate_rate=0.001
 ```
 
-That corresponds to roughly:
+Those values correspond approximately to:
 
 ```text
-10% walk-in behavior
-5% late-arrival behavior
-4% return behavior
+10% walk-in behaviour
+5% late-arrival behaviour
+4% return behaviour
 0.1% duplicate injection
 ```
 
-These knobs are there to make the input imperfect on purpose, so the pipeline can be tested against the situations it was built to handle.
+They exist so the pipeline can be tested against imperfect input rather than only clean examples.
 
 ---
 
 # Demo, incremental, and reset modes
 
-The generator supports three operating modes.
+The generator has three modes.
 
 ## `demo`
 
 `demo` creates the initial deterministic baseline.
 
-If published landing data already exists, the generator refuses to overwrite it. Replacing the baseline is meant to be an explicit action, not an accidental side effect of rerunning a command.
+It refuses to overwrite an existing published landing dataset. Rebuilding the baseline must be an explicit action.
 
 ## `incremental`
 
-`incremental` adds a new, non-overlapping business-date range to an existing baseline.
+`incremental` appends a new, non-overlapping business-date range to an existing baseline.
 
-For example:
+Example:
 
 ```bash
 databricks bundle run retail_medallion_job \
@@ -656,13 +629,15 @@ databricks bundle run retail_medallion_job \
   --params mode=incremental,records=5000,start_date=2026-04-01,end_date=2026-04-03
 ```
 
-The generator reuses the existing dimensions and product price history. Published manifests keep track of completed batches, prevent overlapping date ranges, and make an exact rerun safe.
+The run reuses the existing dimensions and product price history.
+
+Published manifests track the batches, reject overlapping date ranges, and make an exact rerun safe.
 
 ## `reset`
 
-The Python generator also has a reset mode. It removes only the landing directories owned by the generator.
+The Python generator can remove only the landing directories it owns.
 
-For a local landing area:
+For a local landing zone:
 
 ```bash
 python data_generator/incremental.py \
@@ -670,17 +645,15 @@ python data_generator/incremental.py \
   --output-dir data/raw
 ```
 
-One detail is worth calling out: `retail_medallion_job` is an end-to-end workflow, not a reset-only job. Once its generator task succeeds, it continues into Bronze, Silver, Gold, and validation.
+Use reset carefully in Databricks. The current `retail_medallion_job` is an end-to-end workflow, so a successful generator task continues into Bronze, Silver, Gold, and validation. It is not a reset-only job.
 
-For that reason, any dedicated Databricks reset workflow should stay separate from the normal processing job.
+If a dedicated Databricks reset workflow is added later, it should stay separate from the normal processing job.
 
 ---
 
 # Running the generator locally
 
-You can work on the generator without running the full Databricks platform.
-
-For example:
+You can run the generator without Databricks when working on generation logic or generator tests.
 
 ```bash
 python data_generator/incremental.py \
@@ -695,6 +668,4 @@ python data_generator/incremental.py \
   --master-dir master
 ```
 
-This is useful when changing generation logic or running generator-focused tests.
-
-The full **Bronze → Silver → Gold → Reporting** workflow still runs in Databricks.
+The full Bronze → Silver → Gold → Reporting workflow still requires Databricks.
