@@ -423,5 +423,3 @@ table CustomerLTV
 				in
 				    v_customer_ltv_View
 
-	changedProperty = Name
-

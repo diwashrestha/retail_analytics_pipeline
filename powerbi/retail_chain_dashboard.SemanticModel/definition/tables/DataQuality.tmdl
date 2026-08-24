@@ -86,5 +86,3 @@ table DataQuality
 				in
 				    v_data_quality_summary_View
 
-	changedProperty = Name
-

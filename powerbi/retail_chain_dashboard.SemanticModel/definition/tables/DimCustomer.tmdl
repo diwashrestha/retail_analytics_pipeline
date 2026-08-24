@@ -78,5 +78,3 @@ table DimCustomer
 				in
 				    v_dim_customer_View
 
-	changedProperty = Name
-

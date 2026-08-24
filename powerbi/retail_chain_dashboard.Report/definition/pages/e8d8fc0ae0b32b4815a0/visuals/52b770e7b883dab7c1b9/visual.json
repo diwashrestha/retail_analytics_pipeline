@@ -194,5 +194,141 @@
       ]
     },
     "drillFilterOtherVisuals": true
+  },
+  "filterConfig": {
+    "filters": [
+      {
+        "name": "01f23325c37f12f5c2a9",
+        "field": {
+          "HierarchyLevel": {
+            "Expression": {
+              "Hierarchy": {
+                "Expression": {
+                  "SourceRef": {
+                    "Entity": "DimDate"
+                  }
+                },
+                "Hierarchy": "Date Hierarchy"
+              }
+            },
+            "Level": "year"
+          }
+        },
+        "type": "Advanced"
+      },
+      {
+        "name": "669763a6ac49452fb4f8",
+        "field": {
+          "HierarchyLevel": {
+            "Expression": {
+              "Hierarchy": {
+                "Expression": {
+                  "SourceRef": {
+                    "Entity": "DimDate"
+                  }
+                },
+                "Hierarchy": "Date Hierarchy"
+              }
+            },
+            "Level": "quarter"
+          }
+        },
+        "type": "Categorical"
+      },
+      {
+        "name": "8cc232b46993e5fb3a66",
+        "field": {
+          "HierarchyLevel": {
+            "Expression": {
+              "Hierarchy": {
+                "Expression": {
+                  "SourceRef": {
+                    "Entity": "DimDate"
+                  }
+                },
+                "Hierarchy": "Date Hierarchy"
+              }
+            },
+            "Level": "month_name"
+          }
+        },
+        "type": "Categorical"
+      },
+      {
+        "name": "538a72fcb45322aa683e",
+        "field": {
+          "HierarchyLevel": {
+            "Expression": {
+              "Hierarchy": {
+                "Expression": {
+                  "SourceRef": {
+                    "Entity": "DimDate"
+                  }
+                },
+                "Hierarchy": "Date Hierarchy"
+              }
+            },
+            "Level": "calendar_date"
+          }
+        },
+        "type": "Categorical"
+      },
+      {
+        "name": "bbbbabdde1b37fd134ae",
+        "field": {
+          "Measure": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "_Measures"
+              }
+            },
+            "Property": "Total Refunds"
+          }
+        },
+        "type": "Advanced"
+      },
+      {
+        "name": "26f1151353bb6c45719e",
+        "field": {
+          "Measure": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "_Measures"
+              }
+            },
+            "Property": "Total Return Events"
+          }
+        },
+        "type": "Advanced"
+      },
+      {
+        "name": "b9b38b0aec79ba22faa4",
+        "field": {
+          "Measure": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "_Measures"
+              }
+            },
+            "Property": "Unit Return Rate"
+          }
+        },
+        "type": "Advanced"
+      },
+      {
+        "name": "40cbbb6e12382aacff61",
+        "field": {
+          "Measure": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "_Measures"
+              }
+            },
+            "Property": "Returned Units"
+          }
+        },
+        "type": "Advanced"
+      }
+    ]
   }
 }

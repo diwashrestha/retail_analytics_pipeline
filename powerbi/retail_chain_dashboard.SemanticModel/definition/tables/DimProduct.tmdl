@@ -133,5 +133,3 @@ table DimProduct
 				in
 				    v_dim_product_View
 
-	changedProperty = Name
-

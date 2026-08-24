@@ -10,3 +10,6 @@ dist/
 build/
 .databricks/
 migration/existing-pipeline.json
+# Power BI local/cache files
+**/.pbi/cache.abf
+**/.pbi/localSettings.json
