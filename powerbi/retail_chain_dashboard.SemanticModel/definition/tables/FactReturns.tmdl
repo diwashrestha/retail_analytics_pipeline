@@ -202,5 +202,3 @@ table FactReturns
 				in
 				    v_fact_returns_View
 
-	changedProperty = Name
-

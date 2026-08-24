@@ -165,5 +165,3 @@ table DimDate
 				in
 				    v_dim_date_View
 
-	changedProperty = Name
-

@@ -122,5 +122,3 @@ table DimStore
 				in
 				    v_dim_store_View
 
-	changedProperty = Name
-
