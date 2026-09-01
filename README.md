@@ -10,6 +10,244 @@ The pipeline is built to catch those cases before the data reaches reporting.
 
 ---
 
+
+# Getting started
+
+## Prerequisites
+
+You will need:
+
+- Git
+- Python 3.11+
+- Databricks CLI with Asset Bundle support
+- access to a Databricks workspace
+- Unity Catalog support in that workspace
+- Power BI Desktop if you want to open the dashboard
+
+The local development dependencies are small:
+
+```text
+pytest
+pyyaml
+```
+
+They are listed in `requirements-dev.txt`.
+
+---
+
+## 1. Clone the repository
+
+```bash
+git clone https://github.com/diwashrestha/retail_analytics_pipeline.git
+cd retail_analytics_pipeline
+```
+
+## 2. Create a Python environment
+
+On Linux or macOS:
+
+```bash
+python -m venv .venv
+source .venv/bin/activate
+```
+
+On Windows PowerShell:
+
+```powershell
+python -m venv .venv
+.venv\Scripts\Activate.ps1
+```
+
+Install the dependencies:
+
+```bash
+python -m pip install --upgrade pip
+pip install -r requirements-dev.txt
+```
+
+## 3. Authenticate Databricks
+
+The project does not use a `.env` file. Databricks authentication goes through the Databricks CLI.
+
+Configure a profile for your workspace and check that it works:
+
+```bash
+databricks current-user me --profile <your-profile>
+```
+
+`scripts/deploy_dev.sh` uses `einkaufpark-free` as its default profile. To use another profile:
+
+```bash
+export DATABRICKS_PROFILE=<your-profile>
+```
+
+Do not commit credentials to the repository.
+
+## 4. Run the local tests
+
+```bash
+python -m pytest tests/unit -q
+```
+
+The current unit suite covers bundle configuration, generator behaviour, Silver contracts, and Gold contracts.
+
+There are additional test assets under `tests/`, including SQL tests and `test_pipeline_contracts.py`. The current GitHub Actions workflow runs `tests/unit`.
+
+## 5. Validate the Databricks bundle
+
+```bash
+databricks bundle validate \
+  --target dev \
+  --profile <your-profile>
+```
+
+## 6. Deploy the development environment
+
+```bash
+databricks bundle deploy \
+  --target dev \
+  --profile <your-profile>
+```
+
+## 7. Run the complete platform
+
+```bash
+databricks bundle run \
+  retail_medallion_job \
+  --target dev \
+  --profile <your-profile>
+```
+
+Without extra parameters, the job uses the defaults from `databricks.yml`.
+
+A full run follows this sequence:
+
+```text
+generate the demo data
+        ↓
+refresh Bronze / Silver / Gold
+        ↓
+validate the medallion model
+        ↓
+create reporting views
+        ↓
+validate the reporting layer
+```
+
+# Controlling generated data
+
+The job accepts these runtime parameters:
+
+```text
+mode
+records
+customers
+seed
+start_date
+end_date
+price_history_end_date
+walkin_rate
+late_rate
+return_rate
+duplicate_rate
+```
+
+For example:
+
+```bash
+databricks bundle run retail_medallion_job \
+  --target dev \
+  --params mode=demo,records=500000,customers=25000,start_date=2023-01-01,end_date=2026-03-31,seed=42
+```
+
+The behaviour parameters use decimal rates:
+
+```text
+walkin_rate=0.10
+late_rate=0.05
+return_rate=0.04
+duplicate_rate=0.001
+```
+
+Those values correspond approximately to:
+
+```text
+10% walk-in behaviour
+5% late-arrival behaviour
+4% return behaviour
+0.1% duplicate injection
+```
+
+They exist so the pipeline can be tested against imperfect input rather than only clean examples.
+
+---
+
+# Demo, incremental, and reset modes
+
+The generator has three modes.
+
+## `demo`
+
+`demo` creates the initial deterministic baseline.
+
+It refuses to overwrite an existing published landing dataset. Rebuilding the baseline must be an explicit action.
+
+## `incremental`
+
+`incremental` appends a new, non-overlapping business-date range to an existing baseline.
+
+Example:
+
+```bash
+databricks bundle run retail_medallion_job \
+  --target dev \
+  --params mode=incremental,records=5000,start_date=2026-04-01,end_date=2026-04-03
+```
+
+The run reuses the existing dimensions and product price history.
+
+Published manifests track the batches, reject overlapping date ranges, and make an exact rerun safe.
+
+## `reset`
+
+The Python generator can remove only the landing directories it owns.
+
+For a local landing zone:
+
+```bash
+python data_generator/incremental.py \
+  --mode reset \
+  --output-dir data/raw
+```
+
+Use reset carefully in Databricks. The current `retail_medallion_job` is an end-to-end workflow, so a successful generator task continues into Bronze, Silver, Gold, and validation. It is not a reset-only job.
+
+If a dedicated Databricks reset workflow is added later, it should stay separate from the normal processing job.
+
+---
+
+# Running the generator locally
+
+You can run the generator without Databricks when working on generation logic or generator tests.
+
+```bash
+python data_generator/incremental.py \
+  --mode demo \
+  --records 100000 \
+  --customers 10000 \
+  --seed 42 \
+  --start-date 2023-01-01 \
+  --end-date 2026-03-31 \
+  --price-history-end-date 2026-12-31 \
+  --output-dir data/raw \
+  --master-dir master
+```
+
+The full Bronze → Silver → Gold → Reporting workflow still requires Databricks.
+
+--- 
+
+
 ## Architecture
 
 ![Einkaufpark Retail Analytics Platform Architecture](pipeline_image.png)
@@ -436,236 +674,3 @@ retail_analytics_pipeline/
 └── README.md
 ```
 
-# Getting started
-
-## Prerequisites
-
-You will need:
-
-- Git
-- Python 3.11+
-- Databricks CLI with Asset Bundle support
-- access to a Databricks workspace
-- Unity Catalog support in that workspace
-- Power BI Desktop if you want to open the dashboard
-
-The local development dependencies are small:
-
-```text
-pytest
-pyyaml
-```
-
-They are listed in `requirements-dev.txt`.
-
----
-
-## 1. Clone the repository
-
-```bash
-git clone https://github.com/diwashrestha/retail_analytics_pipeline.git
-cd retail_analytics_pipeline
-```
-
-## 2. Create a Python environment
-
-On Linux or macOS:
-
-```bash
-python -m venv .venv
-source .venv/bin/activate
-```
-
-On Windows PowerShell:
-
-```powershell
-python -m venv .venv
-.venv\Scripts\Activate.ps1
-```
-
-Install the dependencies:
-
-```bash
-python -m pip install --upgrade pip
-pip install -r requirements-dev.txt
-```
-
-## 3. Authenticate Databricks
-
-The project does not use a `.env` file. Databricks authentication goes through the Databricks CLI.
-
-Configure a profile for your workspace and check that it works:
-
-```bash
-databricks current-user me --profile <your-profile>
-```
-
-`scripts/deploy_dev.sh` uses `einkaufpark-free` as its default profile. To use another profile:
-
-```bash
-export DATABRICKS_PROFILE=<your-profile>
-```
-
-Do not commit credentials to the repository.
-
-## 4. Run the local tests
-
-```bash
-python -m pytest tests/unit -q
-```
-
-The current unit suite covers bundle configuration, generator behaviour, Silver contracts, and Gold contracts.
-
-There are additional test assets under `tests/`, including SQL tests and `test_pipeline_contracts.py`. The current GitHub Actions workflow runs `tests/unit`.
-
-## 5. Validate the Databricks bundle
-
-```bash
-databricks bundle validate \
-  --target dev \
-  --profile <your-profile>
-```
-
-## 6. Deploy the development environment
-
-```bash
-databricks bundle deploy \
-  --target dev \
-  --profile <your-profile>
-```
-
-## 7. Run the complete platform
-
-```bash
-databricks bundle run \
-  retail_medallion_job \
-  --target dev \
-  --profile <your-profile>
-```
-
-Without extra parameters, the job uses the defaults from `databricks.yml`.
-
-A full run follows this sequence:
-
-```text
-generate the demo data
-        ↓
-refresh Bronze / Silver / Gold
-        ↓
-validate the medallion model
-        ↓
-create reporting views
-        ↓
-validate the reporting layer
-```
-
-# Controlling generated data
-
-The job accepts these runtime parameters:
-
-```text
-mode
-records
-customers
-seed
-start_date
-end_date
-price_history_end_date
-walkin_rate
-late_rate
-return_rate
-duplicate_rate
-```
-
-For example:
-
-```bash
-databricks bundle run retail_medallion_job \
-  --target dev \
-  --params mode=demo,records=500000,customers=25000,start_date=2023-01-01,end_date=2026-03-31,seed=42
-```
-
-The behaviour parameters use decimal rates:
-
-```text
-walkin_rate=0.10
-late_rate=0.05
-return_rate=0.04
-duplicate_rate=0.001
-```
-
-Those values correspond approximately to:
-
-```text
-10% walk-in behaviour
-5% late-arrival behaviour
-4% return behaviour
-0.1% duplicate injection
-```
-
-They exist so the pipeline can be tested against imperfect input rather than only clean examples.
-
----
-
-# Demo, incremental, and reset modes
-
-The generator has three modes.
-
-## `demo`
-
-`demo` creates the initial deterministic baseline.
-
-It refuses to overwrite an existing published landing dataset. Rebuilding the baseline must be an explicit action.
-
-## `incremental`
-
-`incremental` appends a new, non-overlapping business-date range to an existing baseline.
-
-Example:
-
-```bash
-databricks bundle run retail_medallion_job \
-  --target dev \
-  --params mode=incremental,records=5000,start_date=2026-04-01,end_date=2026-04-03
-```
-
-The run reuses the existing dimensions and product price history.
-
-Published manifests track the batches, reject overlapping date ranges, and make an exact rerun safe.
-
-## `reset`
-
-The Python generator can remove only the landing directories it owns.
-
-For a local landing zone:
-
-```bash
-python data_generator/incremental.py \
-  --mode reset \
-  --output-dir data/raw
-```
-
-Use reset carefully in Databricks. The current `retail_medallion_job` is an end-to-end workflow, so a successful generator task continues into Bronze, Silver, Gold, and validation. It is not a reset-only job.
-
-If a dedicated Databricks reset workflow is added later, it should stay separate from the normal processing job.
-
----
-
-# Running the generator locally
-
-You can run the generator without Databricks when working on generation logic or generator tests.
-
-```bash
-python data_generator/incremental.py \
-  --mode demo \
-  --records 100000 \
-  --customers 10000 \
-  --seed 42 \
-  --start-date 2023-01-01 \
-  --end-date 2026-03-31 \
-  --price-history-end-date 2026-12-31 \
-  --output-dir data/raw \
-  --master-dir master
-```
-
-The full Bronze → Silver → Gold → Reporting workflow still requires Databricks.
